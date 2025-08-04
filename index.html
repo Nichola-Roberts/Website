@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Energy Landscape Theory — Nichola Roberts</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Crimson+Text:ital@0;1&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Marked.js for Markdown -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="site-header">
+        <div class="header-container">
+            <div class="header-brand">
+                <h1 class="site-title">Energy Landscape Theory</h1>
+                <p class="site-author">Nichola Roberts</p>
+            </div>
+            
+            <nav class="header-nav">
+                <button class="nav-button menu-trigger" aria-label="Open navigation">
+                    <svg width="20" height="14" viewBox="0 0 20 14" fill="none">
+                        <path d="M0 1H20M0 7H20M0 13H20" stroke="currentColor" stroke-width="2"/>
+                    </svg>
+                </button>
+                <button class="nav-button help-trigger" aria-label="Open help">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="2"/>
+                        <path d="M7.5 7.5C7.5 6.11929 8.61929 5 10 5C11.3807 5 12.5 6.11929 12.5 7.5C12.5 8.88071 11.3807 10 10 10V12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <circle cx="10" cy="15" r="0.5" fill="currentColor"/>
+                    </svg>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Navigation Menu -->
+    <div class="nav-menu" id="navMenu">
+        <div class="nav-menu-inner">
+            <button class="nav-close">&times;</button>
+            <nav class="nav-links">
+                <a href="#introduction" class="nav-link" data-section="0">
+                    <span class="nav-link-title">Introduction</span>
+                    <span class="nav-link-time"></span>
+                </a>
+                <a href="#energy-landscape" class="nav-link" data-section="1">
+                    <span class="nav-link-title">Energy Landscape</span>
+                    <span class="nav-link-time"></span>
+                </a>
+                <a href="#fluctuations" class="nav-link" data-section="2">
+                    <span class="nav-link-title">Fluctuations</span>
+                    <span class="nav-link-time"></span>
+                </a>
+                <a href="#energy-limit" class="nav-link" data-section="3">
+                    <span class="nav-link-title">Energy Limit</span>
+                    <span class="nav-link-time"></span>
+                </a>
+                <a href="#planning" class="nav-link" data-section="4">
+                    <span class="nav-link-title">Planning</span>
+                    <span class="nav-link-time"></span>
+                </a>
+                <a href="#relationships" class="nav-link" data-section="5">
+                    <span class="nav-link-title">Relationships</span>
+                    <span class="nav-link-time"></span>
+                </a>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Help Modal -->
+    <div class="help-modal" id="helpModal">
+        <div class="help-modal-inner">
+            <button class="help-close">&times;</button>
+            <h2 class="help-title">Quick Guide</h2>
+            <div class="help-sections">
+                <div class="help-section" data-section="0">
+                    <h3>Introduction</h3>
+                    <p>Understanding how energy shapes every decision and action in your daily life.</p>
+                </div>
+                <div class="help-section" data-section="1">
+                    <h3>Energy Landscape</h3>
+                    <p>You're a ball on a landscape. Mountains are hard things, valleys are easy things.</p>
+                </div>
+                <div class="help-section" data-section="2">
+                    <h3>Fluctuations</h3>
+                    <p>Your energy changes throughout the day, creating natural rhythms and patterns.</p>
+                </div>
+                <div class="help-section" data-section="3">
+                    <h3>Energy Limit</h3>
+                    <p>Like a battery, you have finite energy that needs careful management.</p>
+                </div>
+                <div class="help-section" data-section="4">
+                    <h3>Planning</h3>
+                    <p>Design your life paths to require less climbing and preserve energy.</p>
+                </div>
+                <div class="help-section" data-section="5">
+                    <h3>Relationships</h3>
+                    <p>Some people give energy, others take it. Navigate wisely.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="site-main">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-image">
+                <img src="https://raw.githubusercontent.com/Nichola-Roberts/Website/main/Mountain%20Path%20at%20Golden%20Hour.png" 
+                     alt="Mountain path at golden hour, representing life's energy landscape">
+            </div>
+        </section>
+
+        <!-- Content Sections -->
+        <article class="content">
+            <section id="introduction" class="content-section" data-section="0">
+                <div class="section-inner">
+                    <p class="lead">You know the feeling. You just got home from work. It's been a long, hard day. You collapse on the sofa. You don't have the energy for anything. You know you have to cook dinner, to do your washing. But you can't. You can't even begin to think about doing it. You are completely out of energy.</p>
+                    
+                    <p>Your partner comes over, and asks you how your day was. You snap. You don't mean to. You just can't think about anything right now. You don't have the energy.</p>
+                    
+                    <p>A lot of actions in life can be explained by not having the energy.</p>
+                </div>
+            </section>
+
+            <section id="energy-landscape" class="content-section" data-section="1">
+                <div class="section-inner">
+                    <h2>Energy Landscape</h2>
+                    <div class="section-content">
+                        <!-- Content will be loaded from markdown -->
+                    </div>
+                </div>
+            </section>
+
+            <section id="fluctuations" class="content-section" data-section="2">
+                <div class="section-inner">
+                    <h2>Fluctuations</h2>
+                    <div class="section-content">
+                        <!-- Content will be loaded from markdown -->
+                    </div>
+                </div>
+            </section>
+
+            <section id="energy-limit" class="content-section" data-section="3">
+                <div class="section-inner">
+                    <h2>Energy Limit</h2>
+                    <div class="section-content">
+                        <!-- Content will be loaded from markdown -->
+                    </div>
+                </div>
+            </section>
+
+            <section id="planning" class="content-section" data-section="4">
+                <div class="section-inner">
+                    <h2>Planning</h2>
+                    <div class="section-content">
+                        <!-- Content will be loaded from markdown -->
+                    </div>
+                </div>
+            </section>
+
+            <section id="relationships" class="content-section" data-section="5">
+                <div class="section-inner">
+                    <h2>Relationships</h2>
+                    <div class="section-content">
+                        <!-- Content will be loaded from markdown -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Endless scroll sections -->
+            <section class="endless-section"></section>
+            <section class="endless-section"></section>
+            <section class="endless-section final"></section>
+        </article>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
