@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeParagraphEffects();
     initializeSmoothScroll();
     loadMarkdownContent();
+    loadGuideContent();
 });
 
 // Header scroll effect
@@ -193,35 +194,56 @@ function updateReadingTimeDisplay() {
     elements.navLinks.forEach((link, index) => {
         const timeSpent = state.readingTimes[index] || 0;
         const level = getReadingLevel(timeSpent);
-        const timeElement = link.querySelector('.nav-link-time');
         
+        // Set reading level for text darkening (no time display)
         link.setAttribute('data-reading-level', level);
-        
-        if (timeSpent > 0) {
-            const minutes = Math.floor(timeSpent / 60);
-            const seconds = Math.floor(timeSpent % 60);
-            timeElement.textContent = minutes > 0 ? `${minutes}m` : `${seconds}s`;
-        }
     });
 }
 
-// Paragraph fade effects
+// Paragraph and heading fade effects
 function initializeParagraphEffects() {
     const observerOptions = {
-        threshold: [0, 0.5, 1],
-        rootMargin: '-10% 0px -10% 0px'
+        threshold: [0, 0.3, 1],
+        rootMargin: '-15% 0px -15% 0px'
     };
     
-    const paragraphObserver = new IntersectionObserver((entries) => {
+    const contentObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-            if (entry.intersectionRatio > 0.5) {
-                entry.target.classList.add('visible');
+            if (entry.intersectionRatio > 0.3) {
+                const element = entry.target;
+                
+                if (element.tagName === 'H2') {
+                    // For headings, show them more quickly
+                    const section = element.closest('.content-section');
+                    const sectionId = section?.id;
+                    
+                    // Special case for energy-landscape - show immediately
+                    if (sectionId === 'energy-landscape') {
+                        setTimeout(() => {
+                            element.classList.add('visible');
+                        }, 300);
+                    } else {
+                        setTimeout(() => {
+                            element.classList.add('visible');
+                        }, 400);
+                    }
+                } else {
+                    // For paragraphs, add a slight delay for dreamlike effect
+                    setTimeout(() => {
+                        element.classList.add('visible');
+                    }, Math.random() * 200 + 200);
+                }
             }
         });
     }, observerOptions);
     
+    // Observe all paragraphs and headings
     elements.paragraphs.forEach(p => {
-        paragraphObserver.observe(p);
+        contentObserver.observe(p);
+    });
+    
+    document.querySelectorAll('.content-section h2').forEach(h => {
+        contentObserver.observe(h);
     });
     
     // Make first paragraph visible immediately
@@ -250,17 +272,28 @@ function initializeSmoothScroll() {
 async function loadMarkdownContent() {
     try {
         // For development, use local path
-        // const response = await fetch('./content.md');
-        
-        // For production, use GitHub raw URL
-        const response = await fetch('https://raw.githubusercontent.com/Nichola-Roberts/Website/main/content.md');
+        const response = await fetch('./content.md');
         
         if (!response.ok) {
             throw new Error('Failed to load content');
         }
         
         const markdown = await response.text();
-        const sections = markdown.split(/^## /m).filter(s => s.trim());
+        // Split by ## but keep the first part (intro) separate
+        const parts = markdown.split(/^## /m);
+        const introContent = parts[0].trim();
+        const sections = parts.slice(1).filter(s => s.trim());
+        
+        // Handle introduction section specially
+        if (introContent) {
+            const introElement = document.getElementById('introduction');
+            if (introElement) {
+                const contentDiv = introElement.querySelector('.section-content');
+                if (contentDiv) {
+                    contentDiv.innerHTML = introContent.split('\n').map(line => line.trim() ? `<p>${line}</p>` : '').join('');
+                }
+            }
+        }
         
         sections.forEach(section => {
             const lines = section.split('\n');
@@ -278,22 +311,34 @@ async function loadMarkdownContent() {
                     contentDiv.innerHTML = html;
                     contentDiv.classList.remove('loading');
                     
-                    // Observe new paragraphs
+                    // Observe new paragraphs and headings
                     const newParagraphs = contentDiv.querySelectorAll('p');
+                    const newHeadings = contentDiv.querySelectorAll('h1, h2, h3, h4, h5, h6');
                     const observerOptions = {
-                        threshold: [0, 0.5, 1],
-                        rootMargin: '-10% 0px -10% 0px'
+                        threshold: [0, 0.3, 1],
+                        rootMargin: '-15% 0px -15% 0px'
                     };
                     
                     const observer = new IntersectionObserver((entries) => {
                         entries.forEach(entry => {
-                            if (entry.intersectionRatio > 0.5) {
-                                entry.target.classList.add('visible');
+                            if (entry.intersectionRatio > 0.3) {
+                                const element = entry.target;
+                                
+                                if (element.tagName.startsWith('H')) {
+                                    setTimeout(() => {
+                                        element.classList.add('visible');
+                                    }, 200);
+                                } else {
+                                    setTimeout(() => {
+                                        element.classList.add('visible');
+                                    }, Math.random() * 100 + 50);
+                                }
                             }
                         });
                     }, observerOptions);
                     
                     newParagraphs.forEach(p => observer.observe(p));
+                    newHeadings.forEach(h => observer.observe(h));
                 }
             }
         });
@@ -323,3 +368,51 @@ function debounce(func, wait) {
 // Performance optimization for scroll events
 const debouncedTrackReading = debounce(trackReadingTime, 100);
 window.addEventListener('scroll', debouncedTrackReading);
+
+// Load guide content
+async function loadGuideContent() {
+    try {
+        const response = await fetch('./guide.md');
+        
+        if (!response.ok) {
+            throw new Error('Failed to load guide');
+        }
+        
+        const markdown = await response.text();
+        // Skip the main title (# Quick Guide) and get only ## sections
+        const sections = markdown.split(/^## /m).slice(1).filter(s => s.trim());
+        
+        // Clear existing help sections
+        const helpSections = document.querySelector('.help-sections');
+        if (helpSections) {
+            helpSections.innerHTML = '';
+        }
+        
+        sections.forEach((section, index) => {
+            const lines = section.split('\n');
+            const title = lines[0].trim();
+            const content = lines.slice(1).join('\n').trim();
+            
+            // Create help section element
+            const helpSection = document.createElement('div');
+            helpSection.className = 'help-section';
+            helpSection.setAttribute('data-section', index.toString());
+            
+            const heading = document.createElement('h3');
+            heading.textContent = title;
+            
+            const paragraph = document.createElement('p');
+            paragraph.textContent = content;
+            
+            helpSection.appendChild(heading);
+            helpSection.appendChild(paragraph);
+            
+            if (helpSections) {
+                helpSections.appendChild(helpSection);
+            }
+        });
+        
+    } catch (error) {
+        console.error('Error loading guide:', error);
+    }
+}
