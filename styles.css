@@ -11,6 +11,7 @@
     --color-primary-light: #1a5d47;
     --color-primary-lighter: #f0f7f4;
     --color-text: #1a1a1a;
+    --color-text-mobile: #404040;
     --color-text-light: #666666;
     --color-text-lighter: #999999;
     --color-background: #f8f8f8;
@@ -100,7 +101,8 @@ body {
 /* Navigation Buttons */
 .header-nav {
     display: flex;
-    gap: var(--space-sm);
+    flex-direction: column;
+    gap: 4px;
 }
 
 .nav-button {
@@ -193,11 +195,11 @@ body {
 }
 
 /* Reading time indicators */
-.nav-link[data-reading-level="0"] { color: #d0d0d0; }
-.nav-link[data-reading-level="1"] { color: #a8a8a8; }
-.nav-link[data-reading-level="2"] { color: #808080; }
-.nav-link[data-reading-level="3"] { color: #5a5a5a; }
-.nav-link[data-reading-level="4"] { color: #3a3a3a; }
+.nav-link[data-reading-level="0"] { color: rgba(26, 26, 26, 0.15); }
+.nav-link[data-reading-level="1"] { color: rgba(26, 26, 26, 0.4); }
+.nav-link[data-reading-level="2"] { color: rgba(26, 26, 26, 0.6); }
+.nav-link[data-reading-level="3"] { color: rgba(26, 26, 26, 0.8); }
+.nav-link[data-reading-level="4"] { color: rgba(26, 26, 26, 0.9); }
 .nav-link[data-reading-level="5"] { color: #1a1a1a; }
 
 /* Help Modal */
@@ -283,7 +285,8 @@ body {
     font-size: 16px;
     font-weight: 600;
     color: var(--color-primary);
-    margin-bottom: var(--space-xs);
+    margin-bottom: 2px !important;
+    line-height: 1.2;
 }
 
 .help-section p {
@@ -306,8 +309,13 @@ body {
 .help-section.current {
     background-color: var(--color-primary-lighter);
     border: 1px solid var(--color-primary);
-    opacity: 1;
-    filter: none;
+    opacity: 1 !important;
+    filter: none !important;
+}
+
+.help-section.current p {
+    opacity: 1 !important;
+    filter: none !important;
 }
 
 .help-section.future {
@@ -318,7 +326,20 @@ body {
 /* Hero Section */
 .hero {
     margin-bottom: var(--space-lg);
-    margin-top: 0;
+    margin-top: var(--space-md);
+    position: relative;
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    top: -80px;
+    left: 0;
+    right: 0;
+    height: 80px;
+    background: linear-gradient(to bottom, #f8f8f8 0%, rgba(248, 248, 248, 0.8) 50%, rgba(248, 248, 248, 0) 100%);
+    z-index: 999;
+    pointer-events: none;
 }
 
 .hero-image {
@@ -422,6 +443,16 @@ p.lead {
     
     body {
         font-size: 16px;
+        color: var(--color-text-mobile);
+    }
+    
+    p {
+        color: var(--color-text-mobile);
+    }
+    
+    .content-section h2 {
+        font-size: 14px;
+        color: var(--color-primary);
     }
     
     .header-container,
@@ -431,11 +462,12 @@ p.lead {
     }
     
     .header-brand h1 {
-        font-size: 20px;
+        font-size: 18px;
     }
     
     .site-author {
-        font-size: 13px;
+        font-size: 12px;
+        display: block;
     }
     
     .nav-menu {
@@ -444,11 +476,16 @@ p.lead {
     }
     
     .content-section h2 {
-        font-size: 26px;
+        font-size: 15px;
     }
     
     p.lead {
-        font-size: 18px;
+        font-size: 15px;
+    }
+    
+    .hero::before {
+        top: -40px;
+        height: 40px;
     }
 }
 
