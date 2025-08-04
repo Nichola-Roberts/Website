@@ -112,10 +112,10 @@ body {
     background: none;
     border: none;
     cursor: pointer;
-    padding: 10px;
+    padding: 8px;
     color: var(--color-nav-buttons);
     transition: all var(--transition-fast);
-    border-radius: 8px;
+    border-radius: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -127,8 +127,8 @@ body {
 }
 
 .nav-button svg {
-    width: 18px;
-    height: 18px;
+    width: 14px;
+    height: 14px;
 }
 
 /* Navigation Menu */
@@ -354,6 +354,20 @@ body {
 .help-modal * {
     filter: none !important;
     -webkit-filter: none !important;
+}
+
+/* Plain text mode - disable all effects */
+body.plain-text-mode .content p,
+body.plain-text-mode .content h2 {
+    opacity: 1 !important;
+    filter: none !important;
+    transform: none !important;
+    transition: none !important;
+    color: var(--color-text) !important;
+}
+
+body.plain-text-mode .endless-section {
+    display: none;
 }
 
 /* Hero Section */

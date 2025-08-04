@@ -1,6 +1,6 @@
 // State Management
 const state = {
-    currentSection: 0,
+    currentSection: parseInt(localStorage.getItem('lastSection')) || 0,
     sectionStartTime: Date.now(),
     readingTimes: JSON.parse(localStorage.getItem('readingTimes')) || {},
     isMenuOpen: false,
@@ -12,6 +12,7 @@ const elements = {
     header: document.querySelector('.site-header'),
     menuTrigger: document.querySelector('.menu-trigger'),
     helpTrigger: document.querySelector('.help-trigger'),
+    plainTextToggle: document.querySelector('.plain-text-toggle'),
     navMenu: document.getElementById('navMenu'),
     helpModal: document.getElementById('helpModal'),
     navClose: document.querySelector('.nav-close'),
@@ -26,11 +27,15 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeHeader();
     initializeNavigation();
     initializeHelp();
+    initializePlainTextToggle();
     initializeReadingTracking();
     initializeParagraphEffects();
     initializeSmoothScroll();
     loadMarkdownContent();
     loadGuideContent();
+    
+    // Restore last reading position after content loads
+    setTimeout(restoreLastPosition, 1000);
 });
 
 // Header scroll effect
@@ -46,8 +51,10 @@ function initializeHeader() {
             elements.header.classList.remove('scrolled');
         }
         
-        // Dreamy fade effect for text elements
-        applyDreamyFade();
+        // Dreamy fade effect for text elements (unless in plain text mode)
+        if (!document.body.classList.contains('plain-text-mode')) {
+            applyDreamyFade();
+        }
         
         lastScroll = currentScroll;
     });
@@ -145,7 +152,7 @@ function initializeNavigation() {
             const targetSection = document.getElementById(targetId);
             
             if (targetSection) {
-                targetSection.scrollIntoView({ behavior: 'smooth' });
+                targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 closeMenu();
             }
         });
@@ -184,6 +191,43 @@ function openHelp() {
 function closeHelp() {
     state.isHelpOpen = false;
     elements.helpModal.classList.remove('active');
+}
+
+// Plain text toggle
+function initializePlainTextToggle() {
+    if (elements.plainTextToggle) {
+        elements.plainTextToggle.addEventListener('click', togglePlainTextMode);
+        
+        // Restore saved preference or check if user prefers reduced motion
+        const savedPreference = localStorage.getItem('plainTextMode') === 'true';
+        const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        
+        if (savedPreference || prefersReducedMotion) {
+            document.body.classList.add('plain-text-mode');
+            updatePlainTextButtonAppearance(true);
+        }
+    }
+}
+
+function togglePlainTextMode() {
+    document.body.classList.toggle('plain-text-mode');
+    
+    // Store preference
+    const isPlainText = document.body.classList.contains('plain-text-mode');
+    localStorage.setItem('plainTextMode', isPlainText);
+    
+    // Update button appearance
+    updatePlainTextButtonAppearance(isPlainText);
+}
+
+function updatePlainTextButtonAppearance(isActive) {
+    if (isActive) {
+        elements.plainTextToggle.style.backgroundColor = 'var(--color-primary-lighter)';
+        elements.plainTextToggle.style.color = 'var(--color-primary)';
+    } else {
+        elements.plainTextToggle.style.backgroundColor = '';
+        elements.plainTextToggle.style.color = '';
+    }
 }
 
 function updateHelpSections() {
@@ -238,6 +282,9 @@ function trackReadingTime() {
         // Start timing new section
         state.currentSection = newSection;
         state.sectionStartTime = Date.now();
+        
+        // Save current section to localStorage
+        localStorage.setItem('lastSection', newSection);
     }
 }
 
@@ -273,6 +320,22 @@ function updateReadingTimeDisplay() {
         // Set reading level for text darkening (no time display)
         link.setAttribute('data-reading-level', level);
     });
+}
+
+// Restore last reading position
+function restoreLastPosition() {
+    const lastSection = parseInt(localStorage.getItem('lastSection'));
+    if (lastSection && lastSection > 0) {
+        const targetSection = elements.sections[lastSection];
+        if (targetSection) {
+            // Smooth scroll to the last section
+            targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            
+            // Update current section state
+            state.currentSection = lastSection;
+            state.sectionStartTime = Date.now();
+        }
+    }
 }
 
 // Paragraph and heading fade effects
@@ -337,7 +400,7 @@ function initializeSmoothScroll() {
             e.preventDefault();
             const target = document.querySelector(this.getAttribute('href'));
             if (target) {
-                target.scrollIntoView({ behavior: 'smooth' });
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         });
     });
