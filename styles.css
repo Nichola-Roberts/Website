@@ -236,6 +236,7 @@ body {
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    filter: none !important;
 }
 
 .help-close {
@@ -275,27 +276,12 @@ body {
 }
 
 .help-section {
-    padding: 12px;
-    border-radius: 12px;
+    padding: 8px 0;
+    margin-bottom: 12px;
     transition: all var(--transition-base);
-    background: rgba(15, 76, 58, 0.05);
-    border: 1px solid rgba(15, 76, 58, 0.1);
-    margin-bottom: 8px;
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-}
-
-.help-section h3 {
-    font-family: var(--font-sans);
-    font-size: 16px;
-    font-weight: 600;
-    color: var(--color-primary);
-    margin: 0 !important;
-    padding: 0 !important;
-    line-height: 14px !important; /* Match p font-size */
-    height: 14px !important; /* Force exact height */
-    display: block !important;
+    background: none;
+    border: none;
+    border-radius: 0;
 }
 
 .help-section p {
@@ -307,10 +293,18 @@ body {
     opacity: 1 !important;
     margin: 0 !important;
     padding: 0 !important;
-    margin-top: -2px !important; /* Negative margin to pull it up */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+}
+
+.help-section p strong {
+    font-family: var(--font-sans);
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--color-primary);
+    display: inline;
+    margin-right: 0.3em;
 }
 
 /* Target any element that might be between h3 and p */
@@ -333,13 +327,15 @@ body {
 }
 
 .help-section.past {
-    opacity: 0.7;
-    filter: none;
+    opacity: 0.6;
+    filter: none !important;
 }
 
 .help-section.current {
-    background-color: var(--color-primary-lighter);
-    border: 1px solid var(--color-primary);
+    background: none;
+    border: none;
+    border-radius: 0;
+    padding: 8px 0;
     opacity: 1 !important;
     filter: none !important;
 }
@@ -350,8 +346,14 @@ body {
 }
 
 .help-section.future {
-    opacity: 0.8;
-    filter: blur(1px);
+    opacity: 0.15;
+    filter: none !important;
+}
+
+/* Force no blur on all modal content */
+.help-modal * {
+    filter: none !important;
+    -webkit-filter: none !important;
 }
 
 /* Hero Section */

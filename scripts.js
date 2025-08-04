@@ -56,7 +56,7 @@ function initializeHeader() {
 // Track elements that have been triggered for fade-in
 const fadedInElements = new WeakSet();
 
-// Dreamy fade effect for scrolling text
+// Dreamy fade effect for scrolling text - back to smooth opacity
 function applyDreamyFade() {
     const fadeStartTop = 300; // Start fading at top
     const fadeEndTop = 85; // Fully transparent at top
@@ -73,12 +73,22 @@ function applyDreamyFade() {
         const elementTop = rect.top;
         const elementBottom = rect.bottom;
         
-        // Fade out at top
+        // Fade out at top using color instead of opacity
         if (elementTop < fadeStartTop) {
             const fadePercent = Math.max(0, Math.min(1, (elementTop - fadeEndTop) / (fadeStartTop - fadeEndTop)));
-            element.style.opacity = fadePercent;
-            element.style.filter = `blur(${(1 - fadePercent) * 3}px)`;
-            element.style.transform = `translateY(${(1 - fadePercent) * -5}px)`;
+            
+            // Fade to background color instead of using opacity
+            const bgColor = [248, 248, 248]; // --color-background: #f8f8f8
+            const textColor = [26, 26, 26]; // --color-text: #1a1a1a
+            
+            const r = Math.round(textColor[0] + (bgColor[0] - textColor[0]) * (1 - fadePercent));
+            const g = Math.round(textColor[1] + (bgColor[1] - textColor[1]) * (1 - fadePercent));
+            const b = Math.round(textColor[2] + (bgColor[2] - textColor[2]) * (1 - fadePercent));
+            
+            element.style.color = `rgb(${r}, ${g}, ${b})`;
+            element.style.opacity = '1'; // Keep text sharp
+            element.style.filter = `blur(${(1 - fadePercent) * 0.5}px)`; // Tiny blur
+            element.style.transform = `translateY(${(1 - fadePercent) * -3}px)`; // Keep slight movement
             element.style.transition = 'none';
         } 
         // Check if element is entering viewport from bottom
@@ -89,8 +99,10 @@ function applyDreamyFade() {
                 
                 // Start invisible
                 element.style.opacity = '0';
-                element.style.filter = 'blur(3px)';
+                element.style.filter = 'blur(0.5px)'; // Tiny blur for entrance
                 element.style.transform = 'translateY(20px)';
+                element.style.webkitMask = '';
+                element.style.mask = '';
                 
                 // Fade in over 1 second
                 setTimeout(() => {
@@ -105,6 +117,7 @@ function applyDreamyFade() {
         else if (elementTop >= fadeStartTop && elementBottom <= fadeStartBottom) {
             if (fadedInElements.has(element)) {
                 element.style.opacity = '1';
+                element.style.color = ''; // Reset to default color
                 element.style.filter = '';
                 element.style.transform = '';
             }
@@ -460,13 +473,9 @@ async function loadGuideContent() {
             helpSection.className = 'help-section';
             helpSection.setAttribute('data-section', index.toString());
             
-            const heading = document.createElement('h3');
-            heading.textContent = title;
-            helpSection.appendChild(heading);
-            
-            // Create paragraph directly without markdown parsing
+            // Create single paragraph with bold title and content
             const paragraph = document.createElement('p');
-            paragraph.textContent = content;
+            paragraph.innerHTML = `<strong>${title}</strong> ${content}`;
             helpSection.appendChild(paragraph);
             
             if (helpSections) {
