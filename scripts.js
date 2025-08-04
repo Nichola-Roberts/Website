@@ -80,44 +80,35 @@ function applyDreamyFade() {
         const elementTop = rect.top;
         const elementBottom = rect.bottom;
         
-        // Fade out at top using color instead of opacity
+        // Fade out at top using opacity (matching bottom fade style)
         if (elementTop < fadeStartTop) {
             const fadePercent = Math.max(0, Math.min(1, (elementTop - fadeEndTop) / (fadeStartTop - fadeEndTop)));
             
-            // Fade to background color instead of using opacity
-            const bgColor = [248, 248, 248]; // --color-background: #f8f8f8
-            const textColor = [26, 26, 26]; // --color-text: #1a1a1a
-            
-            const r = Math.round(textColor[0] + (bgColor[0] - textColor[0]) * (1 - fadePercent));
-            const g = Math.round(textColor[1] + (bgColor[1] - textColor[1]) * (1 - fadePercent));
-            const b = Math.round(textColor[2] + (bgColor[2] - textColor[2]) * (1 - fadePercent));
-            
-            element.style.color = `rgb(${r}, ${g}, ${b})`;
-            element.style.opacity = '1'; // Keep text sharp
-            element.style.filter = `blur(${(1 - fadePercent) * 0.5}px)`; // Tiny blur
-            element.style.transform = `translateY(${(1 - fadePercent) * -3}px)`; // Keep slight movement
+            element.style.opacity = fadePercent;
+            element.style.color = ''; // Reset color
+            element.style.filter = `blur(${(1 - fadePercent) * 0.4}px)`;
+            element.style.transform = `translateY(${(1 - fadePercent) * -3}px)`;
             element.style.transition = 'none';
         } 
-        // Check if element is entering viewport from bottom
+        // Fade in at bottom using opacity (matching top fade style)
         else if (elementBottom > fadeStartBottom && elementTop < windowHeight) {
-            // If we haven't faded this element in yet
+            // If we haven't started fading this element in yet
             if (!fadedInElements.has(element)) {
                 fadedInElements.add(element);
                 
-                // Start invisible
+                // Start invisible with blur and offset
                 element.style.opacity = '0';
-                element.style.filter = 'blur(0.5px)'; // Tiny blur for entrance
-                element.style.transform = 'translateY(20px)';
-                element.style.webkitMask = '';
-                element.style.mask = '';
+                element.style.color = ''; // Reset color
+                element.style.filter = 'blur(0.4px)';
+                element.style.transform = 'translateY(12px)';
                 
-                // Fade in over 1 second
+                // Animate to full visibility
                 setTimeout(() => {
-                    element.style.transition = 'all 1s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                    element.style.transition = 'all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
                     element.style.opacity = '1';
                     element.style.filter = '';
                     element.style.transform = '';
-                }, 100);
+                }, 50);
             }
         } 
         // Fully visible in the middle
