@@ -68,6 +68,9 @@ body {
     opacity: 1;
 }
 
+/* Removed fade from site-main - will add to content only */
+
+
 .site-header.scrolled {
     /* Remove box-shadow to eliminate line under header */
 }
@@ -181,7 +184,7 @@ body {
 
 .nav-link {
     display: block;
-    padding: var(--space-sm) var(--space-md);
+    padding: 6px var(--space-md);
     text-decoration: none;
     color: var(--color-text);
     border-radius: 8px;
@@ -272,12 +275,15 @@ body {
 }
 
 .help-section {
-    padding: var(--space-md);
+    padding: 12px;
     border-radius: 12px;
     transition: all var(--transition-base);
     background: rgba(15, 76, 58, 0.05);
     border: 1px solid rgba(15, 76, 58, 0.1);
     margin-bottom: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
 }
 
 .help-section h3 {
@@ -285,20 +291,45 @@ body {
     font-size: 16px;
     font-weight: 600;
     color: var(--color-primary);
-    margin-bottom: 2px !important;
-    line-height: 1.2;
+    margin: 0 !important;
+    padding: 0 !important;
+    line-height: 14px !important; /* Match p font-size */
+    height: 14px !important; /* Force exact height */
+    display: block !important;
 }
 
 .help-section p {
     font-family: var(--font-sans);
     font-size: 14px;
-    line-height: 1.5;
+    line-height: 1.3;
     color: var(--color-text);
     display: block !important;
     opacity: 1 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    margin-top: -2px !important; /* Negative margin to pull it up */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+}
+
+/* Target any element that might be between h3 and p */
+.help-section h3 + * {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+
+/* Target first paragraph after h3 specifically */
+.help-section h3 + p,
+.help-section h3 + div p:first-child {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+
+/* Remove any spacing from all children */
+.help-section * {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
 }
 
 .help-section.past {
@@ -326,26 +357,17 @@ body {
 /* Hero Section */
 .hero {
     margin-bottom: var(--space-lg);
-    margin-top: var(--space-md);
+    margin-top: var(--space-sm);
     position: relative;
 }
 
-.hero::before {
-    content: '';
-    position: absolute;
-    top: -80px;
-    left: 0;
-    right: 0;
-    height: 80px;
-    background: linear-gradient(to bottom, #f8f8f8 0%, rgba(248, 248, 248, 0.8) 50%, rgba(248, 248, 248, 0) 100%);
-    z-index: 999;
-    pointer-events: none;
-}
 
 .hero-image {
     max-width: 720px;
     width: 70%;
     margin: 0 auto;
+    position: relative;
+    z-index: 0;
 }
 
 .hero-image img {
@@ -354,6 +376,11 @@ body {
     display: block;
     border: 3px solid var(--color-primary);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Main */
+.site-main {
+    position: relative;
 }
 
 /* Content */

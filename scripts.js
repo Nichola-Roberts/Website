@@ -46,7 +46,69 @@ function initializeHeader() {
             elements.header.classList.remove('scrolled');
         }
         
+        // Dreamy fade effect for text elements
+        applyDreamyFade();
+        
         lastScroll = currentScroll;
+    });
+}
+
+// Track elements that have been triggered for fade-in
+const fadedInElements = new WeakSet();
+
+// Dreamy fade effect for scrolling text
+function applyDreamyFade() {
+    const fadeStartTop = 300; // Start fading at top
+    const fadeEndTop = 85; // Fully transparent at top
+    
+    const windowHeight = window.innerHeight;
+    const fadeStartBottom = windowHeight - 200; // Start fading at bottom
+    const fadeEndBottom = windowHeight - 50; // Fully transparent at bottom
+    
+    // Apply to all text content, not the hero image
+    const textElements = document.querySelectorAll('.content p, .content h2');
+    
+    textElements.forEach(element => {
+        const rect = element.getBoundingClientRect();
+        const elementTop = rect.top;
+        const elementBottom = rect.bottom;
+        
+        // Fade out at top
+        if (elementTop < fadeStartTop) {
+            const fadePercent = Math.max(0, Math.min(1, (elementTop - fadeEndTop) / (fadeStartTop - fadeEndTop)));
+            element.style.opacity = fadePercent;
+            element.style.filter = `blur(${(1 - fadePercent) * 3}px)`;
+            element.style.transform = `translateY(${(1 - fadePercent) * -5}px)`;
+            element.style.transition = 'none';
+        } 
+        // Check if element is entering viewport from bottom
+        else if (elementBottom > fadeStartBottom && elementTop < windowHeight) {
+            // If we haven't faded this element in yet
+            if (!fadedInElements.has(element)) {
+                fadedInElements.add(element);
+                
+                // Start invisible
+                element.style.opacity = '0';
+                element.style.filter = 'blur(3px)';
+                element.style.transform = 'translateY(20px)';
+                
+                // Fade in over 1 second
+                setTimeout(() => {
+                    element.style.transition = 'all 1s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                    element.style.opacity = '1';
+                    element.style.filter = '';
+                    element.style.transform = '';
+                }, 100);
+            }
+        } 
+        // Fully visible in the middle
+        else if (elementTop >= fadeStartTop && elementBottom <= fadeStartBottom) {
+            if (fadedInElements.has(element)) {
+                element.style.opacity = '1';
+                element.style.filter = '';
+                element.style.transform = '';
+            }
+        }
     });
 }
 
@@ -400,11 +462,11 @@ async function loadGuideContent() {
             
             const heading = document.createElement('h3');
             heading.textContent = title;
+            helpSection.appendChild(heading);
             
+            // Create paragraph directly without markdown parsing
             const paragraph = document.createElement('p');
             paragraph.textContent = content;
-            
-            helpSection.appendChild(heading);
             helpSection.appendChild(paragraph);
             
             if (helpSections) {
