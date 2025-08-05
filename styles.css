@@ -43,7 +43,7 @@
     
     /* Refined Typography */
     --font-display: 'Instrument Serif', 'Crimson Text', Georgia, serif;
-    --font-body: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     --font-mono: 'JetBrains Mono', Consolas, monospace;
     
     /* Line Heights */
@@ -133,27 +133,29 @@ body {
     padding: var(--space-2) var(--space-13); /* Very minimal padding */
     display: flex;
     justify-content: space-between;
-    align-items: baseline;
+    align-items: center;
 }
 
 /* Brand */
 .header-brand h1 {
-    font-family: var(--font-display);
+    font-family: var(--font-body);
     font-size: var(--text-xl);
-    font-weight: 400;
+    font-weight: 500;
     color: var(--color-sage);  /* Bring back green accent */
     letter-spacing: var(--tracking-tight);
     line-height: 1;
     margin: 0;  /* Ensure no default margin */
+    -webkit-text-stroke: 0.3px var(--color-sage);
+    text-stroke: 0.3px var(--color-sage);
 }
 
 .site-author {
     font-family: var(--font-body);
-    font-size: var(--text-sm);
+    font-size: var(--text-xs);
     font-weight: 400;
     color: var(--color-sage);
     letter-spacing: var(--tracking-wide);
-    margin-top: 0;  /* Remove extra spacing */
+    margin: 0;  /* Remove all margins */
     line-height: 1.2;  /* Tighter line height */
 }
 
@@ -189,6 +191,83 @@ body {
     stroke-width: 1.5;
 }
 
+/* Floating Font Controls */
+.floating-font-controls {
+    position: fixed;
+    top: 50%;
+    right: var(--space-8);
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    background: var(--color-glass);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: var(--space-2);
+    border-radius: var(--space-2);
+    box-shadow: 0 2px 12px rgba(10, 15, 13, 0.1);
+    border: 1px solid rgba(59, 125, 105, 0.1);
+    z-index: 999;
+    opacity: 0;
+    transform: translateY(-50%) translateX(100%);
+    transition: all var(--duration-base) var(--ease-out);
+    pointer-events: none;
+}
+
+.floating-font-controls.visible {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+    pointer-events: auto;
+}
+
+.floating-font-controls.auto-hide {
+    opacity: 0.1;
+}
+
+.floating-font-controls:hover {
+    opacity: 1 !important;
+}
+
+.font-button {
+    background: transparent;
+    border: 1px solid var(--color-sage);
+    color: var(--color-sage);
+    width: 1.5rem;
+    height: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--space-1);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--duration-fast) var(--ease-out);
+}
+
+.font-button:hover {
+    background-color: var(--color-sage);
+    color: white;
+}
+
+.font-button svg {
+    width: 12px;
+    height: 12px;
+    stroke-width: 1.5;
+}
+
+/* Plain text button styling in floating controls */
+.floating-font-controls .plain-text-toggle {
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 1px solid var(--color-sage);
+}
+
+/* Highlight plain text button when active in floating controls */
+body.plain-text-mode .floating-font-controls .plain-text-toggle {
+    background-color: var(--color-sage);
+    color: white;
+}
+
 /* Navigation Drawer - Minimal */
 .nav-menu {
     position: fixed;
@@ -208,43 +287,20 @@ body {
 }
 
 .nav-menu-inner {
-    padding: var(--space-21);
-}
-
-.nav-close {
-    position: absolute;
-    top: var(--space-8);
-    right: var(--space-8);
-    background: transparent;
-    border: none;
-    font-size: var(--text-xl);
-    cursor: pointer;
-    color: var(--color-sage);
-    width: var(--space-13);
-    height: var(--space-13);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: var(--space-2);
-    transition: all var(--duration-fast) var(--ease-out);
-}
-
-.nav-close:hover {
-    color: var(--color-sage);
-    background-color: var(--color-sage-highlight);  /* Light green background */
+    padding: var(--space-13);
 }
 
 /* Navigation Links - Elegant Progress */
 .nav-links {
-    margin-top: var(--space-34);
+    margin-top: 0;
     display: flex;
     flex-direction: column;
-    gap: var(--space-1);
+    gap: 0;
 }
 
 .nav-link {
     display: block;
-    padding: var(--space-5) var(--space-8);
+    padding: var(--space-3) var(--space-8);
     text-decoration: none;
     color: var(--color-ink);
     border-radius: var(--space-2);
@@ -262,13 +318,13 @@ body {
 
 /* Reading Progress - Ultra Subtle */
 .nav-link[data-reading-level="0"] { 
-    color: var(--color-ink-fade);
-}
-.nav-link[data-reading-level="1"] { 
     color: rgba(10, 15, 13, 0.25);
 }
+.nav-link[data-reading-level="1"] { 
+    color: rgba(10, 15, 13, 0.35);
+}
 .nav-link[data-reading-level="2"] { 
-    color: rgba(10, 15, 13, 0.45);
+    color: rgba(10, 15, 13, 0.50);
 }
 .nav-link[data-reading-level="3"] { 
     color: rgba(10, 15, 13, 0.65);
@@ -282,7 +338,7 @@ body {
 
 /* Hero Section - Refined */
 .hero {
-    margin-top: 0;  /* No gap from header */
+    margin-top: var(--space-8);  /* Reduced space from header */
     margin-bottom: var(--space-34);
 }
 
@@ -328,11 +384,11 @@ body {
     font-size: var(--text-sm);
     font-weight: 600;
     color: var(--color-sage);  /* Keep green for section headers */
-    margin-bottom: var(--space-21);
+    margin-bottom: var(--space-13);
     letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
-    opacity: 0;
-    transform: translateY(var(--space-3));
+    opacity: 1;
+    transform: translateY(0);
     transition: all var(--duration-slow) var(--ease-out);
 }
 
@@ -341,14 +397,26 @@ body {
     transform: translateY(0);
 }
 
+/* Force all content to be visible */
+.section-content p,
+.section-content h1,
+.section-content h2,
+.section-content h3,
+.section-content h4,
+.section-content h5,
+.section-content h6 {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+}
+
 /* Paragraphs - Refined Reading Experience */
 p {
-    margin-bottom: var(--space-21);
-    font-size: var(--text-lg);
+    margin-bottom: var(--space-13);
+    font-size: var(--text-base);
     line-height: var(--leading-loose);
     letter-spacing: var(--tracking-normal);
-    opacity: 0;
-    transform: translateY(var(--space-5));
+    opacity: 1;
+    transform: translateY(0);
     transition: all var(--duration-slower) var(--ease-out);
 }
 
@@ -493,6 +561,56 @@ body.plain-text-mode h2 {
     transition: none !important;
 }
 
+/* Custom Scroll Indicator */
+.scroll-indicator {
+    position: fixed;
+    right: var(--space-5);
+    top: 50%;
+    width: 4px;
+    height: 80px;
+    background-color: var(--color-sage);
+    border-radius: 2px;
+    transform: translateY(-50%) scaleY(0);
+    transform-origin: center;
+    opacity: 0;
+    transition: all var(--duration-base) var(--ease-out);
+    z-index: 1001;
+    pointer-events: none;
+    cursor: pointer;
+}
+
+body.plain-text-mode .scroll-indicator {
+    opacity: 0.6;
+    transform: translateY(-50%) scaleY(1);
+    pointer-events: auto;
+}
+
+body.plain-text-mode .scroll-indicator.scrolling {
+    opacity: 0.9;
+}
+
+body.plain-text-mode .scroll-indicator:hover {
+    opacity: 1;
+    width: 6px;
+    cursor: grab;
+}
+
+body.plain-text-mode .scroll-indicator:active,
+body.plain-text-mode .scroll-indicator.dragging {
+    opacity: 1;
+    width: 6px;
+    cursor: grabbing;
+    transition: width var(--duration-fast) var(--ease-out);
+}
+
+/* Prevent text selection while dragging */
+body.dragging-scroll {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
 /* Highlight plain text button when active */
 body.plain-text-mode .plain-text-toggle {
     background-color: var(--color-sage);
@@ -503,6 +621,27 @@ body.plain-text-mode .plain-text-toggle {
 .plain-text-toggle {
     background: transparent;
     color: var(--color-sage);
+}
+
+/* Font Size Controls - Only affect content paragraphs */
+body.font-xs .content p {
+    font-size: var(--text-xs) !important;
+}
+
+body.font-small .content p {
+    font-size: var(--text-sm) !important;
+}
+
+body.font-large .content p {
+    font-size: var(--text-lg) !important;
+}
+
+body.font-xl .content p {
+    font-size: var(--text-xl) !important;
+}
+
+body.font-2xl .content p {
+    font-size: var(--text-2xl) !important;
 }
 
 /* Responsive - Mobile First */

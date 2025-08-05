@@ -17,9 +17,12 @@ const elements = {
     menuTrigger: document.querySelector('.menu-trigger'),
     helpTrigger: document.querySelector('.help-trigger'),
     plainTextToggle: document.querySelector('.plain-text-toggle'),
+    fontDecrease: document.querySelector('.font-decrease'),
+    fontIncrease: document.querySelector('.font-increase'),
+    floatingFontControls: document.getElementById('floatingFontControls'),
+    scrollIndicator: document.getElementById('scrollIndicator'),
     navMenu: document.getElementById('navMenu'),
     helpModal: document.getElementById('helpModal'),
-    navClose: document.querySelector('.nav-close'),
     helpClose: document.querySelector('.help-close'),
     navLinks: document.querySelectorAll('.nav-link'),
     sections: document.querySelectorAll('.content-section'),
@@ -33,6 +36,8 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeNavigation();
     initializeHelp();
     initializePlainTextToggle();
+    initializeFontSizeControls();
+    initializeScrollIndicator();
     initializeReadingTracking();
     initializeContentReveal();
     initializeSmoothScroll();
@@ -103,7 +108,6 @@ function updateFadeOverlays(scrollY) {
 // Navigation
 function initializeNavigation() {
     elements.menuTrigger.addEventListener('click', toggleMenu);
-    elements.navClose.addEventListener('click', closeMenu);
     
     // Close on outside click
     document.addEventListener('click', (e) => {
@@ -227,6 +231,21 @@ function initializePlainTextToggle() {
     
     if (savedPreference || prefersReducedMotion) {
         document.body.classList.add('plain-text-mode');
+        
+        // Force fade overlays to be hidden immediately
+        if (elements.fadeTop && elements.fadeBottom) {
+            elements.fadeTop.style.opacity = '0';
+            elements.fadeBottom.style.opacity = '0';
+        }
+        
+        // Ensure all content is visible
+        setTimeout(() => {
+            document.querySelectorAll('p, h1, h2, h3, h4, h5, h6').forEach(element => {
+                element.classList.add('visible');
+                element.style.opacity = '1';
+                element.style.transform = 'translateY(0)';
+            });
+        }, 100);
     }
     
     elements.plainTextToggle.addEventListener('click', () => {
@@ -239,6 +258,199 @@ function initializePlainTextToggle() {
             elements.fadeBottom.style.opacity = '0';
         }
     });
+}
+
+// Font Size Controls
+function initializeFontSizeControls() {
+    const sizes = ['xs', 'small', 'normal', 'large', 'xl', '2xl'];
+    let currentSizeIndex = sizes.indexOf(localStorage.getItem('fontSize')) || 2; // Default to 'normal'
+    applyFontSize(sizes[currentSizeIndex]);
+    
+    // Floating controls scroll behavior
+    let hideTimeout;
+    let lastScrollY = 0;
+    
+    function showFloatingControls() {
+        if (window.scrollY > 200) { // Show after scrolling 200px
+            elements.floatingFontControls.classList.add('visible');
+            elements.floatingFontControls.classList.remove('auto-hide');
+            
+            // Auto-hide after 3 seconds of no scrolling
+            clearTimeout(hideTimeout);
+            hideTimeout = setTimeout(() => {
+                elements.floatingFontControls.classList.add('auto-hide');
+            }, 3000);
+        } else {
+            elements.floatingFontControls.classList.remove('visible');
+        }
+        lastScrollY = window.scrollY;
+    }
+    
+    // Show/hide on scroll
+    window.addEventListener('scroll', showFloatingControls);
+    
+    // Font size button handlers
+    elements.fontDecrease.addEventListener('click', () => {
+        if (currentSizeIndex > 0) {
+            currentSizeIndex--;
+            applyFontSize(sizes[currentSizeIndex]);
+            localStorage.setItem('fontSize', sizes[currentSizeIndex]);
+        }
+    });
+    
+    elements.fontIncrease.addEventListener('click', () => {
+        if (currentSizeIndex < sizes.length - 1) {
+            currentSizeIndex++;
+            applyFontSize(sizes[currentSizeIndex]);
+            localStorage.setItem('fontSize', sizes[currentSizeIndex]);
+        }
+    });
+    
+    // Keep visible on hover/interaction
+    elements.floatingFontControls.addEventListener('mouseenter', () => {
+        clearTimeout(hideTimeout);
+        elements.floatingFontControls.classList.remove('auto-hide');
+    });
+}
+
+function applyFontSize(size) {
+    document.body.classList.remove('font-xs', 'font-small', 'font-large', 'font-xl', 'font-2xl');
+    if (size !== 'normal') {
+        document.body.classList.add(`font-${size}`);
+    }
+}
+
+// Scroll Indicator
+function initializeScrollIndicator() {
+    let scrollTimeout;
+    let isDragging = false;
+    
+    function updateScrollIndicator() {
+        if (!document.body.classList.contains('plain-text-mode') || isDragging) return;
+        
+        const scrollTop = window.pageYOffset;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        
+        // Prevent division by zero
+        if (docHeight <= 0) return;
+        
+        const scrollPercent = Math.max(0, Math.min(1, scrollTop / docHeight));
+        
+        // Position the indicator based on scroll percentage
+        const viewportHeight = window.innerHeight;
+        const indicatorHeight = 80; // Height from CSS
+        const maxTop = viewportHeight - indicatorHeight - 40; // Leave some margin
+        const minTop = 40;
+        const topPosition = minTop + (scrollPercent * (maxTop - minTop));
+        
+        // Smooth transition for the position update
+        elements.scrollIndicator.style.top = `${topPosition}px`;
+        elements.scrollIndicator.classList.add('scrolling');
+        
+        // Remove scrolling class after scroll stops
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => {
+            elements.scrollIndicator.classList.remove('scrolling');
+        }, 150);
+    }
+    
+    // Drag functionality
+    function handleDragStart(e) {
+        if (!document.body.classList.contains('plain-text-mode')) return;
+        
+        e.preventDefault();
+        isDragging = true;
+        elements.scrollIndicator.classList.add('dragging');
+        document.body.classList.add('dragging-scroll');
+        
+        const startY = e.type === 'mousedown' ? e.clientY : e.touches[0].clientY;
+        const startScrollTop = window.pageYOffset;
+        
+        function handleDragMove(e) {
+            e.preventDefault();
+            
+            const currentY = e.type === 'mousemove' ? e.clientY : e.touches[0].clientY;
+            const deltaY = currentY - startY;
+            
+            // Calculate scroll position based on drag distance
+            const viewportHeight = window.innerHeight;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollRatio = deltaY / (viewportHeight * 0.8); // Use 80% of viewport for drag range
+            const newScrollTop = Math.max(0, Math.min(docHeight, startScrollTop + (scrollRatio * docHeight)));
+            
+            window.scrollTo(0, newScrollTop);
+            
+            // Manually update indicator position during drag
+            const scrollPercent = newScrollTop / docHeight;
+            const indicatorHeight = 80;
+            const maxTop = viewportHeight - indicatorHeight - 40;
+            const minTop = 40;
+            const topPosition = minTop + (scrollPercent * (maxTop - minTop));
+            elements.scrollIndicator.style.top = `${topPosition}px`;
+        }
+        
+        function handleDragEnd() {
+            isDragging = false;
+            elements.scrollIndicator.classList.remove('dragging');
+            document.body.classList.remove('dragging-scroll');
+            
+            document.removeEventListener('mousemove', handleDragMove);
+            document.removeEventListener('mouseup', handleDragEnd);
+            document.removeEventListener('touchmove', handleDragMove);
+            document.removeEventListener('touchend', handleDragEnd);
+        }
+        
+        document.addEventListener('mousemove', handleDragMove);
+        document.addEventListener('mouseup', handleDragEnd);
+        document.addEventListener('touchmove', handleDragMove, { passive: false });
+        document.addEventListener('touchend', handleDragEnd);
+    }
+    
+    // Initialize position when plain text mode is toggled
+    function initializeIndicatorPosition() {
+        if (document.body.classList.contains('plain-text-mode')) {
+            // Set initial position based on current scroll position
+            const currentScrollTop = window.pageYOffset;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            
+            if (docHeight > 0) {
+                const scrollPercent = Math.max(0, Math.min(1, currentScrollTop / docHeight));
+                const viewportHeight = window.innerHeight;
+                const indicatorHeight = 80;
+                const maxTop = viewportHeight - indicatorHeight - 40;
+                const minTop = 40;
+                const topPosition = minTop + (scrollPercent * (maxTop - minTop));
+                
+                // Set position immediately without transition
+                elements.scrollIndicator.style.transition = 'none';
+                elements.scrollIndicator.style.top = `${topPosition}px`;
+                
+                // Restore transition after a moment
+                setTimeout(() => {
+                    elements.scrollIndicator.style.transition = '';
+                }, 50);
+            }
+        }
+    }
+    
+    // Watch for plain text mode changes
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                initializeIndicatorPosition();
+            }
+        });
+    });
+    
+    observer.observe(document.body, { attributes: true });
+    
+    // Event listeners
+    elements.scrollIndicator.addEventListener('mousedown', handleDragStart);
+    elements.scrollIndicator.addEventListener('touchstart', handleDragStart);
+    window.addEventListener('scroll', updateScrollIndicator);
+    
+    // Initial setup
+    initializeIndicatorPosition();
 }
 
 // Reading tracking with IntersectionObserver
@@ -444,10 +656,12 @@ function restoreLastPosition() {
 // Load markdown content
 async function loadMarkdownContent() {
     try {
+        console.log('Starting to load markdown content...');
         const response = await fetch('./content.md');
         if (!response.ok) throw new Error('Failed to load content');
         
         const markdown = await response.text();
+        console.log('Markdown loaded, length:', markdown.length);
         const parts = markdown.split(/^## /m);
         const sections = parts.slice(1).filter(s => s.trim());
         
@@ -465,7 +679,19 @@ async function loadMarkdownContent() {
                 const contentDiv = sectionElement.querySelector('.section-content');
                 if (contentDiv) {
                     // Convert markdown to HTML
-                    const html = marked.parse(content);
+                    let html;
+                    if (typeof marked !== 'undefined' && marked.parse) {
+                        html = marked.parse(content);
+                    } else {
+                        console.warn('Marked.js not available, using simple text conversion');
+                        // Simple fallback - convert line breaks to paragraphs
+                        html = content
+                            .split('\n\n')
+                            .filter(p => p.trim())
+                            .map(p => `<p>${p.trim().replace(/\n/g, ' ')}</p>`)
+                            .join('');
+                    }
+                    
                     contentDiv.innerHTML = html;
                     console.log(`Loaded content into ${title}`);
                     
@@ -493,6 +719,17 @@ async function loadMarkdownContent() {
         });
     } catch (error) {
         console.error('Error loading content:', error);
+        console.log('Trying alternative loading method...');
+        
+        // Show a message to the user about serving locally
+        console.warn('Content loading failed. If viewing locally, please serve through a web server (e.g., python -m http.server 8000) to load markdown content.');
+        
+        // Add a temporary message to sections
+        document.querySelectorAll('.section-content').forEach(contentDiv => {
+            if (!contentDiv.innerHTML.trim()) {
+                contentDiv.innerHTML = '<p style="color: #666; font-style: italic;">Content will load when served through a web server. For local development, run: <code>python -m http.server 8000</code></p>';
+            }
+        });
     }
 }
 
