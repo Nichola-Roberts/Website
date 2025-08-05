@@ -53,6 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeTitleClick();
     initializeTotalTimeTracking();
     initializeNotesFeature();
+    initializeTransferFeature();
     loadMarkdownContent();
     loadGuideContent();
     
@@ -1721,5 +1722,265 @@ function hideAllNoteInputs() {
 function hideAllEditContainers() {
     const editContainers = document.querySelectorAll('.note-edit-container');
     editContainers.forEach(container => container.remove());
+}
+
+// Initialize transfer feature
+function initializeTransferFeature() {
+    const transferToggle = document.querySelector('.transfer-toggle');
+    const transferModal = document.getElementById('transferModal');
+    const transferClose = document.querySelector('.transfer-close');
+    const modalBackdrop = document.getElementById('modalBackdrop');
+    
+    if (!transferToggle || !transferModal) return;
+    
+    // Initialize transfer system
+    const transferSystem = new DeviceTransfer();
+    let currentImportData = null;
+    
+    // Show/hide modal
+    function showTransferModal() {
+        transferModal.classList.add('active');
+        modalBackdrop.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        
+        // Temporarily hide fade overlays while modal is open
+        const fadeTop = document.querySelector('.fade-top');
+        const fadeBottom = document.querySelector('.fade-bottom');
+        if (fadeTop) {
+            fadeTop.style.display = 'none';
+        }
+        if (fadeBottom) {
+            fadeBottom.style.display = 'none';
+        }
+        
+        // Ensure modal is not affected by any filters
+        transferModal.style.filter = 'none';
+        transferModal.style.backdropFilter = 'none';
+    }
+    
+    function hideTransferModal() {
+        transferModal.classList.remove('active');
+        modalBackdrop.classList.remove('active');
+        document.body.style.overflow = '';
+        
+        // Restore fade overlays when modal closes
+        const fadeTop = document.querySelector('.fade-top');
+        const fadeBottom = document.querySelector('.fade-bottom');
+        if (fadeTop) {
+            fadeTop.style.display = '';
+        }
+        if (fadeBottom) {
+            fadeBottom.style.display = '';
+        }
+        
+        resetTransferState();
+    }
+    
+    function resetTransferState() {
+        // Reset export
+        document.getElementById('exportResult').style.display = 'none';
+        document.getElementById('generateCodeBtn').disabled = false;
+        document.getElementById('generateCodeBtn').textContent = 'Generate';
+        
+        // Reset import
+        document.getElementById('importResult').style.display = 'none';
+        document.getElementById('importCode').value = '';
+        document.getElementById('inputSection').style.display = 'block';
+        hideImportStates();
+    }
+    
+    function hideImportStates() {
+        document.getElementById('importSuccess').style.display = 'none';
+        document.getElementById('importConflicts').style.display = 'none';
+        document.getElementById('importError').style.display = 'none';
+    }
+    
+    
+    // Event listeners
+    transferToggle.addEventListener('click', showTransferModal);
+    transferClose.addEventListener('click', hideTransferModal);
+    
+    // Close on backdrop click
+    modalBackdrop.addEventListener('click', (e) => {
+        if (e.target === modalBackdrop) hideTransferModal();
+    });
+    
+    // Close on modal background click (outside the modal content)
+    transferModal.addEventListener('click', (e) => {
+        if (e.target === transferModal) hideTransferModal();
+    });
+    
+    // Export functionality
+    const generateCodeBtn = document.getElementById('generateCodeBtn');
+    const copyCodeBtn = document.getElementById('copyCodeBtn');
+    
+    generateCodeBtn.addEventListener('click', async () => {
+        generateCodeBtn.disabled = true;
+        generateCodeBtn.textContent = 'Generating...';
+        
+        try {
+            const result = await transferSystem.exportData();
+            
+            if (result.success) {
+                document.getElementById('transferCode').textContent = result.code;
+                document.getElementById('exportResult').style.display = 'block';
+                document.getElementById('inputSection').style.display = 'none';
+                
+                generateCodeBtn.textContent = 'Generated ✓';
+            } else {
+                alert('Failed to generate transfer code: ' + result.error);
+                generateCodeBtn.disabled = false;
+                generateCodeBtn.textContent = 'Generate';
+            }
+        } catch (error) {
+            alert('Error: ' + error.message);
+            generateCodeBtn.disabled = false;
+            generateCodeBtn.textContent = 'Generate';
+        }
+    });
+    
+    copyCodeBtn.addEventListener('click', async () => {
+        const code = document.getElementById('transferCode').textContent;
+        try {
+            await navigator.clipboard.writeText(code);
+            const originalText = copyCodeBtn.textContent;
+            copyCodeBtn.textContent = 'Copied!';
+            setTimeout(() => {
+                copyCodeBtn.textContent = originalText;
+            }, 2000);
+        } catch (error) {
+            // Fallback for older browsers
+            const textArea = document.createElement('textarea');
+            textArea.value = code;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            
+            copyCodeBtn.textContent = 'Copied!';
+            setTimeout(() => {
+                copyCodeBtn.textContent = 'Copy Code';
+            }, 2000);
+        }
+    });
+    
+    
+    // Import functionality
+    const importDataBtn = document.getElementById('importDataBtn');
+    const importCodeInput = document.getElementById('importCode');
+    const mergeDataBtn = document.getElementById('mergeDataBtn');
+    const replaceDataBtn = document.getElementById('replaceDataBtn');
+    
+    // Format input as user types - allow all alphanumeric
+    importCodeInput.addEventListener('input', (e) => {
+        e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+    });
+    
+    importDataBtn.addEventListener('click', async () => {
+        const code = importCodeInput.value.trim();
+        
+        if (!code || code.length !== 8) {
+            alert('Please enter a valid 8-character transfer code');
+            return;
+        }
+        
+        importDataBtn.disabled = true;
+        importDataBtn.textContent = 'Importing...';
+        hideImportStates();
+        
+        try {
+            const result = await transferSystem.importData(code);
+            
+            if (result.success) {
+                currentImportData = result.data;
+                
+                // Try to apply directly first
+                const applyResult = transferSystem.applyImportedData(result.data);
+                
+                if (applyResult.success) {
+                    // Success - no conflicts
+                    document.getElementById('importSuccess').style.display = 'block';
+                    document.getElementById('importResult').style.display = 'block';
+                } else {
+                    // Conflicts detected
+                    document.getElementById('importConflicts').style.display = 'block';
+                    document.getElementById('importResult').style.display = 'block';
+                }
+            } else {
+                document.getElementById('importError').style.display = 'block';
+                document.getElementById('importErrorMessage').textContent = result.error;
+                document.getElementById('importResult').style.display = 'block';
+            }
+        } catch (error) {
+            document.getElementById('importError').style.display = 'block';
+            document.getElementById('importErrorMessage').textContent = error.message;
+            document.getElementById('importResult').style.display = 'block';
+        } finally {
+            importDataBtn.disabled = false;
+            importDataBtn.textContent = 'Import Data';
+        }
+    });
+    
+    // Conflict resolution
+    mergeDataBtn.addEventListener('click', () => {
+        if (currentImportData) {
+            transferSystem.mergeImportedData(currentImportData);
+            document.getElementById('importConflicts').style.display = 'none';
+            document.getElementById('importSuccess').style.display = 'block';
+        }
+    });
+    
+    replaceDataBtn.addEventListener('click', () => {
+        if (currentImportData && confirm('This will replace ALL your current data. Are you sure?')) {
+            // Clear existing data first
+            transferSystem.STORAGE_KEYS.forEach(key => {
+                localStorage.removeItem(key);
+            });
+            
+            // Apply imported data
+            transferSystem.applyImportedData(currentImportData);
+            
+            document.getElementById('importConflicts').style.display = 'none';
+            document.getElementById('importSuccess').style.display = 'block';
+        }
+    });
+
+    // Delete local data functionality
+    const deleteLocalDataBtn = document.getElementById('deleteLocalDataBtn');
+    
+    deleteLocalDataBtn.addEventListener('click', () => {
+        const confirmDelete = confirm(
+            'Are you sure you want to delete all your local data?\n\n' +
+            'This will permanently remove:\n' +
+            '• All your notes and annotations\n' +
+            '• Reading progress and time tracking\n' +
+            '• All preferences and settings\n\n' +
+            'This action cannot be undone.'
+        );
+        
+        if (confirmDelete) {
+            // Clear all transfer-related localStorage data
+            transferSystem.STORAGE_KEYS.forEach(key => {
+                localStorage.removeItem(key);
+            });
+            
+            // Clear any other app-related data
+            localStorage.clear();
+            
+            // Reset current state
+            if (window.state) {
+                window.state.notes = {};
+                window.state.isNotesMode = false;
+                window.state.totalTimeOnSite = 0;
+                window.state.readingTimes = {};
+                window.state.currentSection = 0;
+            }
+            
+            alert('All local data has been deleted. The page will refresh.');
+            
+            // Refresh the page to reset everything
+            window.location.reload();
+        }
+    });
 }
 

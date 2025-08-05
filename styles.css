@@ -1088,6 +1088,297 @@ body:not(.notes-mode) .note-input-container {
     color: var(--color-sage) !important;
 }
 
+/* Transfer Modal Styling */
+.transfer-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(249, 250, 249, 0.85);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: var(--space-4);
+    backdrop-filter: none !important;
+    filter: none !important;
+}
+
+.transfer-modal.active {
+    display: flex;
+}
+
+.transfer-modal-inner {
+    background: white;
+    border-radius: 16px;
+    padding: var(--space-8);
+    max-width: 420px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    border: 2px solid var(--color-sage);
+    z-index: 10000;
+    backdrop-filter: none !important;
+    filter: none !important;
+}
+
+.transfer-close {
+    position: absolute;
+    top: var(--space-5);
+    right: var(--space-5);
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.transfer-close:hover {
+    background: var(--color-sage);
+    color: white;
+}
+
+/* Transfer Content */
+.transfer-content {
+    text-align: center;
+    padding: var(--space-4) 0;
+}
+
+.transfer-input-section {
+    margin-top: var(--space-8);
+    padding-top: var(--space-6);
+}
+
+/* Transfer Buttons */
+.transfer-button {
+    padding: var(--space-5) var(--space-8);
+    border: 1px solid rgba(181, 188, 181, 0.3);
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 400;
+    transition: all 0.2s ease;
+    margin: var(--space-2);
+    font-size: 1rem;
+    background: white;
+    color: var(--color-text-primary);
+}
+
+.transfer-button:hover {
+    background: #f8f9fa;
+    border-color: var(--color-sage);
+}
+
+.transfer-button.secondary {
+    background: var(--color-text-secondary);
+    color: white;
+}
+
+.transfer-button.danger {
+    background: #dc3545;
+    color: white;
+}
+
+.transfer-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Transfer Code Display */
+.transfer-code-display {
+    text-align: center;
+    margin: var(--space-4) 0;
+}
+
+.transfer-code-display label {
+    display: block;
+    margin-bottom: var(--space-2);
+    color: var(--color-text-primary);
+    font-weight: 500;
+}
+
+.code-display {
+    font-family: 'Courier New', monospace;
+    font-size: 2rem;
+    font-weight: bold;
+    letter-spacing: 0.3em;
+    color: var(--color-sage);
+    background: #f8f9fa;
+    padding: var(--space-5);
+    border-radius: 4px;
+    margin: var(--space-4) 0;
+    border: 1px solid rgba(181, 188, 181, 0.3);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.copy-code-btn {
+    background: white;
+    color: var(--color-text-primary);
+    border: 1px solid rgba(181, 188, 181, 0.3);
+    padding: var(--space-3) var(--space-4);
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    margin-top: var(--space-2);
+    font-weight: 400;
+}
+
+.copy-code-btn:hover {
+    background: #f8f9fa;
+    border-color: var(--color-sage);
+}
+
+/* Transfer Input */
+.transfer-input-section {
+    text-align: center;
+}
+
+.transfer-input-section label {
+    display: block;
+    margin-bottom: var(--space-2);
+    color: var(--color-text-primary);
+    font-weight: 500;
+}
+
+.transfer-code-input {
+    font-family: inherit;
+    font-size: 1rem;
+    letter-spacing: normal;
+    padding: var(--space-5) var(--space-4);
+    border: 1px solid rgba(181, 188, 181, 0.3);
+    border-radius: 4px;
+    text-align: center;
+    width: 260px;
+    margin: var(--space-4) 0;
+    background: white;
+    box-shadow: none;
+}
+
+.transfer-code-input:focus {
+    outline: none;
+    border-color: var(--color-sage);
+}
+
+.transfer-code-input::placeholder {
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+    opacity: 0.7;
+    text-transform: lowercase;
+}
+
+/* Transfer Results */
+.transfer-result {
+    margin-top: var(--space-4);
+    padding: var(--space-4);
+    border-radius: var(--border-radius);
+}
+
+.transfer-expiry {
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+    margin-top: var(--space-2);
+}
+
+.transfer-note {
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+}
+
+.refresh-note {
+    font-style: italic;
+    color: var(--color-text-secondary);
+}
+
+.privacy-note {
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    margin-top: var(--space-6);
+    font-style: italic;
+}
+
+/* Delete Section */
+.delete-section {
+    margin-top: var(--space-8);
+    padding-top: var(--space-6);
+    border-top: 1px solid rgba(181, 188, 181, 0.2);
+    text-align: center;
+}
+
+.delete-button {
+    padding: var(--space-3) var(--space-6);
+    border: 1px solid rgba(220, 53, 69, 0.3);
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 400;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+    background: white;
+    color: #dc3545;
+}
+
+.delete-button:hover {
+    background: #fff5f5;
+    border-color: #dc3545;
+}
+
+/* Import States */
+.import-success {
+    background: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+}
+
+.import-conflicts {
+    background: #fff3cd;
+    border: 1px solid #ffeaa7;
+    color: #856404;
+}
+
+.import-error {
+    background: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+}
+
+/* Mobile adjustments */
+@media (max-width: 48rem) {
+    .transfer-modal-inner {
+        padding: var(--space-6);
+        margin: var(--space-3);
+        max-width: 360px;
+    }
+    
+    .code-display {
+        font-size: 1.5rem;
+        letter-spacing: 0.2em;
+        padding: var(--space-4);
+    }
+    
+    .transfer-code-input {
+        font-size: 1.2rem;
+        width: 240px;
+    }
+    
+    .transfer-input-section {
+        margin-top: var(--space-6);
+        padding-top: var(--space-4);
+    }
+    
+    .delete-section {
+        margin-top: var(--space-6);
+        padding-top: var(--space-4);
+    }
+}
+
 /* Reset plain text button when not in plain text mode */
 body:not(.plain-text-mode) .plain-text-toggle {
     background: transparent !important;

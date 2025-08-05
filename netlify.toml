@@ -1,0 +1,14 @@
+[build]
+  functions = "netlify/functions"
+
+[functions]
+  # For production, use Redis endpoints
+  store-transfer = "netlify/functions/store-transfer-redis.js"
+  retrieve-transfer = "netlify/functions/retrieve-transfer-redis.js"
+
+[[headers]]
+  for = "/.netlify/functions/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Headers = "Content-Type"
+    Access-Control-Allow-Methods = "GET, POST, OPTIONS"

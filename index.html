@@ -52,6 +52,14 @@
         </button>
         <button class="font-button font-decrease" aria-label="Decrease font size">-</button>
         <button class="font-button font-increase" aria-label="Increase font size">+</button>
+        <button class="font-button transfer-toggle" aria-label="Transfer data between devices" title="Transfer your notes and progress to another device">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M17 1l4 4-4 4"/>
+                <path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+                <path d="M7 23l-4-4 4-4"/>
+                <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+            </svg>
+        </button>
     </div>
 
     <!-- Custom Scroll Indicator -->
@@ -92,6 +100,74 @@
     <div class="help-modal" id="helpModal">
         <div class="help-modal-inner">
             <div class="help-sections"></div>
+        </div>
+    </div>
+
+    <!-- Transfer Modal -->
+    <div class="transfer-modal" id="transferModal">
+        <div class="transfer-modal-inner">
+            <button class="transfer-close" aria-label="Close transfer">&times;</button>
+            
+            <div class="transfer-content">
+                <!-- Generate Code Button -->
+                <button class="transfer-button" id="generateCodeBtn">
+                    Generate
+                </button>
+                
+                <!-- Generated Code Result -->
+                <div class="transfer-result" id="exportResult" style="display: none;">
+                    <div class="transfer-code-display">
+                        <div class="code-display" id="transferCode"></div>
+                        <button class="copy-code-btn" id="copyCodeBtn">Copy Code</button>
+                    </div>
+                    <p class="transfer-expiry">Active for 2 hours</p>
+                </div>
+
+                <!-- Input Code Section -->
+                <div class="transfer-input-section" id="inputSection">
+                    <input type="text" id="importCode" class="transfer-code-input" 
+                           placeholder="enter transfer code" maxlength="8" 
+                           style="text-transform: uppercase">
+                    <button class="transfer-button" id="importDataBtn">
+                        Import
+                    </button>
+                </div>
+                
+                <!-- Import Results -->
+                <div class="transfer-result" id="importResult" style="display: none;">
+                    <div class="import-success" id="importSuccess" style="display: none;">
+                        <h4>✅ Import Successful!</h4>
+                        <p>Your data has been transferred successfully.</p>
+                        <p class="refresh-note">Refresh the page to see your imported notes and progress.</p>
+                    </div>
+                    
+                    <div class="import-conflicts" id="importConflicts" style="display: none;">
+                        <h4>⚠️ Data Conflicts Detected</h4>
+                        <p>You already have data on this device. How would you like to handle this?</p>
+                        <button class="transfer-button secondary" id="mergeDataBtn">
+                            Merge Data (Recommended)
+                        </button>
+                        <button class="transfer-button danger" id="replaceDataBtn">
+                            Replace All Data
+                        </button>
+                    </div>
+                    
+                    <div class="import-error" id="importError" style="display: none;">
+                        <h4>❌ Import Failed</h4>
+                        <p id="importErrorMessage"></p>
+                    </div>
+                </div>
+
+                <!-- Privacy Note -->
+                <p class="privacy-note">Data is encrypted and cannot be accessed by anyone without the code.</p>
+
+                <!-- Delete Local Data Section -->
+                <div class="delete-section">
+                    <button class="delete-button" id="deleteLocalDataBtn">
+                        Delete Local Data
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -277,6 +353,7 @@
         Estimated time left in section - <span id="timeRemaining">calculating...</span>
     </div>
 
+    <script src="transfer.js"></script>
     <script src="scripts.js"></script>
 </body>
 </html>
