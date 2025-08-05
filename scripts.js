@@ -1,10 +1,14 @@
+// Energy Landscape Theory - Sleek Interactions
+
 // State Management
 const state = {
     currentSection: parseInt(localStorage.getItem('lastSection')) || 0,
     sectionStartTime: Date.now(),
     readingTimes: JSON.parse(localStorage.getItem('readingTimes')) || {},
     isMenuOpen: false,
-    isHelpOpen: false
+    isHelpOpen: false,
+    scrollPosition: 0,
+    readingSpeed: 0
 };
 
 // DOM Elements
@@ -19,7 +23,8 @@ const elements = {
     helpClose: document.querySelector('.help-close'),
     navLinks: document.querySelectorAll('.nav-link'),
     sections: document.querySelectorAll('.content-section'),
-    paragraphs: document.querySelectorAll('p')
+    fadeTop: document.querySelector('.fade-top'),
+    fadeBottom: document.querySelector('.fade-bottom')
 };
 
 // Initialize
@@ -29,113 +34,87 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeHelp();
     initializePlainTextToggle();
     initializeReadingTracking();
-    initializeParagraphEffects();
+    initializeContentReveal();
     initializeSmoothScroll();
     loadMarkdownContent();
     loadGuideContent();
     
-    // Restore last reading position after content loads
-    setTimeout(restoreLastPosition, 1000);
+    // Restore reading position
+    setTimeout(restoreLastPosition, 800);
 });
 
-// Header scroll effect
+// Header - Subtle scroll effect
 function initializeHeader() {
     let lastScroll = 0;
+    let ticking = false;
     
-    window.addEventListener('scroll', () => {
+    function updateHeader() {
         const currentScroll = window.pageYOffset;
         
+        // Add scrolled class for subtle border
         if (currentScroll > 50) {
             elements.header.classList.add('scrolled');
         } else {
             elements.header.classList.remove('scrolled');
         }
         
-        // Dreamy fade effect for text elements (unless in plain text mode)
-        if (!document.body.classList.contains('plain-text-mode')) {
-            applyDreamyFade();
-        }
+        // Update fade overlays opacity based on scroll
+        updateFadeOverlays(currentScroll);
         
         lastScroll = currentScroll;
-    });
-}
-
-// Track elements that have been triggered for fade-in
-const fadedInElements = new WeakSet();
-
-// Dreamy fade effect for scrolling text - back to smooth opacity
-function applyDreamyFade() {
-    const fadeStartTop = 300; // Start fading at top
-    const fadeEndTop = 85; // Fully transparent at top
+        ticking = false;
+    }
     
-    const windowHeight = window.innerHeight;
-    const fadeStartBottom = windowHeight - 200; // Start fading at bottom
-    const fadeEndBottom = windowHeight - 50; // Fully transparent at bottom
-    
-    // Apply to all text content, not the hero image
-    const textElements = document.querySelectorAll('.content p, .content h2');
-    
-    textElements.forEach(element => {
-        const rect = element.getBoundingClientRect();
-        const elementTop = rect.top;
-        const elementBottom = rect.bottom;
-        
-        // Fade out at top using opacity (matching bottom fade style)
-        if (elementTop < fadeStartTop) {
-            const fadePercent = Math.max(0, Math.min(1, (elementTop - fadeEndTop) / (fadeStartTop - fadeEndTop)));
-            
-            element.style.opacity = fadePercent;
-            element.style.color = ''; // Reset color
-            element.style.filter = `blur(${(1 - fadePercent) * 0.4}px)`;
-            element.style.transform = `translateY(${(1 - fadePercent) * -3}px)`;
-            element.style.transition = 'none';
-        } 
-        // Fade in at bottom using opacity (matching top fade style)
-        else if (elementBottom > fadeStartBottom && elementTop < windowHeight) {
-            // If we haven't started fading this element in yet
-            if (!fadedInElements.has(element)) {
-                fadedInElements.add(element);
-                
-                // Start invisible with blur and offset
-                element.style.opacity = '0';
-                element.style.color = ''; // Reset color
-                element.style.filter = 'blur(0.4px)';
-                element.style.transform = 'translateY(12px)';
-                
-                // Animate to full visibility
-                setTimeout(() => {
-                    element.style.transition = 'all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-                    element.style.opacity = '1';
-                    element.style.filter = '';
-                    element.style.transform = '';
-                }, 50);
-            }
-        } 
-        // Fully visible in the middle
-        else if (elementTop >= fadeStartTop && elementBottom <= fadeStartBottom) {
-            if (fadedInElements.has(element)) {
-                element.style.opacity = '1';
-                element.style.color = ''; // Reset to default color
-                element.style.filter = '';
-                element.style.transform = '';
-            }
+    window.addEventListener('scroll', () => {
+        if (!ticking) {
+            window.requestAnimationFrame(updateHeader);
+            ticking = true;
         }
     });
 }
 
-// Navigation menu
+// Fade overlays - Very subtle
+function updateFadeOverlays(scrollY) {
+    if (document.body.classList.contains('plain-text-mode')) return;
+    
+    // Get hero bottom position
+    const hero = document.querySelector('.hero');
+    const heroBottom = hero ? hero.offsetTop + hero.offsetHeight : 0;
+    
+    // Only show top fade after scrolling past hero image
+    if (scrollY > heroBottom) {
+        const fadeProgress = Math.min(1, (scrollY - heroBottom) / 200);
+        elements.fadeTop.style.opacity = fadeProgress * 0.8; // Max 80% opacity
+    } else {
+        elements.fadeTop.style.opacity = 0;
+    }
+    
+    // Bottom fade is always visible but subtle
+    const windowHeight = window.innerHeight;
+    const documentHeight = document.documentElement.scrollHeight;
+    const maxScroll = documentHeight - windowHeight;
+    const scrollProgress = scrollY / maxScroll;
+    
+    // Reduce bottom fade near the end
+    const bottomOpacity = scrollProgress > 0.9 ? (1 - scrollProgress) * 10 : 1;
+    elements.fadeBottom.style.opacity = bottomOpacity;
+}
+
+// Navigation
 function initializeNavigation() {
     elements.menuTrigger.addEventListener('click', toggleMenu);
     elements.navClose.addEventListener('click', closeMenu);
     
-    // Close menu when clicking outside
+    // Close on outside click
     document.addEventListener('click', (e) => {
-        if (state.isMenuOpen && !elements.navMenu.contains(e.target) && !elements.menuTrigger.contains(e.target)) {
+        if (state.isMenuOpen && 
+            !elements.navMenu.contains(e.target) && 
+            !elements.menuTrigger.contains(e.target)) {
             closeMenu();
         }
     });
     
-    // Smooth scroll for nav links
+    // Smooth scroll navigation
     elements.navLinks.forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
@@ -143,7 +122,15 @@ function initializeNavigation() {
             const targetSection = document.getElementById(targetId);
             
             if (targetSection) {
-                targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                // Calculate position with offset for header
+                const headerHeight = elements.header.offsetHeight;
+                const targetPosition = targetSection.offsetTop - headerHeight - 20;
+                
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
+                });
+                
                 closeMenu();
             }
         });
@@ -153,7 +140,7 @@ function initializeNavigation() {
 function toggleMenu() {
     state.isMenuOpen = !state.isMenuOpen;
     elements.navMenu.classList.toggle('active');
-    updateReadingTimeDisplay();
+    updateReadingProgress();
 }
 
 function closeMenu() {
@@ -163,20 +150,69 @@ function closeMenu() {
 
 // Help modal
 function initializeHelp() {
-    elements.helpTrigger.addEventListener('click', openHelp);
-    elements.helpClose.addEventListener('click', closeHelp);
+    elements.helpTrigger.addEventListener('click', toggleHelp);
     
-    elements.helpModal.addEventListener('click', (e) => {
-        if (e.target === elements.helpModal) {
+    // Close when clicking outside the modal content
+    document.addEventListener('click', (e) => {
+        if (state.isHelpOpen && 
+            !elements.helpModal.contains(e.target) && 
+            !elements.helpTrigger.contains(e.target)) {
             closeHelp();
         }
     });
+    
+    // Prevent closing when clicking inside the modal
+    const helpInner = document.querySelector('.help-modal-inner');
+    if (helpInner) {
+        helpInner.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+    }
 }
 
-function openHelp() {
-    state.isHelpOpen = true;
-    elements.helpModal.classList.add('active');
-    updateHelpSections();
+function toggleHelp() {
+    state.isHelpOpen = !state.isHelpOpen;
+    if (state.isHelpOpen) {
+        elements.helpModal.classList.add('active');
+        console.log('Help opened, current section should be:', state.currentSection);
+        // Update guide progress and scroll to current section
+        setTimeout(() => {
+            updateGuideProgress();
+            initializeGuideScrollTracking();
+        }, 150); // Slightly longer delay for modal to appear
+    } else {
+        elements.helpModal.classList.remove('active');
+    }
+}
+
+// Track scrolling within the guide to highlight visible sections
+function initializeGuideScrollTracking() {
+    const helpModalInner = document.querySelector('.help-modal-inner');
+    if (!helpModalInner) return;
+    
+    const guideSections = document.querySelectorAll('.help-section');
+    
+    const guideObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
+                // Clear all current highlighting
+                guideSections.forEach(section => {
+                    section.classList.remove('guide-current');
+                });
+                
+                // Highlight the section that's most visible in the guide
+                entry.target.classList.add('guide-current');
+            }
+        });
+    }, {
+        root: helpModalInner,
+        threshold: [0.5],
+        rootMargin: '-10% 0px -10% 0px'
+    });
+    
+    guideSections.forEach(section => {
+        guideObserver.observe(section);
+    });
 }
 
 function closeHelp() {
@@ -186,302 +222,321 @@ function closeHelp() {
 
 // Plain text toggle
 function initializePlainTextToggle() {
-    if (elements.plainTextToggle) {
-        elements.plainTextToggle.addEventListener('click', togglePlainTextMode);
-        
-        // Restore saved preference or check if user prefers reduced motion
-        const savedPreference = localStorage.getItem('plainTextMode') === 'true';
-        const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        
-        if (savedPreference || prefersReducedMotion) {
-            document.body.classList.add('plain-text-mode');
-            updatePlainTextButtonAppearance(true);
-        }
+    const savedPreference = localStorage.getItem('plainTextMode') === 'true';
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    
+    if (savedPreference || prefersReducedMotion) {
+        document.body.classList.add('plain-text-mode');
     }
-}
-
-function togglePlainTextMode() {
-    document.body.classList.toggle('plain-text-mode');
     
-    // Store preference
-    const isPlainText = document.body.classList.contains('plain-text-mode');
-    localStorage.setItem('plainTextMode', isPlainText);
-    
-    // Update button appearance
-    updatePlainTextButtonAppearance(isPlainText);
-}
-
-function updatePlainTextButtonAppearance(isActive) {
-    if (isActive) {
-        elements.plainTextToggle.style.backgroundColor = 'var(--color-primary-lighter)';
-        elements.plainTextToggle.style.color = 'var(--color-primary)';
-    } else {
-        elements.plainTextToggle.style.backgroundColor = '';
-        elements.plainTextToggle.style.color = '';
-    }
-}
-
-function updateHelpSections() {
-    const helpSections = document.querySelectorAll('.help-section');
-    const currentSection = getCurrentSection();
-    
-    helpSections.forEach((section, index) => {
-        section.classList.remove('past', 'current', 'future');
+    elements.plainTextToggle.addEventListener('click', () => {
+        const isPlainText = document.body.classList.toggle('plain-text-mode');
+        localStorage.setItem('plainTextMode', isPlainText);
         
-        if (index < currentSection) {
-            section.classList.add('past');
-        } else if (index === currentSection) {
-            section.classList.add('current');
-            // Scroll to current section in modal
-            setTimeout(() => {
-                section.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }, 100);
-        } else {
-            section.classList.add('future');
+        // Reset fade overlays
+        if (isPlainText) {
+            elements.fadeTop.style.opacity = '0';
+            elements.fadeBottom.style.opacity = '0';
         }
     });
 }
 
-// Reading time tracking
+// Reading tracking with IntersectionObserver
 function initializeReadingTracking() {
-    window.addEventListener('scroll', trackReadingTime);
-    window.addEventListener('beforeunload', saveReadingTime);
+    const observerOptions = {
+        threshold: [0.25, 0.5, 0.75],
+        rootMargin: '-20% 0px -20% 0px'
+    };
     
-    // Initial update
-    updateReadingTimeDisplay();
+    let activeSection = null;
+    
+    const sectionObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            const sectionIndex = parseInt(entry.target.dataset.section);
+            console.log(`Section ${sectionIndex} intersection ratio:`, entry.intersectionRatio);
+            
+            if (entry.intersectionRatio > 0.25) {  // Lower threshold since sections aren't reaching 50%
+                console.log(`Section ${sectionIndex} is now visible (>50%)`);
+                
+                if (activeSection !== sectionIndex) {
+                    console.log(`Switching from section ${activeSection} to ${sectionIndex}`);
+                    
+                    // Save previous section time
+                    if (activeSection !== null) {
+                        const timeSpent = Date.now() - state.sectionStartTime;
+                        state.readingTimes[activeSection] = 
+                            (state.readingTimes[activeSection] || 0) + timeSpent;
+                    }
+                    
+                    // Update current section
+                    activeSection = sectionIndex;
+                    state.currentSection = sectionIndex;
+                    state.sectionStartTime = Date.now();
+                    
+                    console.log('New current section:', state.currentSection);
+                    
+                    // Save state
+                    localStorage.setItem('lastSection', sectionIndex);
+                    localStorage.setItem('readingTimes', JSON.stringify(state.readingTimes));
+                    
+                    // Update navigation and guide
+                    updateReadingProgress();
+                    updateGuideProgress();
+                }
+            }
+        });
+    }, observerOptions);
+    
+    console.log('Observing sections:', elements.sections.length);
+    elements.sections.forEach((section, index) => {
+        console.log(`Observing section ${index}:`, section.id, section.dataset.section);
+        sectionObserver.observe(section);
+    });
 }
 
-function getCurrentSection() {
-    const scrollPosition = window.pageYOffset + window.innerHeight / 2;
-    
-    for (let i = elements.sections.length - 1; i >= 0; i--) {
-        if (elements.sections[i].offsetTop <= scrollPosition) {
-            return i;
-        }
-    }
-    
-    return 0;
-}
-
-function trackReadingTime() {
-    const newSection = getCurrentSection();
-    
-    if (newSection !== state.currentSection) {
-        // Update time for previous section
-        updateSectionTime(state.currentSection);
-        
-        // Start timing new section
-        state.currentSection = newSection;
-        state.sectionStartTime = Date.now();
-        
-        // Save current section to localStorage
-        localStorage.setItem('lastSection', newSection);
-    }
-}
-
-function updateSectionTime(sectionIndex) {
-    if (!state.readingTimes[sectionIndex]) {
-        state.readingTimes[sectionIndex] = 0;
-    }
-    
-    const timeSpent = (Date.now() - state.sectionStartTime) / 1000;
-    state.readingTimes[sectionIndex] += timeSpent;
-    
-    localStorage.setItem('readingTimes', JSON.stringify(state.readingTimes));
-}
-
-function saveReadingTime() {
-    updateSectionTime(state.currentSection);
-}
-
-function getReadingLevel(seconds) {
-    if (!seconds || seconds === 0) return 0;
-    if (seconds < 30) return 1;
-    if (seconds < 60) return 2;
-    if (seconds < 90) return 3;
-    if (seconds < 120) return 4;
-    return 5;
-}
-
-function updateReadingTimeDisplay() {
+// Update reading progress in navigation
+function updateReadingProgress() {
     elements.navLinks.forEach((link, index) => {
         const timeSpent = state.readingTimes[index] || 0;
         const level = getReadingLevel(timeSpent);
-        
-        // Set reading level for text darkening (no time display)
         link.setAttribute('data-reading-level', level);
+    });
+}
+
+// Update guide progress highlighting
+function updateGuideProgress() {
+    const guideSections = document.querySelectorAll('.help-section');
+    
+    console.log('Current section:', state.currentSection); // Debug
+    console.log('Total guide sections:', guideSections.length);
+    
+    guideSections.forEach((section, index) => {
+        // Guide sections should match content sections exactly
+        // Content sections: 0=intro, 1=energy-landscape, 2=fluctuations, etc.
+        // Guide sections: 0=energy-landscape, 1=fluctuations, etc.
+        const contentSectionIndex = index + 1; // Guide section 0 = content section 1
+        
+        // Remove all classes
+        section.classList.remove('past', 'current', 'future');
+        
+        // Add appropriate class based on reading progress
+        // Special handling for introduction (section 0) - mark first guide section as current
+        if (state.currentSection === 0 && index === 0) {
+            section.classList.add('current');
+            console.log(`Guide section ${index} marked as current (intro mode)`);
+        } else if (contentSectionIndex < state.currentSection) {
+            section.classList.add('past');
+            console.log(`Guide section ${index} (content ${contentSectionIndex}) marked as past`);
+        } else if (contentSectionIndex === state.currentSection) {
+            section.classList.add('current');
+            console.log(`Guide section ${index} (content ${contentSectionIndex}) marked as current`);
+        } else {
+            section.classList.add('future');
+            console.log(`Guide section ${index} (content ${contentSectionIndex}) marked as future`);
+        }
+    });
+    
+    // Center on current section when guide opens (instant, no animation)
+    if (state.isHelpOpen) {
+        setTimeout(() => {
+            const currentSection = document.querySelector('.help-section.current');
+            if (currentSection) {
+                currentSection.scrollIntoView({ 
+                    behavior: 'instant', 
+                    block: 'center' 
+                });
+            } else {
+                console.log('No current section found in guide');
+            }
+        }, 100); // Longer delay to ensure classes are applied
+    }
+}
+
+// Calculate reading level (0-5)
+function getReadingLevel(seconds) {
+    if (seconds === 0) return 0;
+    if (seconds < 15) return 1;
+    if (seconds < 30) return 2;
+    if (seconds < 60) return 3;
+    if (seconds < 120) return 4;
+    return 5; // 2+ minutes = deep moss green
+}
+
+// Content reveal on scroll
+function initializeContentReveal() {
+    const revealOptions = {
+        threshold: 0.15,
+        rootMargin: '0px 0px -10% 0px'
+    };
+    
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // Add visible class with slight delay for staggered effect
+                setTimeout(() => {
+                    entry.target.classList.add('visible');
+                }, 50);
+                
+                // Stop observing once revealed
+                revealObserver.unobserve(entry.target);
+            }
+        });
+    }, revealOptions);
+    
+    // Observe all paragraphs and headings
+    document.querySelectorAll('p, h2').forEach(element => {
+        revealObserver.observe(element);
+    });
+}
+
+// Smooth scroll behavior
+function initializeSmoothScroll() {
+    // Already handled in navigation, but add for any other anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        if (!anchor.classList.contains('nav-link')) {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const headerHeight = elements.header.offsetHeight;
+                    const targetPosition = target.offsetTop - headerHeight - 20;
+                    
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        }
     });
 }
 
 // Restore last reading position
 function restoreLastPosition() {
     const lastSection = parseInt(localStorage.getItem('lastSection'));
+    console.log('Restoring to last section:', lastSection);
+    
     if (lastSection && lastSection > 0) {
         const targetSection = elements.sections[lastSection];
+        console.log('Target section found:', targetSection?.id);
+        
         if (targetSection) {
-            // Smooth scroll to the last section
-            targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            const headerHeight = elements.header.offsetHeight;
+            const targetPosition = targetSection.offsetTop - headerHeight - 20;
             
-            // Update current section state
+            console.log(`Scrolling to position: ${targetPosition} for section ${lastSection}`);
+            
+            window.scrollTo({
+                top: targetPosition,
+                behavior: 'smooth'
+            });
+            
+            // Update state to match restored position
             state.currentSection = lastSection;
-            state.sectionStartTime = Date.now();
+            updateReadingProgress();
+            updateGuideProgress();
         }
+    } else {
+        console.log('No last section to restore or starting from beginning');
     }
-}
-
-// Paragraph and heading fade effects
-function initializeParagraphEffects() {
-    const observerOptions = {
-        threshold: [0, 0.3, 1],
-        rootMargin: '-15% 0px -15% 0px'
-    };
-    
-    const contentObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.intersectionRatio > 0.3) {
-                const element = entry.target;
-                
-                if (element.tagName === 'H2') {
-                    // For headings, show them more quickly
-                    const section = element.closest('.content-section');
-                    const sectionId = section?.id;
-                    
-                    // Special case for energy-landscape - show immediately
-                    if (sectionId === 'energy-landscape') {
-                        setTimeout(() => {
-                            element.classList.add('visible');
-                        }, 300);
-                    } else {
-                        setTimeout(() => {
-                            element.classList.add('visible');
-                        }, 400);
-                    }
-                } else {
-                    // For paragraphs, add a slight delay for dreamlike effect
-                    setTimeout(() => {
-                        element.classList.add('visible');
-                    }, Math.random() * 200 + 200);
-                }
-            }
-        });
-    }, observerOptions);
-    
-    // Observe all paragraphs and headings
-    elements.paragraphs.forEach(p => {
-        contentObserver.observe(p);
-    });
-    
-    document.querySelectorAll('.content-section h2').forEach(h => {
-        contentObserver.observe(h);
-    });
-    
-    // Make first paragraph visible immediately
-    const firstParagraph = document.querySelector('.content p');
-    if (firstParagraph) {
-        setTimeout(() => {
-            firstParagraph.classList.add('visible');
-        }, 500);
-    }
-}
-
-// Smooth scroll
-function initializeSmoothScroll() {
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-        });
-    });
 }
 
 // Load markdown content
 async function loadMarkdownContent() {
     try {
-        // For development, use local path
         const response = await fetch('./content.md');
-        
-        if (!response.ok) {
-            throw new Error('Failed to load content');
-        }
+        if (!response.ok) throw new Error('Failed to load content');
         
         const markdown = await response.text();
-        // Split by ## but keep the first part (intro) separate
         const parts = markdown.split(/^## /m);
-        const introContent = parts[0].trim();
         const sections = parts.slice(1).filter(s => s.trim());
         
-        // Handle introduction section specially
-        if (introContent) {
-            const introElement = document.getElementById('introduction');
-            if (introElement) {
-                const contentDiv = introElement.querySelector('.section-content');
-                if (contentDiv) {
-                    contentDiv.innerHTML = introContent.split('\n').map(line => line.trim() ? `<p>${line}</p>` : '').join('');
-                }
-            }
-        }
-        
-        sections.forEach(section => {
+        console.log('Total markdown sections found:', sections.length);
+        sections.forEach((section, index) => {
             const lines = section.split('\n');
             const title = lines[0].trim().toLowerCase().replace(/\s+/g, '-');
             const content = lines.slice(1).join('\n').trim();
             
+            console.log(`Section ${index}: ${title}, content length: ${content.length}`);
+            
             const sectionElement = document.getElementById(title);
             if (sectionElement) {
+                console.log(`Found HTML element for: ${title}`);
                 const contentDiv = sectionElement.querySelector('.section-content');
                 if (contentDiv) {
-                    contentDiv.classList.add('loading');
-                    
                     // Convert markdown to HTML
                     const html = marked.parse(content);
                     contentDiv.innerHTML = html;
-                    contentDiv.classList.remove('loading');
+                    console.log(`Loaded content into ${title}`);
                     
-                    // Observe new paragraphs and headings
-                    const newParagraphs = contentDiv.querySelectorAll('p');
-                    const newHeadings = contentDiv.querySelectorAll('h1, h2, h3, h4, h5, h6');
-                    const observerOptions = {
-                        threshold: [0, 0.3, 1],
-                        rootMargin: '-15% 0px -15% 0px'
-                    };
-                    
-                    const observer = new IntersectionObserver((entries) => {
-                        entries.forEach(entry => {
-                            if (entry.intersectionRatio > 0.3) {
-                                const element = entry.target;
-                                
-                                if (element.tagName.startsWith('H')) {
+                    // Observe new content for reveal effect
+                    contentDiv.querySelectorAll('p, h1, h2, h3, h4, h5, h6').forEach(element => {
+                        const revealObserver = new IntersectionObserver((entries) => {
+                            entries.forEach(entry => {
+                                if (entry.isIntersecting) {
                                     setTimeout(() => {
-                                        element.classList.add('visible');
-                                    }, 200);
-                                } else {
-                                    setTimeout(() => {
-                                        element.classList.add('visible');
-                                    }, Math.random() * 100 + 50);
+                                        entry.target.classList.add('visible');
+                                    }, 50);
+                                    revealObserver.unobserve(entry.target);
                                 }
-                            }
-                        });
-                    }, observerOptions);
-                    
-                    newParagraphs.forEach(p => observer.observe(p));
-                    newHeadings.forEach(h => observer.observe(h));
+                            });
+                        }, { threshold: 0.15, rootMargin: '0px 0px -10% 0px' });
+                        
+                        revealObserver.observe(element);
+                    });
+                } else {
+                    console.error(`No .section-content found in ${title}`);
                 }
+            } else {
+                console.error(`No HTML element found for section: ${title}`);
             }
         });
     } catch (error) {
         console.error('Error loading content:', error);
-        
-        // Fallback content
-        document.querySelectorAll('.section-content').forEach(el => {
-            el.innerHTML = '<p>Content is being updated. Please check back soon.</p>';
-        });
     }
 }
 
-// Utility function for debouncing
+// Load help/guide content
+async function loadGuideContent() {
+    try {
+        const response = await fetch('./guide.md');
+        if (!response.ok) throw new Error('Failed to load guide');
+        
+        const markdown = await response.text();
+        // Split by ## headings to create sections
+        const sections = markdown.split(/^## /m).filter(s => s.trim());
+        
+        const helpSections = document.querySelector('.help-sections');
+        if (helpSections) {
+            // Create guide sections that match content sections
+            const sectionNames = [
+                'Energy Landscape', 'Fluctuations', 'Energy Limit', 'Planning',
+                'Relationships', 'Emotions', 'Emotional Overload', 'Core Beliefs',
+                'Triggers', 'Emergency Escape Routes', 'Protective Structures',
+                'Erosion', 'Holding Patterns', 'False Erosion'
+            ];
+            
+            let guideHTML = '';
+            sections.forEach((section, index) => {
+                const lines = section.split('\n');
+                const title = lines[0].trim();
+                const content = lines.slice(1).join('\n').trim();
+                
+                if (content) {
+                    const html = marked.parse(`## ${title}\n${content}`);
+                    guideHTML += `<div class="help-section">${html}</div>`;
+                }
+            });
+            
+            helpSections.innerHTML = guideHTML;
+            updateGuideProgress();
+        }
+    } catch (error) {
+        console.error('Error loading guide:', error);
+    }
+}
+
+// Performance optimization - Debounce utility
 function debounce(func, wait) {
     let timeout;
     return function executedFunction(...args) {
@@ -494,50 +549,16 @@ function debounce(func, wait) {
     };
 }
 
-// Performance optimization for scroll events
-const debouncedTrackReading = debounce(trackReadingTime, 100);
-window.addEventListener('scroll', debouncedTrackReading);
-
-// Load guide content
-async function loadGuideContent() {
-    try {
-        const response = await fetch('./guide.md');
-        
-        if (!response.ok) {
-            throw new Error('Failed to load guide');
-        }
-        
-        const markdown = await response.text();
-        // Skip the main title (# Quick Guide) and get only ## sections
-        const sections = markdown.split(/^## /m).slice(1).filter(s => s.trim());
-        
-        // Clear existing help sections
-        const helpSections = document.querySelector('.help-sections');
-        if (helpSections) {
-            helpSections.innerHTML = '';
-        }
-        
-        sections.forEach((section, index) => {
-            const lines = section.split('\n');
-            const title = lines[0].trim();
-            const content = lines.slice(1).join('\n').trim();
-            
-            // Create help section element
-            const helpSection = document.createElement('div');
-            helpSection.className = 'help-section';
-            helpSection.setAttribute('data-section', index.toString());
-            
-            // Create single paragraph with bold title and content
-            const paragraph = document.createElement('p');
-            paragraph.innerHTML = `<strong>${title}</strong> ${content}`;
-            helpSection.appendChild(paragraph);
-            
-            if (helpSections) {
-                helpSections.appendChild(helpSection);
-            }
-        });
-        
-    } catch (error) {
-        console.error('Error loading guide:', error);
+// Add subtle parallax to hero image
+window.addEventListener('scroll', debounce(() => {
+    if (document.body.classList.contains('plain-text-mode')) return;
+    
+    const scrolled = window.pageYOffset;
+    const heroImage = document.querySelector('.hero-image img');
+    
+    if (heroImage && scrolled < window.innerHeight) {
+        const speed = 0.5;
+        const yPos = -(scrolled * speed);
+        heroImage.style.transform = `translateY(${yPos}px)`;
     }
-}
+}, 10));

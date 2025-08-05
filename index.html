@@ -8,7 +8,7 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@400;500;600;700&family=Crimson+Text:ital@0;1&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Instrument+Serif&display=swap" rel="stylesheet">
     
     <!-- Styles -->
     <link rel="stylesheet" href="styles.css">
@@ -21,108 +21,78 @@
     <header class="site-header">
         <div class="header-container">
             <div class="header-brand">
-                <h1 class="site-title">Energy Landscape Theory</h1>
+                <h1>Energy Landscape Theory</h1>
                 <p class="site-author">Nichola Roberts</p>
             </div>
             
             <nav class="header-nav">
-                <button class="nav-button menu-trigger" aria-label="Open navigation" title="Navigation menu">
-                    <svg width="16" height="12" viewBox="0 0 20 14" fill="none">
-                        <path d="M0 1H20M0 7H20M0 13H20" stroke="currentColor" stroke-width="2"/>
+                <button class="nav-button menu-trigger" aria-label="Navigation">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M4 6h16M4 12h16M4 18h16"/>
                     </svg>
                 </button>
-                <button class="nav-button help-trigger" aria-label="Open help" title="Quick guide">
-                    <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
-                        <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="2"/>
-                        <path d="M7.5 7.5C7.5 6.11929 8.61929 5 10 5C11.3807 5 12.5 6.11929 12.5 7.5C12.5 8.88071 11.3807 10 10 10V12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        <circle cx="10" cy="15" r="0.5" fill="currentColor"/>
+                <button class="nav-button help-trigger" aria-label="Guide">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M9 9a3 3 0 016 0c0 2-3 3-3 3m0 3h.01"/>
                     </svg>
                 </button>
-                <button class="nav-button plain-text-toggle" aria-label="Toggle plain text mode" title="Plain text mode">
-                    <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
-                        <path d="M3 4h14M3 8h14M3 12h14M3 16h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <button class="nav-button plain-text-toggle" aria-label="Plain text">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M6 6h12M6 10h12M6 14h12M6 18h8"/>
                     </svg>
                 </button>
             </nav>
         </div>
     </header>
 
+    <!-- Fade overlays -->
+    <div class="fade-top"></div>
+    <div class="fade-bottom"></div>
+
     <!-- Navigation Menu -->
-    <div class="nav-menu" id="navMenu">
+    <aside class="nav-menu" id="navMenu">
         <div class="nav-menu-inner">
-            <button class="nav-close">&times;</button>
+            <button class="nav-close" aria-label="Close">&times;</button>
             <nav class="nav-links">
-                <a href="#introduction" class="nav-link" data-section="0">
-                    <span class="nav-link-title">Introduction</span>
-                </a>
-                <a href="#energy-landscape" class="nav-link" data-section="1">
-                    <span class="nav-link-title">Energy Landscape</span>
-                </a>
-                <a href="#fluctuations" class="nav-link" data-section="2">
-                    <span class="nav-link-title">Fluctuations</span>
-                </a>
-                <a href="#energy-limit" class="nav-link" data-section="3">
-                    <span class="nav-link-title">Energy Limit</span>
-                </a>
-                <a href="#planning" class="nav-link" data-section="4">
-                    <span class="nav-link-title">Planning</span>
-                </a>
-                <a href="#relationships" class="nav-link" data-section="5">
-                    <span class="nav-link-title">Relationships</span>
-                </a>
-                <a href="#emotions" class="nav-link" data-section="6">
-                    <span class="nav-link-title">Emotions</span>
-                </a>
-                <a href="#emotional-overload" class="nav-link" data-section="7">
-                    <span class="nav-link-title">Emotional Overload</span>
-                </a>
-                <a href="#core-beliefs" class="nav-link" data-section="8">
-                    <span class="nav-link-title">Core Beliefs</span>
-                </a>
-                <a href="#triggers" class="nav-link" data-section="9">
-                    <span class="nav-link-title">Triggers</span>
-                </a>
-                <a href="#emergency-escape-routes" class="nav-link" data-section="10">
-                    <span class="nav-link-title">Emergency Escape Routes</span>
-                </a>
-                <a href="#protective-structures" class="nav-link" data-section="11">
-                    <span class="nav-link-title">Protective Structures</span>
-                </a>
-                <a href="#erosion" class="nav-link" data-section="12">
-                    <span class="nav-link-title">Erosion</span>
-                </a>
-                <a href="#holding-patterns" class="nav-link" data-section="13">
-                    <span class="nav-link-title">Holding Patterns</span>
-                </a>
-                <a href="#false-erosion" class="nav-link" data-section="14">
-                    <span class="nav-link-title">False Erosion</span>
-                </a>
+                <a href="#introduction" class="nav-link" data-section="0">Introduction</a>
+                <a href="#energy-landscape" class="nav-link" data-section="1">Energy Landscape</a>
+                <a href="#fluctuations" class="nav-link" data-section="2">Fluctuations</a>
+                <a href="#energy-limit" class="nav-link" data-section="3">Energy Limit</a>
+                <a href="#planning" class="nav-link" data-section="4">Planning</a>
+                <a href="#relationships" class="nav-link" data-section="5">Relationships</a>
+                <a href="#emotions" class="nav-link" data-section="6">Emotions</a>
+                <a href="#emotional-overload" class="nav-link" data-section="7">Emotional Overload</a>
+                <a href="#core-beliefs" class="nav-link" data-section="8">Core Beliefs</a>
+                <a href="#triggers" class="nav-link" data-section="9">Triggers</a>
+                <a href="#emergency-escape-routes" class="nav-link" data-section="10">Emergency Escape Routes</a>
+                <a href="#protective-structures" class="nav-link" data-section="11">Protective Structures</a>
+                <a href="#erosion" class="nav-link" data-section="12">Erosion</a>
+                <a href="#holding-patterns" class="nav-link" data-section="13">Holding Patterns</a>
+                <a href="#false-erosion" class="nav-link" data-section="14">False Erosion</a>
             </nav>
         </div>
-    </div>
+    </aside>
 
     <!-- Help Modal -->
     <div class="help-modal" id="helpModal">
         <div class="help-modal-inner">
-            <button class="help-close">&times;</button>
-            <h2 class="help-title">Quick Guide</h2>
-            <div class="help-sections">
-                <!-- Content will be loaded from guide.md -->
-            </div>
+            <div class="help-sections"></div>
         </div>
     </div>
 
     <!-- Main Content -->
-    <main class="site-main">
-        <!-- Hero Section -->
+    <main>
+        <!-- Hero -->
         <section class="hero">
             <div class="hero-image">
                 <img src="images/landscape.png" 
-                     alt="Mountain path at golden hour, representing life's energy landscape">
+                     alt="Mountain path at golden hour"
+                     loading="eager">
             </div>
         </section>
 
-        <!-- Content Sections -->
+        <!-- Content -->
         <article class="content">
             <section id="introduction" class="content-section" data-section="0">
                 <div class="section-inner">
@@ -137,133 +107,100 @@
             <section id="energy-landscape" class="content-section" data-section="1">
                 <div class="section-inner">
                     <h2>Energy Landscape</h2>
-                    <div class="section-content">
-                        <!-- Content will be loaded from markdown -->
-                    </div>
+                    <div class="section-content"></div>
                 </div>
             </section>
 
             <section id="fluctuations" class="content-section" data-section="2">
                 <div class="section-inner">
                     <h2>Fluctuations</h2>
-                    <div class="section-content">
-                        <!-- Content will be loaded from markdown -->
-                    </div>
+                    <div class="section-content"></div>
                 </div>
             </section>
 
             <section id="energy-limit" class="content-section" data-section="3">
                 <div class="section-inner">
                     <h2>Energy Limit</h2>
-                    <div class="section-content">
-                        <!-- Content will be loaded from markdown -->
-                    </div>
+                    <div class="section-content"></div>
                 </div>
             </section>
 
             <section id="planning" class="content-section" data-section="4">
                 <div class="section-inner">
                     <h2>Planning</h2>
-                    <div class="section-content">
-                        <!-- Content will be loaded from markdown -->
-                    </div>
+                    <div class="section-content"></div>
                 </div>
             </section>
 
             <section id="relationships" class="content-section" data-section="5">
                 <div class="section-inner">
                     <h2>Relationships</h2>
-                    <div class="section-content">
-                        <!-- Content will be loaded from markdown -->
-                    </div>
+                    <div class="section-content"></div>
                 </div>
             </section>
 
             <section id="emotions" class="content-section" data-section="6">
                 <div class="section-inner">
                     <h2>Emotions</h2>
-                    <div class="section-content">
-                        <!-- Content will be loaded from markdown -->
-                    </div>
+                    <div class="section-content"></div>
                 </div>
             </section>
 
             <section id="emotional-overload" class="content-section" data-section="7">
                 <div class="section-inner">
                     <h2>Emotional Overload</h2>
-                    <div class="section-content">
-                        <!-- Content will be loaded from markdown -->
-                    </div>
+                    <div class="section-content"></div>
                 </div>
             </section>
 
             <section id="core-beliefs" class="content-section" data-section="8">
                 <div class="section-inner">
                     <h2>Core Beliefs</h2>
-                    <div class="section-content">
-                        <!-- Content will be loaded from markdown -->
-                    </div>
+                    <div class="section-content"></div>
                 </div>
             </section>
 
             <section id="triggers" class="content-section" data-section="9">
                 <div class="section-inner">
                     <h2>Triggers</h2>
-                    <div class="section-content">
-                        <!-- Content will be loaded from markdown -->
-                    </div>
+                    <div class="section-content"></div>
                 </div>
             </section>
 
             <section id="emergency-escape-routes" class="content-section" data-section="10">
                 <div class="section-inner">
                     <h2>Emergency Escape Routes</h2>
-                    <div class="section-content">
-                        <!-- Content will be loaded from markdown -->
-                    </div>
+                    <div class="section-content"></div>
                 </div>
             </section>
 
             <section id="protective-structures" class="content-section" data-section="11">
                 <div class="section-inner">
                     <h2>Protective Structures</h2>
-                    <div class="section-content">
-                        <!-- Content will be loaded from markdown -->
-                    </div>
+                    <div class="section-content"></div>
                 </div>
             </section>
 
             <section id="erosion" class="content-section" data-section="12">
                 <div class="section-inner">
                     <h2>Erosion</h2>
-                    <div class="section-content">
-                        <!-- Content will be loaded from markdown -->
-                    </div>
+                    <div class="section-content"></div>
                 </div>
             </section>
 
             <section id="holding-patterns" class="content-section" data-section="13">
                 <div class="section-inner">
                     <h2>Holding Patterns</h2>
-                    <div class="section-content">
-                        <!-- Content will be loaded from markdown -->
-                    </div>
+                    <div class="section-content"></div>
                 </div>
             </section>
 
             <section id="false-erosion" class="content-section" data-section="14">
                 <div class="section-inner">
                     <h2>False Erosion</h2>
-                    <div class="section-content">
-                        <!-- Content will be loaded from markdown -->
-                    </div>
+                    <div class="section-content"></div>
                 </div>
             </section>
-
-            <!-- Endless scroll sections -->
-            <section class="endless-section"></section>
-            <section class="endless-section"></section>
-            <section class="endless-section final"></section>
         </article>
     </main>
 
