@@ -47,7 +47,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeSmoothScroll();
     initializeReadingTimeEstimator();
     initializeTitleClick();
-    initializeTextSharing();
     loadMarkdownContent();
     loadGuideContent();
     
@@ -1161,93 +1160,3 @@ function initializeTitleClick() {
     }
 }
 
-// Text sharing functionality
-function initializeTextSharing() {
-    const shareButton = document.getElementById('shareButton');
-    const shareBtn = document.querySelector('.share-btn');
-    let selectedText = '';
-    
-    // Handle text selection
-    function updateShareButton() {
-        const selection = window.getSelection();
-        selectedText = selection.toString().trim();
-        
-        if (selectedText.length > 0 && selection.rangeCount > 0) {
-            // Position the share button near the selection
-            const range = selection.getRangeAt(0);
-            const rect = range.getBoundingClientRect();
-            
-            // Position button above the selection
-            const buttonX = rect.left + (rect.width / 2) - 20; // Center horizontally
-            const buttonY = rect.top - 50; // Above the selection
-            
-            shareButton.style.left = `${Math.max(10, Math.min(buttonX, window.innerWidth - 50))}px`;
-            shareButton.style.top = `${Math.max(10, buttonY + window.pageYOffset)}px`;
-            shareButton.classList.add('visible');
-        } else {
-            shareButton.classList.remove('visible');
-        }
-    }
-    
-    // Listen for selection changes
-    document.addEventListener('selectionchange', updateShareButton);
-    
-    // Also check on mouse up to catch completed selections
-    document.addEventListener('mouseup', () => {
-        setTimeout(updateShareButton, 10); // Small delay to ensure selection is finalized
-    });
-    
-    // Handle share button click
-    shareBtn.addEventListener('click', async () => {
-        if (!selectedText) return;
-        
-        const shareData = {
-            title: 'Energy Landscape Theory',
-            text: `"${selectedText}" - from Energy Landscape Theory by Nichola Roberts`,
-            url: window.location.href
-        };
-        
-        try {
-            // Try Web Share API first
-            if (navigator.share) {
-                await navigator.share(shareData);
-            } else {
-                // Fallback to clipboard
-                await navigator.clipboard.writeText(`"${selectedText}" - ${shareData.url}`);
-                showShareFeedback('Copied to clipboard!');
-            }
-        } catch (error) {
-            // Final fallback - create text selection for manual copy
-            const textArea = document.createElement('textarea');
-            textArea.value = `"${selectedText}" - ${shareData.url}`;
-            document.body.appendChild(textArea);
-            textArea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textArea);
-            showShareFeedback('Ready to copy!');
-        }
-        
-        // Hide share button after use
-        shareButton.classList.remove('visible');
-        window.getSelection().removeAllRanges();
-    });
-    
-    // Hide share button when clicking elsewhere
-    document.addEventListener('click', (e) => {
-        if (!shareButton.contains(e.target)) {
-            shareButton.classList.remove('visible');
-        }
-    });
-}
-
-// Show share feedback
-function showShareFeedback(message) {
-    const feedback = document.createElement('div');
-    feedback.className = 'share-feedback';
-    feedback.textContent = message;
-    document.body.appendChild(feedback);
-    
-    setTimeout(() => {
-        feedback.remove();
-    }, 2000);
-}
