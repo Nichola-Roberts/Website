@@ -1145,11 +1145,11 @@ function updateBottomReadingTime() {
     
     // Only show complete if at bottom of entire document
     if (isAtBottom) {
-        timeSpan.textContent = 'complete';
+        timeSpan.textContent = 'Complete';
     } else if (remainingMinutes <= 1) {
-        timeSpan.textContent = '~1 min';
+        timeSpan.textContent = 'Estimated time left in section ~ 1 min';
     } else {
-        timeSpan.textContent = `~${remainingMinutes} min`;
+        timeSpan.textContent = `Estimated time left in section ~ ${remainingMinutes} min`;
     }
 }
 
