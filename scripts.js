@@ -22,6 +22,7 @@ const elements = {
     floatingFontControls: document.getElementById('floatingFontControls'),
     scrollIndicator: document.getElementById('scrollIndicator'),
     navMenu: document.getElementById('navMenu'),
+    navClose: document.querySelector('.nav-close'),
     helpModal: document.getElementById('helpModal'),
     modalBackdrop: document.getElementById('modalBackdrop'),
     helpClose: document.querySelector('.help-close'),
@@ -112,6 +113,11 @@ window.updateFadeOverlays = updateFadeOverlays;
 // Navigation
 function initializeNavigation() {
     elements.menuTrigger.addEventListener('click', toggleMenu);
+    
+    // Add close button listener
+    if (elements.navClose) {
+        elements.navClose.addEventListener('click', closeMenu);
+    }
     
     // Close on outside click
     document.addEventListener('click', (e) => {

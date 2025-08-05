@@ -305,6 +305,29 @@ body.plain-text-mode .floating-font-controls .plain-text-toggle {
     padding: var(--space-13);
 }
 
+.nav-close {
+    display: none; /* Hidden on desktop */
+    position: absolute;
+    top: var(--space-8);
+    right: var(--space-8);
+    background: transparent;
+    border: none;
+    font-size: var(--text-xl);
+    cursor: pointer;
+    color: var(--color-sage);
+    width: var(--space-13);
+    height: var(--space-13);
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--space-2);
+    transition: all var(--duration-fast) var(--ease-out);
+}
+
+.nav-close:hover {
+    color: var(--color-sage);
+    background-color: var(--color-sage-highlight);
+}
+
 /* Navigation Links - Elegant Progress */
 .nav-links {
     margin-top: 0;
@@ -333,19 +356,19 @@ body.plain-text-mode .floating-font-controls .plain-text-toggle {
 
 /* Reading Progress - Ultra Subtle */
 .nav-link[data-reading-level="0"] { 
-    color: rgba(10, 15, 13, 0.25);
-}
-.nav-link[data-reading-level="1"] { 
     color: rgba(10, 15, 13, 0.35);
 }
+.nav-link[data-reading-level="1"] { 
+    color: rgba(10, 15, 13, 0.45);
+}
 .nav-link[data-reading-level="2"] { 
-    color: rgba(10, 15, 13, 0.50);
+    color: rgba(10, 15, 13, 0.60);
 }
 .nav-link[data-reading-level="3"] { 
-    color: rgba(10, 15, 13, 0.65);
+    color: rgba(10, 15, 13, 0.75);
 }
 .nav-link[data-reading-level="4"] { 
-    color: rgba(10, 15, 13, 0.85);
+    color: rgba(10, 15, 13, 0.90);
 }
 .nav-link[data-reading-level="5"] { 
     color: var(--color-sage-dark); /* Dark green for 2+ minutes */
@@ -725,6 +748,10 @@ body.font-2xl .content p {
         right: -60%;
     }
     
+    .nav-close {
+        display: flex; /* Show close button on mobile */
+    }
+    
     p {
         font-size: var(--text-base);
         margin-bottom: var(--space-13);
@@ -746,8 +773,19 @@ body.font-2xl .content p {
     /* Make floating controls more touch-friendly on mobile */
     .floating-font-controls {
         left: var(--space-5);
+        top: auto;
+        bottom: var(--space-8);
+        transform: none;
         padding: var(--space-3);
         gap: var(--space-2);
+    }
+    
+    .floating-font-controls.visible {
+        transform: none;
+    }
+    
+    .floating-font-controls:not(.visible) {
+        transform: translateY(100%);
     }
     
     .font-button {
