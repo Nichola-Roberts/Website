@@ -95,7 +95,7 @@ function updateFadeOverlays(scrollY) {
     // Only show top fade after scrolling past hero image
     if (scrollY > heroBottom) {
         const fadeProgress = Math.min(1, (scrollY - heroBottom) / 200);
-        elements.fadeTop.style.opacity = fadeProgress * 0.8; // Max 80% opacity
+        elements.fadeTop.style.opacity = fadeProgress; // Full opacity
     } else {
         elements.fadeTop.style.opacity = 0;
     }

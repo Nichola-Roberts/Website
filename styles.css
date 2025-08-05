@@ -411,7 +411,7 @@ body.plain-text-mode .floating-font-controls .plain-text-toggle {
 /* Ensure hero is never affected by fade */
 .hero {
     position: relative;
-    z-index: 1;  /* Below fade overlays but content is protected */
+    z-index: 200;  /* Above fade overlays to stay visible */
 }
 
 /* Content - Elegant Typography */
@@ -481,14 +481,14 @@ p.lead {
     /* Same as regular paragraphs - no special treatment */
 }
 
-/* Fade Effects - Ultra Subtle */
+/* Fade Effects - Strong Focus with tight top fade */
 .fade-top {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    height: 120px;
-    background: linear-gradient(to bottom, var(--color-mist), transparent);
+    height: 15vh; /* Much smaller - close to top */
+    background: linear-gradient(to bottom, var(--color-mist) 0%, var(--color-mist) 50%, rgba(249, 250, 249, 0.9) 80%, transparent 100%);
     pointer-events: none;
     z-index: 100;
     opacity: 0;  /* Start invisible */
@@ -500,10 +500,34 @@ p.lead {
     bottom: 0;
     left: 0;
     right: 0;
-    height: 120px;
-    background: linear-gradient(to top, var(--color-mist), transparent);
+    height: 45vh; /* Larger bottom fade for 3/4 coverage */
+    background: linear-gradient(to top, var(--color-mist) 0%, var(--color-mist) 15%, rgba(249, 250, 249, 0.95) 35%, rgba(249, 250, 249, 0.7) 60%, transparent 100%);
     pointer-events: none;
     z-index: 100;
+}
+
+/* Pre-fade blur effect - very bottom only */
+.fade-bottom::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 25vh; /* Larger area for more noticeable blur */
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    mask: linear-gradient(to top, 
+        rgba(0, 0, 0, 1) 0%, 
+        rgba(0, 0, 0, 1) 10%, 
+        rgba(0, 0, 0, 0.9) 30%, 
+        rgba(0, 0, 0, 0.5) 60%, 
+        transparent 100%);
+    -webkit-mask: linear-gradient(to top, 
+        rgba(0, 0, 0, 1) 0%, 
+        rgba(0, 0, 0, 1) 10%, 
+        rgba(0, 0, 0, 0.9) 30%, 
+        rgba(0, 0, 0, 0.5) 60%, 
+        transparent 100%);
 }
 
 /* Modal Backdrop */
