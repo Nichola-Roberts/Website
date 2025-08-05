@@ -1010,8 +1010,19 @@ body.notes-mode .notes-toggle {
 
 /* Mobile adjustments for notes */
 @media (max-width: 48rem) {
+    /* Add generous padding to content when notes mode is active */
+    body.notes-mode .content {
+        padding-left: var(--space-21);
+        padding-right: var(--space-21);
+    }
+    
+    body.notes-mode .content-section {
+        padding-left: var(--space-8);
+        padding-right: var(--space-8);
+    }
+    
     .paragraph-notes-container {
-        right: -1.5rem;
+        right: calc(var(--space-8) * -1);
         width: 1.5rem;
     }
     
