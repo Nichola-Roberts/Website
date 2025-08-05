@@ -216,7 +216,7 @@ body {
 @media (max-width: 48rem) {
     .bottom-font-controls {
         position: fixed;
-        bottom: 3rem;
+        bottom: 1rem;
         left: 50%;
         display: flex;
         gap: var(--space-2);

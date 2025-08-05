@@ -266,23 +266,26 @@ function initializePlainTextToggle() {
         }, 100);
     }
     
-    elements.plainTextToggle.addEventListener('click', () => {
-        const isPlainText = document.body.classList.toggle('plain-text-mode');
-        localStorage.setItem('plainTextMode', isPlainText);
-        
-        // Handle fade overlays immediately
-        if (isPlainText) {
-            elements.fadeTop.style.opacity = '0';
-            elements.fadeBottom.style.opacity = '0';
-        } else {
-            // Restore fade overlays when exiting plain text mode
-            elements.fadeTop.style.opacity = '';
-            elements.fadeBottom.style.opacity = '';
-            // Trigger fade update immediately
-            if (window.updateFadeOverlays) {
-                window.updateFadeOverlays(window.pageYOffset);
+    // Attach plain text toggle to ALL plain text buttons
+    document.querySelectorAll('.plain-text-toggle').forEach(button => {
+        button.addEventListener('click', () => {
+            const isPlainText = document.body.classList.toggle('plain-text-mode');
+            localStorage.setItem('plainTextMode', isPlainText);
+            
+            // Handle fade overlays immediately
+            if (isPlainText) {
+                elements.fadeTop.style.opacity = '0';
+                elements.fadeBottom.style.opacity = '0';
+            } else {
+                // Restore fade overlays when exiting plain text mode
+                elements.fadeTop.style.opacity = '';
+                elements.fadeBottom.style.opacity = '';
+                // Trigger fade update immediately
+                if (window.updateFadeOverlays) {
+                    window.updateFadeOverlays(window.pageYOffset);
+                }
             }
-        }
+        });
     });
 }
 
@@ -334,21 +337,25 @@ function initializeFontSizeControls() {
     // Show/hide on scroll
     window.addEventListener('scroll', showFloatingControls);
     
-    // Font size button handlers
-    elements.fontDecrease.addEventListener('click', () => {
-        if (currentSizeIndex > 0) {
-            currentSizeIndex--;
-            applyFontSize(sizes[currentSizeIndex]);
-            localStorage.setItem('fontSize', sizes[currentSizeIndex]);
-        }
+    // Font size button handlers - attach to ALL buttons
+    document.querySelectorAll('.font-decrease').forEach(button => {
+        button.addEventListener('click', () => {
+            if (currentSizeIndex > 0) {
+                currentSizeIndex--;
+                applyFontSize(sizes[currentSizeIndex]);
+                localStorage.setItem('fontSize', sizes[currentSizeIndex]);
+            }
+        });
     });
     
-    elements.fontIncrease.addEventListener('click', () => {
-        if (currentSizeIndex < sizes.length - 1) {
-            currentSizeIndex++;
-            applyFontSize(sizes[currentSizeIndex]);
-            localStorage.setItem('fontSize', sizes[currentSizeIndex]);
-        }
+    document.querySelectorAll('.font-increase').forEach(button => {
+        button.addEventListener('click', () => {
+            if (currentSizeIndex < sizes.length - 1) {
+                currentSizeIndex++;
+                applyFontSize(sizes[currentSizeIndex]);
+                localStorage.setItem('fontSize', sizes[currentSizeIndex]);
+            }
+        });
     });
     
     // Keep visible on hover/interaction
@@ -1273,9 +1280,18 @@ function initializeNotesFeature() {
         </svg>
     `;
     
+    // Add to desktop floating controls
     const floatingControls = document.getElementById('floatingFontControls');
     if (floatingControls) {
         floatingControls.appendChild(notesButton); // Add at the end instead of beginning
+    }
+    
+    // Also add to mobile bottom controls
+    const bottomControls = document.getElementById('bottomFontControls');
+    if (bottomControls) {
+        const mobileNotesButton = notesButton.cloneNode(true);
+        mobileNotesButton.addEventListener('click', toggleNotesMode);
+        bottomControls.appendChild(mobileNotesButton);
     }
     
     // Add click handler for notes toggle
@@ -1762,18 +1778,18 @@ function hideAllEditContainers() {
 
 // Initialize transfer feature
 function initializeTransferFeature() {
-    const transferToggle = document.querySelector('.transfer-toggle');
+    const transferToggles = document.querySelectorAll('.transfer-toggle');
     const transferModal = document.getElementById('transferModal');
     const transferClose = document.querySelector('.transfer-close');
     const modalBackdrop = document.getElementById('modalBackdrop');
     
     console.log('Transfer feature initialization:', {
-        transferToggle: !!transferToggle,
+        transferToggles: transferToggles.length,
         transferModal: !!transferModal,
         DeviceTransfer: typeof DeviceTransfer
     });
     
-    if (!transferToggle || !transferModal) {
+    if (transferToggles.length === 0 || !transferModal) {
         console.error('Transfer elements not found');
         return;
     }
@@ -1846,8 +1862,10 @@ function initializeTransferFeature() {
     }
     
     
-    // Event listeners
-    transferToggle.addEventListener('click', showTransferModal);
+    // Event listeners - attach to ALL transfer toggles
+    transferToggles.forEach(toggle => {
+        toggle.addEventListener('click', showTransferModal);
+    });
     transferClose.addEventListener('click', hideTransferModal);
     
     // Close on backdrop click
