@@ -1294,8 +1294,10 @@ function initializeNotesFeature() {
         bottomControls.appendChild(mobileNotesButton);
     }
     
-    // Add click handler for notes toggle
-    notesButton.addEventListener('click', toggleNotesMode);
+    // Add click handler for notes toggle - attach to ALL notes buttons
+    document.querySelectorAll('.notes-toggle').forEach(button => {
+        button.addEventListener('click', toggleNotesMode);
+    });
     
     // Apply saved notes mode state
     if (state.isNotesMode) {
