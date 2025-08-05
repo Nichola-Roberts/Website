@@ -207,7 +207,34 @@ body {
     stroke-width: 1.5;
 }
 
-/* Floating Font Controls */
+/* Bottom Font Controls - hidden on desktop */
+.bottom-font-controls {
+    display: none;
+}
+
+/* Show bottom controls on mobile only */
+@media (max-width: 48rem) {
+    .bottom-font-controls {
+        position: fixed;
+        bottom: 4rem;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: var(--space-2);
+        background: var(--color-glass);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        padding: var(--space-2);
+        border-radius: var(--space-2);
+        box-shadow: 0 2px 12px rgba(10, 15, 13, 0.1);
+        border: 1px solid rgba(59, 125, 105, 0.1);
+        z-index: 999;
+        opacity: 1;
+        pointer-events: auto;
+    }
+}
+
+/* Floating Font Controls (legacy - kept for desktop) */
 .floating-font-controls {
     position: fixed;
     top: 50%;
@@ -273,8 +300,9 @@ body {
     stroke-width: 1.5;
 }
 
-/* Plain text button styling in floating controls */
-.floating-font-controls .plain-text-toggle {
+/* Plain text button styling */
+.floating-font-controls .plain-text-toggle,
+.bottom-font-controls .plain-text-toggle {
     width: 1.5rem;
     height: 1.5rem;
     border: 1px solid var(--color-sage);
@@ -282,14 +310,16 @@ body {
 
 /* Make plain text button same size as others on mobile */
 @media (max-width: 48rem) {
-    .floating-font-controls .plain-text-toggle {
+    .floating-font-controls .plain-text-toggle,
+    .bottom-font-controls .plain-text-toggle {
         width: 1.75rem;
         height: 1.75rem;
     }
 }
 
-/* Highlight plain text button when active in floating controls */
-body.plain-text-mode .floating-font-controls .plain-text-toggle {
+/* Highlight plain text button when active */
+body.plain-text-mode .floating-font-controls .plain-text-toggle,
+body.plain-text-mode .bottom-font-controls .plain-text-toggle {
     background-color: var(--color-sage);
     color: white;
 }
@@ -1405,7 +1435,8 @@ body:not(.plain-text-mode) .plain-text-toggle {
 }
 
 /* Reset in floating controls when not in plain text mode */
-body:not(.plain-text-mode) .floating-font-controls .plain-text-toggle {
+body:not(.plain-text-mode) .floating-font-controls .plain-text-toggle,
+body:not(.plain-text-mode) .bottom-font-controls .plain-text-toggle {
     background: transparent !important;
     color: var(--color-sage) !important;
 }
@@ -1476,22 +1507,16 @@ body.font-2xl .content p {
         height: 180px;
     }
     
-    /* Make floating controls more touch-friendly on mobile */
+    /* Hide legacy floating controls on mobile */
     .floating-font-controls {
-        left: var(--space-5);
-        top: auto;
-        bottom: var(--space-8);
-        transform: none;
+        display: none;
+    }
+    
+    /* Style bottom controls for mobile */
+    .bottom-font-controls {
+        bottom: 3rem;
+        gap: var(--space-3);
         padding: var(--space-3);
-        gap: var(--space-2);
-    }
-    
-    .floating-font-controls.visible {
-        transform: none;
-    }
-    
-    .floating-font-controls:not(.visible) {
-        transform: translateY(100%);
     }
     
     .font-button {
