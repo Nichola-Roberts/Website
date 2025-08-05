@@ -154,6 +154,16 @@ body {
     text-stroke: 0.3px var(--color-sage);
 }
 
+.title-link {
+    color: inherit;
+    text-decoration: none;
+    transition: opacity var(--duration-fast) var(--ease-out);
+}
+
+.title-link:hover {
+    opacity: 0.8;
+}
+
 .site-author {
     font-family: var(--font-body);
     font-size: var(--text-xs);
@@ -517,13 +527,13 @@ p.lead {
     visibility: visible;
 }
 
-/* Help Modal - Below Header */
+/* Help Modal - Centered */
 .help-modal {
     display: none;
     position: fixed;
-    top: 4rem;  /* Below header */
+    top: 50%;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translate(-50%, -50%);
     z-index: 1200;
 }
 
@@ -545,9 +555,6 @@ p.lead {
 /* Mobile help modal improvements */
 @media (max-width: 48rem) {
     .help-modal {
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
         width: 90%;
         max-width: 24rem;
     }
@@ -556,11 +563,6 @@ p.lead {
         width: 100%;
         max-height: 70vh;
         padding: var(--space-8);
-    }
-    
-    /* Reset help section visibility on mobile - let reading progress control it */
-    .help-section.guide-current {
-        opacity: inherit !important;
     }
 }
 
@@ -576,41 +578,16 @@ p.lead {
     transition: all var(--duration-base) var(--ease-out);
 }
 
-/* Reading progress states in guide */
-.help-section.past h2,
-.help-section.past h3 {
-    color: var(--color-sage-light);
-}
-
-.help-section.past li {
-    color: rgba(26, 31, 29, 0.7);
-}
-
-.help-section.current h2,
-.help-section.current h3 {
+/* Simple help section styling */
+.help-section h2,
+.help-section h3 {
     color: var(--color-sage);
-    font-weight: 700;
-}
-
-.help-section.future h2,
-.help-section.future h3 {
-    color: rgba(59, 125, 105, 0.4);
-}
-
-.help-section.future li {
-    color: rgba(26, 31, 29, 0.4);
-}
-
-/* Guide scroll highlighting - overrides reading progress when scrolling in guide */
-.help-section.guide-current h2,
-.help-section.guide-current h3 {
-    color: var(--color-sage) !important;
-    font-weight: 700 !important;
+    font-weight: 600;
 }
 
 .help-section p,
 .help-sections p {
-    font-size: 0.625rem;  /* Even smaller - 10px */
+    font-size: var(--text-sm);  /* 14px */
     line-height: var(--leading-normal);
     color: var(--color-ink-light);
     display: block !important;
@@ -624,7 +601,7 @@ p.lead {
 .help-sections h2,
 .help-section p strong,
 .help-sections p strong {
-    font-size: var(--text-xs);  /* 12px for headings */
+    font-size: var(--text-base);  /* 16px for headings */
     font-weight: 600;
     color: var(--color-sage);  /* Green headings */
     margin-bottom: var(--space-2);
@@ -644,7 +621,7 @@ p.lead {
     position: relative;
     padding-left: 1rem;
     margin-bottom: var(--space-1);
-    font-size: 0.625rem;  /* 10px */
+    font-size: var(--text-sm);  /* 14px */
     line-height: var(--leading-normal);
     color: var(--color-ink-light);
 }
@@ -658,14 +635,35 @@ p.lead {
     font-weight: 600;
 }
 
-/* Current section heading more prominent */
-.help-section.current h2,
-.help-section.current h3,
-.help-section.guide-current h2,
-.help-section.guide-current h3 {
-    color: var(--color-sage);
-    font-weight: 700;
+/* Locked help sections styling */
+.help-section.locked {
+    opacity: 0.5;
+    position: relative;
 }
+
+.help-section.locked h2 {
+    color: var(--color-ink);
+    opacity: 0.6;
+}
+
+.help-section.locked .mystery-text {
+    font-style: italic;
+    color: var(--color-sage);
+    font-size: var(--text-sm);  /* 14px */
+    opacity: 0.8;
+    margin: 0;
+}
+
+.help-section.locked::after {
+    content: '🔒';
+    position: absolute;
+    top: var(--space-2);
+    right: var(--space-2);
+    opacity: 0.4;
+    font-size: var(--text-xs);
+}
+
+
 
 /* Ensure help content is visible */
 .help-sections * {
@@ -744,8 +742,20 @@ body.plain-text-mode .plain-text-toggle {
 
 /* Ensure plain text button is not highlighted by default */
 .plain-text-toggle {
-    background: transparent;
-    color: var(--color-sage);
+    background: transparent !important;
+    color: var(--color-sage) !important;
+}
+
+/* Reset plain text button when not in plain text mode */
+body:not(.plain-text-mode) .plain-text-toggle {
+    background: transparent !important;
+    color: var(--color-sage) !important;
+}
+
+/* Reset in floating controls when not in plain text mode */
+body:not(.plain-text-mode) .floating-font-controls .plain-text-toggle {
+    background: transparent !important;
+    color: var(--color-sage) !important;
 }
 
 /* Font Size Controls - Only affect content paragraphs */
@@ -997,6 +1007,78 @@ body.plain-text-mode .section-reading-time {
 /* Hide in plain text mode */
 body.plain-text-mode .bottom-reading-time {
     display: none;
+}
+
+/* Share Button */
+.share-button {
+    position: absolute;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-5px);
+    transition: all var(--duration-fast) var(--ease-out);
+    pointer-events: none;
+}
+
+.share-button.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.share-btn {
+    background-color: var(--color-sage);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(59, 125, 105, 0.3);
+    transition: all var(--duration-fast) var(--ease-out);
+    color: white;
+}
+
+.share-btn:hover {
+    background-color: var(--color-sage-dark);
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(59, 125, 105, 0.4);
+}
+
+.share-btn svg {
+    width: 18px;
+    height: 18px;
+    stroke-width: 2;
+}
+
+/* Share Feedback */
+.share-feedback {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--color-sage);
+    color: white;
+    padding: var(--space-3) var(--space-5);
+    border-radius: var(--space-2);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    z-index: 1500;
+    animation: sharePopup var(--duration-base) var(--ease-out);
+}
+
+@keyframes sharePopup {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
 }
 
 /* Mobile adjustments */

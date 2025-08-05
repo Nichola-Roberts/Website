@@ -46,6 +46,8 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeContentReveal();
     initializeSmoothScroll();
     initializeReadingTimeEstimator();
+    initializeTitleClick();
+    initializeTextSharing();
     loadMarkdownContent();
     loadGuideContent();
     
@@ -194,15 +196,34 @@ function toggleHelp() {
     if (state.isHelpOpen) {
         elements.helpModal.classList.add('active');
         elements.modalBackdrop.classList.add('active');
-        console.log('Help opened, current section should be:', state.currentSection);
-        // Update guide progress and scroll to current section
+        
+        // Scroll to current section in help modal
         setTimeout(() => {
-            updateGuideProgress();
-            initializeGuideScrollTracking();
-        }, 150); // Slightly longer delay for modal to appear
+            scrollToCurrentHelpSection();
+        }, 100);
     } else {
         elements.helpModal.classList.remove('active');
         elements.modalBackdrop.classList.remove('active');
+    }
+}
+
+// Scroll to current section in help modal
+function scrollToCurrentHelpSection() {
+    const currentSection = state.currentSection || 0;
+    const currentHelpSection = document.querySelector(`[data-section-index="${currentSection}"]`);
+    
+    if (currentHelpSection) {
+        // Center the current section in the help modal
+        const helpModalInner = document.querySelector('.help-modal-inner');
+        if (helpModalInner) {
+            const sectionTop = currentHelpSection.offsetTop;
+            const modalHeight = helpModalInner.clientHeight;
+            const sectionHeight = currentHelpSection.offsetHeight;
+            
+            // Center the section in the modal
+            const scrollTop = sectionTop - (modalHeight / 2) + (sectionHeight / 2);
+            helpModalInner.scrollTop = Math.max(0, scrollTop);
+        }
     }
 }
 
@@ -212,44 +233,6 @@ function closeHelp() {
     elements.modalBackdrop.classList.remove('active');
 }
 
-// Track scrolling within the guide to highlight visible sections
-function initializeGuideScrollTracking() {
-    const helpModalInner = document.querySelector('.help-modal-inner');
-    if (!helpModalInner) return;
-    
-    const guideSections = document.querySelectorAll('.help-section');
-    
-    const guideObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting && entry.intersectionRatio > 0.3) {
-                // Clear all current highlighting
-                guideSections.forEach(section => {
-                    section.classList.remove('guide-current');
-                });
-                
-                // Highlight the section that's most visible in the guide
-                // This overrides the reading progress temporarily while scrolling
-                entry.target.classList.add('guide-current');
-                
-                // Remove guide-current after user stops scrolling to restore reading progress
-                clearTimeout(window.guideScrollTimeout);
-                window.guideScrollTimeout = setTimeout(() => {
-                    entry.target.classList.remove('guide-current');
-                    // Re-apply reading progress state
-                    updateGuideProgress();
-                }, 2000); // 2 seconds after scroll stops
-            }
-        });
-    }, {
-        root: helpModalInner,
-        threshold: [0.3],
-        rootMargin: '-10% 0px -10% 0px'
-    });
-    
-    guideSections.forEach(section => {
-        guideObserver.observe(section);
-    });
-}
 
 
 // Plain text toggle
@@ -547,9 +530,8 @@ function initializeReadingTracking() {
                     localStorage.setItem('lastSection', sectionIndex);
                     localStorage.setItem('readingTimes', JSON.stringify(state.readingTimes));
                     
-                    // Update navigation and guide
+                    // Update navigation
                     updateReadingProgress();
-                    updateGuideProgress();
                 }
             }
         });
@@ -585,6 +567,9 @@ function updateReadingProgress() {
         }
     });
     
+    // Update help sections with progressive disclosure
+    updateHelpSections();
+    
     // Show easter egg if all sections have been read
     console.log('All sections read?', allSectionsRead);
     if (allSectionsRead) {
@@ -593,54 +578,6 @@ function updateReadingProgress() {
     }
 }
 
-// Update guide progress highlighting
-function updateGuideProgress() {
-    const guideSections = document.querySelectorAll('.help-section');
-    
-    console.log('Current section:', state.currentSection); // Debug
-    console.log('Total guide sections:', guideSections.length);
-    
-    guideSections.forEach((section, index) => {
-        // Guide sections should match content sections exactly
-        // Content sections: 0=intro, 1=energy-landscape, 2=fluctuations, etc.
-        // Guide sections: 0=energy-landscape, 1=fluctuations, etc.
-        const contentSectionIndex = index + 1; // Guide section 0 = content section 1
-        
-        // Remove all classes including guide-current
-        section.classList.remove('past', 'current', 'future', 'guide-current');
-        
-        // Add appropriate class based on reading progress
-        // Special handling for introduction (section 0) - mark first guide section as current
-        if (state.currentSection === 0 && index === 0) {
-            section.classList.add('current');
-            console.log(`Guide section ${index} marked as current (intro mode)`);
-        } else if (contentSectionIndex < state.currentSection) {
-            section.classList.add('past');
-            console.log(`Guide section ${index} (content ${contentSectionIndex}) marked as past`);
-        } else if (contentSectionIndex === state.currentSection) {
-            section.classList.add('current');
-            console.log(`Guide section ${index} (content ${contentSectionIndex}) marked as current`);
-        } else {
-            section.classList.add('future');
-            console.log(`Guide section ${index} (content ${contentSectionIndex}) marked as future`);
-        }
-    });
-    
-    // Center on current section when guide opens (instant, no animation)
-    if (state.isHelpOpen) {
-        setTimeout(() => {
-            const currentSection = document.querySelector('.help-section.current');
-            if (currentSection) {
-                currentSection.scrollIntoView({ 
-                    behavior: 'instant', 
-                    block: 'center' 
-                });
-            } else {
-                console.log('No current section found in guide');
-            }
-        }, 100); // Longer delay to ensure classes are applied
-    }
-}
 
 // Calculate reading level (0-5)
 function getReadingLevel(milliseconds) {
@@ -739,7 +676,6 @@ function restoreLastPosition() {
             // Update state to match restored position
             state.currentSection = lastSection;
             updateReadingProgress();
-            updateGuideProgress();
         }
     } else {
         console.log('No last section to restore or starting from beginning');
@@ -899,7 +835,7 @@ async function loadMarkdownContent() {
     }
 }
 
-// Load help/guide content
+// Load help/guide content with progressive disclosure
 async function loadGuideContent() {
     try {
         const response = await fetch('./guide.md');
@@ -911,32 +847,50 @@ async function loadGuideContent() {
         
         const helpSections = document.querySelector('.help-sections');
         if (helpSections) {
-            // Create guide sections that match content sections
-            const sectionNames = [
-                'Energy Landscape', 'Fluctuations', 'Energy Limit', 'Planning',
-                'Relationships', 'Emotions', 'Emotional Overload', 'Core Beliefs',
-                'Triggers', 'Emergency Escape Routes', 'Protective Structures',
-                'Erosion', 'Holding Patterns', 'False Erosion'
-            ];
-            
-            let guideHTML = '';
-            sections.forEach((section, index) => {
-                const lines = section.split('\n');
-                const title = lines[0].trim();
-                const content = lines.slice(1).join('\n').trim();
-                
-                if (content) {
-                    const html = marked.parse(`## ${title}\n${content}`);
-                    guideHTML += `<div class="help-section">${html}</div>`;
-                }
-            });
-            
-            helpSections.innerHTML = guideHTML;
-            updateGuideProgress();
+            // Store all sections for progressive disclosure
+            window.allHelpSections = sections;
+            updateHelpSections();
         }
     } catch (error) {
         console.error('Error loading guide:', error);
     }
+}
+
+// Update help sections based on reading progress
+function updateHelpSections() {
+    const helpSections = document.querySelector('.help-sections');
+    if (!helpSections || !window.allHelpSections) return;
+    
+    const currentSection = state.currentSection || 0;
+    let guideHTML = '';
+    
+    window.allHelpSections.forEach((section, index) => {
+        const lines = section.split('\n');
+        const title = lines[0].trim();
+        const content = lines.slice(1).join('\n').trim();
+        
+        if (!content) return;
+        
+        // Always show Introduction (index 0)
+        // Always show current section
+        // Show sections where user has spent 1+ minutes (60000ms)
+        const sectionReadingTime = state.readingTimes[index] || 0;
+        const hasSpentEnoughTime = sectionReadingTime >= 60000; // 1 minute
+        const isIntroduction = index === 0;
+        const isCurrentSection = index === currentSection;
+        
+        if (isIntroduction || isCurrentSection || hasSpentEnoughTime) {
+            const html = marked.parse(`## ${title}\n${content}`);
+            guideHTML += `<div class="help-section" data-section-index="${index}">${html}</div>`;
+        } else {
+            // Show a locked/mystery placeholder for unread sections
+            guideHTML += `<div class="help-section locked" data-section-index="${index}">
+                <h2>${title}</h2>
+            </div>`;
+        }
+    });
+    
+    helpSections.innerHTML = guideHTML;
 }
 
 // Performance optimization - Debounce utility
@@ -967,12 +921,20 @@ function initializeReadingTimeEstimator() {
         }
     }, 500);
     
-    // Update on scroll
+    // Update on scroll with faster mobile response
     let scrollTimeout;
+    const scrollUpdateDelay = 100; // Reduced from 150ms for better mobile response
+    
     window.addEventListener('scroll', () => {
         clearTimeout(scrollTimeout);
-        scrollTimeout = setTimeout(updateBottomReadingTime, 150);
+        scrollTimeout = setTimeout(updateBottomReadingTime, scrollUpdateDelay);
     });
+    
+    // Also update on touch events for better mobile experience
+    window.addEventListener('touchmove', () => {
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(updateBottomReadingTime, scrollUpdateDelay);
+    }, { passive: true });
 }
 
 // Count words in a text element
@@ -1096,7 +1058,6 @@ function updateBottomReadingTime() {
         localStorage.setItem('lastSection', sectionIndex);
         localStorage.setItem('readingTimes', JSON.stringify(state.readingTimes));
         updateReadingProgress();
-        updateGuideProgress();
     }
     
     // Get paragraphs only in most visible section
@@ -1188,3 +1149,105 @@ window.addEventListener('scroll', debounce(() => {
         }
     }
 }, 8));
+
+// Initialize title click to go to top
+function initializeTitleClick() {
+    const titleLink = document.querySelector('.title-link');
+    if (titleLink) {
+        titleLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
+}
+
+// Text sharing functionality
+function initializeTextSharing() {
+    const shareButton = document.getElementById('shareButton');
+    const shareBtn = document.querySelector('.share-btn');
+    let selectedText = '';
+    
+    // Handle text selection
+    function updateShareButton() {
+        const selection = window.getSelection();
+        selectedText = selection.toString().trim();
+        
+        if (selectedText.length > 0 && selection.rangeCount > 0) {
+            // Position the share button near the selection
+            const range = selection.getRangeAt(0);
+            const rect = range.getBoundingClientRect();
+            
+            // Position button above the selection
+            const buttonX = rect.left + (rect.width / 2) - 20; // Center horizontally
+            const buttonY = rect.top - 50; // Above the selection
+            
+            shareButton.style.left = `${Math.max(10, Math.min(buttonX, window.innerWidth - 50))}px`;
+            shareButton.style.top = `${Math.max(10, buttonY + window.pageYOffset)}px`;
+            shareButton.classList.add('visible');
+        } else {
+            shareButton.classList.remove('visible');
+        }
+    }
+    
+    // Listen for selection changes
+    document.addEventListener('selectionchange', updateShareButton);
+    
+    // Also check on mouse up to catch completed selections
+    document.addEventListener('mouseup', () => {
+        setTimeout(updateShareButton, 10); // Small delay to ensure selection is finalized
+    });
+    
+    // Handle share button click
+    shareBtn.addEventListener('click', async () => {
+        if (!selectedText) return;
+        
+        const shareData = {
+            title: 'Energy Landscape Theory',
+            text: `"${selectedText}" - from Energy Landscape Theory by Nichola Roberts`,
+            url: window.location.href
+        };
+        
+        try {
+            // Try Web Share API first
+            if (navigator.share) {
+                await navigator.share(shareData);
+            } else {
+                // Fallback to clipboard
+                await navigator.clipboard.writeText(`"${selectedText}" - ${shareData.url}`);
+                showShareFeedback('Copied to clipboard!');
+            }
+        } catch (error) {
+            // Final fallback - create text selection for manual copy
+            const textArea = document.createElement('textarea');
+            textArea.value = `"${selectedText}" - ${shareData.url}`;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            showShareFeedback('Ready to copy!');
+        }
+        
+        // Hide share button after use
+        shareButton.classList.remove('visible');
+        window.getSelection().removeAllRanges();
+    });
+    
+    // Hide share button when clicking elsewhere
+    document.addEventListener('click', (e) => {
+        if (!shareButton.contains(e.target)) {
+            shareButton.classList.remove('visible');
+        }
+    });
+}
+
+// Show share feedback
+function showShareFeedback(message) {
+    const feedback = document.createElement('div');
+    feedback.className = 'share-feedback';
+    feedback.textContent = message;
+    document.body.appendChild(feedback);
+    
+    setTimeout(() => {
+        feedback.remove();
+    }, 2000);
+}
