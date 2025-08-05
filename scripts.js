@@ -8,7 +8,9 @@ const state = {
     isMenuOpen: false,
     isHelpOpen: false,
     scrollPosition: 0,
-    readingSpeed: 0
+    readingSpeed: 0,
+    sectionWordCounts: {}, // Store word counts for each section
+    averageReadingSpeed: 225 // words per minute
 };
 
 // DOM Elements
@@ -43,6 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeReadingTracking();
     initializeContentReveal();
     initializeSmoothScroll();
+    initializeReadingTimeEstimator();
     loadMarkdownContent();
     loadGuideContent();
     
@@ -218,19 +221,28 @@ function initializeGuideScrollTracking() {
     
     const guideObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-            if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
+            if (entry.isIntersecting && entry.intersectionRatio > 0.3) {
                 // Clear all current highlighting
                 guideSections.forEach(section => {
                     section.classList.remove('guide-current');
                 });
                 
                 // Highlight the section that's most visible in the guide
+                // This overrides the reading progress temporarily while scrolling
                 entry.target.classList.add('guide-current');
+                
+                // Remove guide-current after user stops scrolling to restore reading progress
+                clearTimeout(window.guideScrollTimeout);
+                window.guideScrollTimeout = setTimeout(() => {
+                    entry.target.classList.remove('guide-current');
+                    // Re-apply reading progress state
+                    updateGuideProgress();
+                }, 2000); // 2 seconds after scroll stops
             }
         });
     }, {
         root: helpModalInner,
-        threshold: [0.5],
+        threshold: [0.3],
         rootMargin: '-10% 0px -10% 0px'
     });
     
@@ -364,8 +376,12 @@ function initializeScrollIndicator() {
         const scrollTop = window.pageYOffset;
         const docHeight = document.documentElement.scrollHeight - window.innerHeight;
         
-        // Prevent division by zero
-        if (docHeight <= 0) return;
+        // Prevent division by zero and ensure we have valid content height
+        if (docHeight <= 0) {
+            // If content isn't ready yet, position at top
+            elements.scrollIndicator.style.top = '40px';
+            return;
+        }
         
         const scrollPercent = Math.max(0, Math.min(1, scrollTop / docHeight));
         
@@ -442,27 +458,33 @@ function initializeScrollIndicator() {
     // Initialize position when plain text mode is toggled
     function initializeIndicatorPosition() {
         if (document.body.classList.contains('plain-text-mode')) {
-            // Set initial position based on current scroll position
-            const currentScrollTop = window.pageYOffset;
-            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-            
-            if (docHeight > 0) {
-                const scrollPercent = Math.max(0, Math.min(1, currentScrollTop / docHeight));
-                const viewportHeight = window.innerHeight;
-                const indicatorHeight = 80;
-                const maxTop = viewportHeight - indicatorHeight - 40;
-                const minTop = 40;
-                const topPosition = minTop + (scrollPercent * (maxTop - minTop));
+            // Wait for layout to be ready
+            setTimeout(() => {
+                const currentScrollTop = window.pageYOffset;
+                const docHeight = document.documentElement.scrollHeight - window.innerHeight;
                 
-                // Set position immediately without transition
-                elements.scrollIndicator.style.transition = 'none';
-                elements.scrollIndicator.style.top = `${topPosition}px`;
-                
-                // Restore transition after a moment
-                setTimeout(() => {
-                    elements.scrollIndicator.style.transition = '';
-                }, 50);
-            }
+                if (docHeight > 0) {
+                    const scrollPercent = Math.max(0, Math.min(1, currentScrollTop / docHeight));
+                    const viewportHeight = window.innerHeight;
+                    const indicatorHeight = 80;
+                    const maxTop = viewportHeight - indicatorHeight - 40;
+                    const minTop = 40;
+                    const topPosition = minTop + (scrollPercent * (maxTop - minTop));
+                    
+                    // Set position immediately without transition
+                    elements.scrollIndicator.style.transition = 'none';
+                    elements.scrollIndicator.style.top = `${topPosition}px`;
+                    elements.scrollIndicator.style.transform = 'translateY(-50%) scaleY(1)';
+                    
+                    // Restore transition after a moment
+                    setTimeout(() => {
+                        elements.scrollIndicator.style.transition = '';
+                    }, 100);
+                } else {
+                    // Fallback for when content isn't loaded yet
+                    elements.scrollIndicator.style.top = '50%';
+                }
+            }, 150); // Longer delay to ensure content is loaded
         }
     }
     
@@ -519,6 +541,7 @@ function initializeReadingTracking() {
                     state.sectionStartTime = Date.now();
                     
                     console.log('New current section:', state.currentSection);
+                    console.log('Section element:', entry.target.id);
                     
                     // Save state
                     localStorage.setItem('lastSection', sectionIndex);
@@ -541,11 +564,33 @@ function initializeReadingTracking() {
 
 // Update reading progress in navigation
 function updateReadingProgress() {
-    elements.navLinks.forEach((link, index) => {
-        const timeSpent = state.readingTimes[index] || 0;
+    console.log('Current reading times:', state.readingTimes);
+    let allSectionsRead = true;
+    
+    elements.navLinks.forEach((link) => {
+        const sectionIndex = parseInt(link.dataset.section);
+        const timeSpent = state.readingTimes[sectionIndex] || 0;
         const level = getReadingLevel(timeSpent);
         link.setAttribute('data-reading-level', level);
+        
+        // Check if this section has been read (2+ minutes = 120000ms)
+        if (timeSpent < 120000) {
+            allSectionsRead = false;
+            console.log(`Section ${sectionIndex} not fully read: ${(timeSpent/1000).toFixed(1)}s`);
+        }
+        
+        // Debug Protective Structures specifically
+        if (sectionIndex === 11) {
+            console.log('Protective Structures - section:', sectionIndex, 'time:', timeSpent, 'level:', level);
+        }
     });
+    
+    // Show easter egg if all sections have been read
+    console.log('All sections read?', allSectionsRead);
+    if (allSectionsRead) {
+        console.log('Triggering easter egg!');
+        showEasterEgg();
+    }
 }
 
 // Update guide progress highlighting
@@ -561,8 +606,8 @@ function updateGuideProgress() {
         // Guide sections: 0=energy-landscape, 1=fluctuations, etc.
         const contentSectionIndex = index + 1; // Guide section 0 = content section 1
         
-        // Remove all classes
-        section.classList.remove('past', 'current', 'future');
+        // Remove all classes including guide-current
+        section.classList.remove('past', 'current', 'future', 'guide-current');
         
         // Add appropriate class based on reading progress
         // Special handling for introduction (section 0) - mark first guide section as current
@@ -598,13 +643,28 @@ function updateGuideProgress() {
 }
 
 // Calculate reading level (0-5)
-function getReadingLevel(seconds) {
+function getReadingLevel(milliseconds) {
+    const seconds = milliseconds / 1000;
     if (seconds === 0) return 0;
     if (seconds < 15) return 1;
     if (seconds < 30) return 2;
     if (seconds < 60) return 3;
     if (seconds < 120) return 4;
     return 5; // 2+ minutes = deep moss green
+}
+
+// Show easter egg notes section
+function showEasterEgg() {
+    const notesSection = document.getElementById('notes');
+    if (notesSection && notesSection.style.display === 'none') {
+        console.log('Revealing easter egg Notes section!');
+        notesSection.style.display = 'block';
+        
+        // Smooth scroll to make it noticeable
+        setTimeout(() => {
+            notesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 500);
+    }
 }
 
 // Content reveal on scroll
@@ -686,38 +746,93 @@ function restoreLastPosition() {
     }
 }
 
-// Load markdown content
+// Load markdown content with preloading and loading states
 async function loadMarkdownContent() {
+    // Add loading states to sections
+    const contentSections = document.querySelectorAll('.section-content');
+    contentSections.forEach(section => {
+        if (!section.innerHTML.trim()) {
+            section.innerHTML = '<div class="loading-placeholder" aria-label="Loading content..."></div>';
+            section.classList.add('loading');
+        }
+    });
+
     try {
         console.log('Starting to load markdown content...');
-        const response = await fetch('./content.md');
-        if (!response.ok) throw new Error('Failed to load content');
+        
+        // Try to use preloaded content first
+        let response;
+        try {
+            response = await fetch('./content.md', { 
+                cache: 'force-cache' // Use cached version if available
+            });
+        } catch (cacheError) {
+            // Fallback to regular fetch
+            response = await fetch('./content.md');
+        }
+        
+        if (!response.ok) throw new Error(`HTTP ${response.status}: Failed to load content`);
         
         const markdown = await response.text();
         console.log('Markdown loaded, length:', markdown.length);
+        
+        // Remove loading states
+        contentSections.forEach(section => {
+            section.classList.remove('loading');
+        });
+        
         const parts = markdown.split(/^## /m);
         const sections = parts.slice(1).filter(s => s.trim());
         
         console.log('Total markdown sections found:', sections.length);
         sections.forEach((section, index) => {
             const lines = section.split('\n');
-            const title = lines[0].trim().toLowerCase().replace(/\s+/g, '-');
+            const rawTitle = lines[0].trim();
+            const title = rawTitle.toLowerCase().replace(/\s+/g, '-');
             const content = lines.slice(1).join('\n').trim();
             
-            console.log(`Section ${index}: ${title}, content length: ${content.length}`);
+            console.log(`Section ${index}: ${rawTitle}, content length: ${content.length}`);
+            
+            // Handle the easter egg section with underscores
+            if (rawTitle.includes('_____') || title === '' || title.includes('-----')) {
+                console.log('Loading easter egg Notes content');
+                const notesSection = document.getElementById('notes');
+                if (notesSection) {
+                    const contentDiv = notesSection.querySelector('.section-content');
+                    if (contentDiv) {
+                        // Convert markdown to HTML for Notes
+                        let html;
+                        if (typeof marked !== 'undefined' && marked.parse) {
+                            html = marked.parse(content);
+                        } else {
+                            html = content
+                                .split('\n\n')
+                                .filter(p => p.trim())
+                                .map(p => `<p>${p.trim().replace(/\n/g, ' ')}</p>`)
+                                .join('');
+                        }
+                        contentDiv.innerHTML = html;
+                        console.log('Loaded easter egg Notes content');
+                    }
+                }
+                return;
+            }
             
             const sectionElement = document.getElementById(title);
             if (sectionElement) {
                 console.log(`Found HTML element for: ${title}`);
                 const contentDiv = sectionElement.querySelector('.section-content');
                 if (contentDiv) {
+                    // Clear loading placeholder
+                    contentDiv.innerHTML = '';
+                    
                     // Convert markdown to HTML
                     let html;
                     if (typeof marked !== 'undefined' && marked.parse) {
                         html = marked.parse(content);
                     } else {
                         console.warn('Marked.js not available, using simple text conversion');
-                        // Simple fallback - convert line breaks to paragraphs
+                        // Enhanced fallback - convert line breaks to paragraphs
                         html = content
                             .split('\n\n')
                             .filter(p => p.trim())
@@ -750,19 +865,37 @@ async function loadMarkdownContent() {
                 console.error(`No HTML element found for section: ${title}`);
             }
         });
+        
+        // Trigger scroll indicator position update after content loads
+        if (document.body.classList.contains('plain-text-mode')) {
+            setTimeout(() => {
+                const event = new Event('scroll');
+                window.dispatchEvent(event);
+            }, 200);
+        }
+        
+        // Update reading time estimates after content loads
+        setTimeout(updateBottomReadingTime, 300);
+        
     } catch (error) {
         console.error('Error loading content:', error);
-        console.log('Trying alternative loading method...');
         
-        // Show a message to the user about serving locally
-        console.warn('Content loading failed. If viewing locally, please serve through a web server (e.g., python -m http.server 8000) to load markdown content.');
-        
-        // Add a temporary message to sections
-        document.querySelectorAll('.section-content').forEach(contentDiv => {
-            if (!contentDiv.innerHTML.trim()) {
-                contentDiv.innerHTML = '<p style="color: #666; font-style: italic;">Content will load when served through a web server. For local development, run: <code>python -m http.server 8000</code></p>';
+        // Remove loading states and show error message
+        contentSections.forEach(contentDiv => {
+            contentDiv.classList.remove('loading');
+            if (!contentDiv.innerHTML.trim() || contentDiv.innerHTML.includes('loading-placeholder')) {
+                contentDiv.innerHTML = `
+                    <div class="content-error">
+                        <p><strong>Content temporarily unavailable</strong></p>
+                        <p>If viewing locally, serve through a web server:</p>
+                        <code>python -m http.server 8000</code>
+                        <p>Or use any local server to enable content loading.</p>
+                    </div>
+                `;
             }
         });
+        
+        console.warn('Content loading failed. Fallback content displayed.');
     }
 }
 
@@ -819,16 +952,239 @@ function debounce(func, wait) {
     };
 }
 
-// Add subtle parallax to hero image
+// Simple Bottom Reading Time Estimator
+function initializeReadingTimeEstimator() {
+    // Initial update
+    updateBottomReadingTime();
+    
+    // Update regularly until content loads
+    const initialInterval = setInterval(() => {
+        updateBottomReadingTime();
+        // Stop checking after content loads or 10 seconds
+        const timeSpan = document.getElementById('timeRemaining');
+        if (timeSpan && timeSpan.textContent !== 'calculating...' || Date.now() - state.sectionStartTime > 10000) {
+            clearInterval(initialInterval);
+        }
+    }, 500);
+    
+    // Update on scroll
+    let scrollTimeout;
+    window.addEventListener('scroll', () => {
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(updateBottomReadingTime, 150);
+    });
+}
+
+// Count words in a text element
+function countWords(text) {
+    if (!text) return 0;
+    return text.trim().split(/\s+/).filter(word => word.length > 0).length;
+}
+
+// Calculate remaining reading time for a section
+function calculateSectionReadingTime(sectionIndex) {
+    const section = document.querySelector(`[data-section="${sectionIndex}"]`);
+    if (!section) {
+        console.log('No section found for index:', sectionIndex);
+        return { remainingWords: 0, remainingMinutes: 0, totalWords: 0, readingProgress: 0 };
+    }
+    
+    // Get all text content in the section (excluding headings)
+    const paragraphs = section.querySelectorAll('p');
+    console.log('Found paragraphs in section', sectionIndex, ':', paragraphs.length);
+    
+    let totalWords = 0;
+    let wordsRead = 0;
+    
+    // Count total words
+    paragraphs.forEach((p, index) => {
+        const words = countWords(p.textContent);
+        console.log(`Paragraph ${index} words:`, words, 'Text preview:', p.textContent.substring(0, 50));
+        totalWords += words;
+    });
+    
+    // Calculate how much has been read based on scroll position
+    const sectionTop = section.offsetTop;
+    const sectionHeight = section.offsetHeight;
+    const sectionBottom = sectionTop + sectionHeight;
+    const viewportTop = window.pageYOffset;
+    const viewportHeight = window.innerHeight;
+    const viewportBottom = viewportTop + viewportHeight;
+    
+    // Calculate reading progress within the section
+    let readingProgress = 0;
+    if (viewportTop >= sectionBottom) {
+        // Section is completely above viewport - fully read
+        readingProgress = 1;
+    } else if (viewportBottom <= sectionTop) {
+        // Section is completely below viewport - not read yet
+        readingProgress = 0;
+    } else {
+        // Section is partially visible - calculate how much is above the fold
+        const visibleTop = Math.max(sectionTop, viewportTop);
+        const readHeight = Math.max(0, visibleTop - sectionTop);
+        readingProgress = Math.min(1, readHeight / sectionHeight);
+    }
+    
+    // Calculate remaining words
+    const remainingWords = Math.max(0, totalWords - (totalWords * readingProgress));
+    
+    // Convert to minutes (round up to nearest 0.5 minute)
+    const remainingMinutes = Math.ceil((remainingWords / state.averageReadingSpeed) * 2) / 2;
+    
+    return {
+        remainingWords,
+        remainingMinutes,
+        totalWords,
+        readingProgress
+    };
+}
+
+// Simple bottom reading time update
+function updateBottomReadingTime() {
+    const timeSpan = document.getElementById('timeRemaining');
+    if (!timeSpan) return;
+    
+    // Find which section is currently most visible
+    const allSections = document.querySelectorAll('.content-section');
+    let mostVisibleSection = null;
+    let maxVisibility = 0;
+    
+    const viewportTop = window.pageYOffset;
+    const viewportHeight = window.innerHeight;
+    const viewportBottom = viewportTop + viewportHeight;
+    
+    allSections.forEach(section => {
+        const rect = section.getBoundingClientRect();
+        const sectionTop = rect.top + viewportTop;
+        const sectionBottom = sectionTop + rect.height;
+        
+        // Calculate how much of this section is visible
+        const visibleTop = Math.max(sectionTop, viewportTop);
+        const visibleBottom = Math.min(sectionBottom, viewportBottom);
+        const visibleHeight = Math.max(0, visibleBottom - visibleTop);
+        const visibility = visibleHeight / rect.height;
+        
+        if (visibility > maxVisibility) {
+            maxVisibility = visibility;
+            mostVisibleSection = section;
+        }
+    });
+    
+    if (!mostVisibleSection) {
+        timeSpan.textContent = 'calculating...';
+        return;
+    }
+    
+    const sectionIndex = parseInt(mostVisibleSection.dataset.section);
+    console.log('Most visible section:', sectionIndex, mostVisibleSection.id);
+    
+    // Update the current section if it changed
+    if (state.currentSection !== sectionIndex) {
+        // Save time spent in previous section
+        if (state.currentSection !== null) {
+            const timeSpent = Date.now() - state.sectionStartTime;
+            state.readingTimes[state.currentSection] = 
+                (state.readingTimes[state.currentSection] || 0) + timeSpent;
+        }
+        
+        // Update to new section
+        state.currentSection = sectionIndex;
+        state.sectionStartTime = Date.now();
+        
+        // Save state and update navigation
+        localStorage.setItem('lastSection', sectionIndex);
+        localStorage.setItem('readingTimes', JSON.stringify(state.readingTimes));
+        updateReadingProgress();
+        updateGuideProgress();
+    }
+    
+    // Get paragraphs only in most visible section
+    const sectionParagraphs = mostVisibleSection.querySelectorAll('p');
+    let totalWords = 0;
+    let wordsAboveViewport = 0;
+    
+    const windowBottom = viewportTop + viewportHeight;
+    const documentHeight = document.documentElement.scrollHeight;
+    
+    // Check if we're at the bottom of the entire document
+    const isAtBottom = windowBottom >= documentHeight - 50; // 50px buffer
+    
+    sectionParagraphs.forEach(p => {
+        const words = countWords(p.textContent);
+        totalWords += words;
+        
+        // Check if paragraph is completely above current viewport (fully read)
+        const pRect = p.getBoundingClientRect();
+        
+        if (pRect.bottom < 0) {
+            // Paragraph is completely above viewport - fully read
+            wordsAboveViewport += words;
+        } else if (pRect.top < 0 && pRect.bottom > 0) {
+            // Paragraph is partially above viewport - partially read
+            const visibleHeight = pRect.bottom;
+            const totalHeight = pRect.height;
+            const readPercent = Math.max(0, Math.min(1, (totalHeight - visibleHeight) / totalHeight));
+            wordsAboveViewport += Math.floor(words * readPercent);
+        }
+        // If paragraph is fully visible or below, don't count any words as read
+    });
+    
+    const remainingWords = Math.max(0, totalWords - wordsAboveViewport);
+    const remainingMinutes = Math.ceil(remainingWords / state.averageReadingSpeed);
+    
+    console.log('Visible section:', sectionIndex, 'Paragraphs:', sectionParagraphs.length);
+    console.log('Section words:', totalWords, 'Read:', wordsAboveViewport, 'Remaining:', remainingWords);
+    console.log('At bottom?', isAtBottom);
+    
+    if (totalWords === 0) {
+        // Fallback to introduction section if current section is empty
+        const introSection = document.querySelector('.content-section[data-section="0"]');
+        if (introSection) {
+            const introParagraphs = introSection.querySelectorAll('p');
+            console.log('Fallback to intro section, paragraphs:', introParagraphs.length);
+            
+            if (introParagraphs.length > 0) {
+                let introWords = 0;
+                introParagraphs.forEach(p => {
+                    introWords += countWords(p.textContent);
+                });
+                const introMinutes = Math.floor(introWords / state.averageReadingSpeed);
+                timeSpan.textContent = introMinutes <= 0 ? 'complete' : `~${introMinutes} min`;
+                return;
+            }
+        }
+        
+        timeSpan.textContent = 'calculating...';
+        return;
+    }
+    
+    // Only show complete if at bottom of entire document
+    if (isAtBottom) {
+        timeSpan.textContent = 'complete';
+    } else if (remainingMinutes <= 1) {
+        timeSpan.textContent = '~1 min';
+    } else {
+        timeSpan.textContent = `~${remainingMinutes} min`;
+    }
+}
+
+// Add subtle parallax to hero image - Fixed for mobile
 window.addEventListener('scroll', debounce(() => {
     if (document.body.classList.contains('plain-text-mode')) return;
     
     const scrolled = window.pageYOffset;
     const heroImage = document.querySelector('.hero-image img');
     
-    if (heroImage && scrolled < window.innerHeight) {
-        const speed = 0.5;
-        const yPos = -(scrolled * speed);
-        heroImage.style.transform = `translateY(${yPos}px)`;
+    if (heroImage) {
+        // Only apply parallax when scrolling down and within reasonable bounds
+        if (scrolled >= 0 && scrolled < window.innerHeight * 1.5) {
+            const speed = 0.3; // Reduced speed for better mobile performance
+            const yPos = -(scrolled * speed);
+            heroImage.style.transform = `translateY(${yPos}px) translateZ(0)`;
+        } else if (scrolled < 0) {
+            // Reset transform when scrolling up past the top
+            heroImage.style.transform = `translateY(0px) translateZ(0)`;
+        }
     }
-}, 10));
+}, 8));

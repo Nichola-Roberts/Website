@@ -1,43 +1,78 @@
-# Quick Guide
+## Introduction
+* Many actions in life can be explained by not having the energy
+* When our energy runs out, even simple things can become impossible
 
 ## Energy Landscape
-Mental and emotional states exist as a topographical landscape of hills and valleys. Actions requiring effort are represented as upward climbs (mountains), while pleasant or easy experiences are downward slopes (valleys). We navigate this landscape like a ball responding to gravity, naturally drawn toward valleys and requiring energy to climb mountains. Our daily decisions and behaviors follow the path of least resistance through this terrain.
+* Landscape with mountains and valleys
+* Mountains represent difficult tasks, but also simple tasks when we're exhausted
+* Valleys are good experainces 
+* The slope guides our decisions like gravity
 
 ## Fluctuations
-Our internal landscape constantly shifts in response to external events and internal states. Small incidents can dramatically reshape our topography - creating instant mountains where flat ground existed moments before. These changes are chaotic and unpredictable, following butterfly effect dynamics. What feels manageable one moment can become overwhelming the next as our landscape reorganizes itself in real-time.
+* Our landscapes change constantly and unpredictably
+* Small events can create dramatic changes
+* It's chaotic, like the butterfly effect
 
 ## Energy Limit
-We operate within a relatively fixed mental energy budget. When stress pushes us to our energy limits, we lose capacity for anything beyond basic survival. At these peaks, even simple tasks become mountains. Our ability to cope, plan, and respond constructively diminishes as we approach our maximum capacity. This limit explains why we sometimes cannot do things that seem theoretically simple.
+* Our mental energy limit is relatively fixed
+* Reaching limits triggers survival mode and focus
+* Flight, Fight, Fawn
+* What looks like laziness or meanness is often just running out of energy
 
 ## Planning
-Our current energy state directly affects our ability to plan and see possibilities. When stressed and at high elevation, we cannot perceive paths that might be obvious when calm. Planning requires spare energy - without it, we're trapped in immediate survival mode. The higher our stress, the shorter our planning horizon becomes, until we can only focus on getting through the next few moments.
+* Stress blocks our ability to see available paths
+* When we're on a mountain, exits become invisible even when others point them out
 
 ## Relationships
-Romantic relationships dramatically reshape our landscapes. New love creates deep valleys and momentum, making previous mountains seem smaller. Partners provide alternative paths and shared energy for navigation. However, relationships also create new topography - both smoothing some areas while potentially creating new peaks. The loss of relationships can instantly transform valleys back into mountains, drastically altering our entire terrain.
+* New relationships can reshape our entire landscape
+* Reliable support and trust lowers our baseline energy level
+* Breakups can instantly send us back up our mountains
 
 ## Emotions
-Emotions serve as our navigation system, signaling the gradient of our current position. They indicate whether we're moving up (stress, anxiety) or down (joy, relief) the landscape. Each emotion provides crucial information about which direction to move. They also reshape the landscape itself, updating our internal map based on experiences and outcomes, making future navigation more accurate.
+* Emotions are signals showing us the slope
+* Each emotional experience updates our landscape
+* Emotional processing only happens if we have the energy
 
 ## Emotional Overload
-Processing emotions requires energy. When operating at our limits, we lack the capacity to process new emotional information. Unprocessed emotions don't disappear - they accumulate, creating unstable terrain. This overload often occurs in childhood when we lack resources to handle intense experiences. These unprocessed emotions become embedded in our landscape as permanent features.
+* Processing emotions requires energy we don't have at our energy limit
+* Overwhelming emotions get put on hold rather than processed
 
 ## Core Beliefs
-Core beliefs are major topographical features formed during intense, often early experiences. They become the mountains we constantly navigate around - "I'm worthless," "I'm a failure," "I'm a burden." These beliefs shape every decision and interaction, though we rarely examine them directly. They're so fundamental to our landscape that we mistake them for objective reality rather than learned patterns.
+* Extreme childhood moments create lasting mountains
+* These mountains shape our daily navigation below our awareness
+* Common examples: "I'm worthless," "I'm a failure," "I'm a burden"
+* Forced false narratives create fragile cover stories over our true experience
 
 ## Triggers
-Triggers are stimuli that instantly transport us up our steepest mountains. They're often connected to core beliefs and can activate disproportionate responses. When triggered, we lose access to our full landscape and become trapped in survival responses. The more mountains in our landscape, the more vigilant we must be, as any small fluctuation could send us rapidly upward.
+* Multiple mountains create elevated baseline stress
+* Core belief mountains often block our steepest downward paths
+* Different attachment styles reflect different mountain patterns
 
 ## Emergency Escape Routes
-When stuck on unbearable peaks, we employ emergency strategies to descend quickly, regardless of long-term consequences. These might include emotional suppression, manipulation, dissociation, or destructive behaviors. Developed in childhood as survival mechanisms, these routes provide immediate relief but often create problems. They're activated when we cannot tolerate our current elevation and need immediate escape.
+* Energy limit demands immediate relief
+* Childhood survival strategies often continue into adulthood
+* Short-term relief wins over long-term thinking
+* Often Automatic
 
 ## Protective Structures
-We build defensive structures around our biggest mountains to prevent others from triggering them. These appear as rigid rules, boundaries, or behavioral patterns designed to keep us safe from our core wounds. While protective in intent, these structures often manifest as controlling, entitled, or defensive behaviors that create distance in relationships and prevent genuine healing.
+* We develop defensive structures around our core mountains
+* These can appear as entitlement, but represent attempts to avoid pain
+* Common structures include scorekeeping, control, and achievement tracking
+* These behaviors become automatic
 
 ## Erosion
-Mountains can gradually erode through consistent counter-evidence and safe relationships. Being loved can slowly wear down beliefs about being unlovable. This process requires vulnerability and repeated positive experiences that contradict our core beliefs. Erosion is slow and requires being willing to risk triggering our mountains in order to discover they might not be as solid as we believed.
+* Mountains can gradually erode through safe experiences
+* Counter-evidence and vulnerability enable erosion
+* Romantic relationships can provide unique opportunities for healing or harm
+* We often attract partners with opposing mountains
 
 ## Holding Patterns
-Relationships often stabilize through patterns that manage but don't resolve underlying mountains. Partners learn to navigate around each other's sensitive terrain, creating elaborate dances of avoidance or controlled conflict. These patterns can create stability but prevent genuine erosion. Couples may cycle through the same conflicts repeatedly, each knowing the moves but unable to change the choreography.
+* Couples develop stable patterns
+* This stability often prevents erosion
+* Patterns include careful avoidance or cyclical breakup-reunion dynamics
 
 ## False Erosion
-Sometimes we believe we're healing when we're actually reinforcing our patterns with new strategies. Using therapeutic language to maintain control, setting "boundaries" that are actually protective structures, or intellectually understanding our patterns without embodying change. This false erosion can be more dangerous than honest stagnation because it provides the illusion of growth while deepening our entrenchment.
+* Apparent healing can mask sophisticated avoidance
+* Therapy language becomes a tool for control rather than erosion
+* Being accommodating or independent can both prevent real erosion
+* Understanding our mountains intellectually isn't the same as eroding them

@@ -14,6 +14,8 @@
     <link rel="stylesheet" href="styles.css">
     
     <!-- Marked.js for Markdown -->
+    <link rel="preload" as="fetch" href="./content.md" crossorigin>
+    <link rel="preload" as="fetch" href="./guide.md" crossorigin>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
@@ -113,6 +115,10 @@
                     <p>Your partner comes over, and asks you how your day was. You snap. You don't mean to. You just can't think about anything right now. You don't have the energy.</p>
                     
                     <p>A lot of actions in life can be explained by not having the energy.</p>
+                    
+                    <div class="section-reading-time" data-section-index="0">
+                        <span class="reading-time-remaining"></span>
+                    </div>
                 </div>
             </section>
 
@@ -120,6 +126,9 @@
                 <div class="section-inner">
                     <h2>Energy Landscape</h2>
                     <div class="section-content"></div>
+                    <div class="section-reading-time" data-section-index="1">
+                        <span class="reading-time-remaining"></span>
+                    </div>
                 </div>
             </section>
 
@@ -127,6 +136,9 @@
                 <div class="section-inner">
                     <h2>Fluctuations</h2>
                     <div class="section-content"></div>
+                    <div class="section-reading-time" data-section-index="2">
+                        <span class="reading-time-remaining"></span>
+                    </div>
                 </div>
             </section>
 
@@ -134,6 +146,9 @@
                 <div class="section-inner">
                     <h2>Energy Limit</h2>
                     <div class="section-content"></div>
+                    <div class="section-reading-time" data-section-index="3">
+                        <span class="reading-time-remaining"></span>
+                    </div>
                 </div>
             </section>
 
@@ -141,6 +156,9 @@
                 <div class="section-inner">
                     <h2>Planning</h2>
                     <div class="section-content"></div>
+                    <div class="section-reading-time" data-section-index="4">
+                        <span class="reading-time-remaining"></span>
+                    </div>
                 </div>
             </section>
 
@@ -148,6 +166,9 @@
                 <div class="section-inner">
                     <h2>Relationships</h2>
                     <div class="section-content"></div>
+                    <div class="section-reading-time" data-section-index="5">
+                        <span class="reading-time-remaining"></span>
+                    </div>
                 </div>
             </section>
 
@@ -155,6 +176,9 @@
                 <div class="section-inner">
                     <h2>Emotions</h2>
                     <div class="section-content"></div>
+                    <div class="section-reading-time" data-section-index="6">
+                        <span class="reading-time-remaining"></span>
+                    </div>
                 </div>
             </section>
 
@@ -162,6 +186,9 @@
                 <div class="section-inner">
                     <h2>Emotional Overload</h2>
                     <div class="section-content"></div>
+                    <div class="section-reading-time" data-section-index="7">
+                        <span class="reading-time-remaining"></span>
+                    </div>
                 </div>
             </section>
 
@@ -169,6 +196,9 @@
                 <div class="section-inner">
                     <h2>Core Beliefs</h2>
                     <div class="section-content"></div>
+                    <div class="section-reading-time" data-section-index="8">
+                        <span class="reading-time-remaining"></span>
+                    </div>
                 </div>
             </section>
 
@@ -176,6 +206,9 @@
                 <div class="section-inner">
                     <h2>Triggers</h2>
                     <div class="section-content"></div>
+                    <div class="section-reading-time" data-section-index="9">
+                        <span class="reading-time-remaining"></span>
+                    </div>
                 </div>
             </section>
 
@@ -183,6 +216,9 @@
                 <div class="section-inner">
                     <h2>Emergency Escape Routes</h2>
                     <div class="section-content"></div>
+                    <div class="section-reading-time" data-section-index="10">
+                        <span class="reading-time-remaining"></span>
+                    </div>
                 </div>
             </section>
 
@@ -190,6 +226,9 @@
                 <div class="section-inner">
                     <h2>Protective Structures</h2>
                     <div class="section-content"></div>
+                    <div class="section-reading-time" data-section-index="11">
+                        <span class="reading-time-remaining"></span>
+                    </div>
                 </div>
             </section>
 
@@ -197,6 +236,9 @@
                 <div class="section-inner">
                     <h2>Erosion</h2>
                     <div class="section-content"></div>
+                    <div class="section-reading-time" data-section-index="12">
+                        <span class="reading-time-remaining"></span>
+                    </div>
                 </div>
             </section>
 
@@ -204,6 +246,9 @@
                 <div class="section-inner">
                     <h2>Holding Patterns</h2>
                     <div class="section-content"></div>
+                    <div class="section-reading-time" data-section-index="13">
+                        <span class="reading-time-remaining"></span>
+                    </div>
                 </div>
             </section>
 
@@ -211,10 +256,26 @@
                 <div class="section-inner">
                     <h2>False Erosion</h2>
                     <div class="section-content"></div>
+                    <div class="section-reading-time" data-section-index="14">
+                        <span class="reading-time-remaining"></span>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Easter Egg: Notes section (hidden until all sections are read) -->
+            <section id="notes" class="content-section easter-egg" data-section="15" style="display: none;">
+                <div class="section-inner">
+                    <h2>Notes</h2>
+                    <div class="section-content"></div>
                 </div>
             </section>
         </article>
     </main>
+
+    <!-- Simple Reading Time at Bottom -->
+    <div class="bottom-reading-time" id="bottomReadingTime">
+        Estimated time left in section - <span id="timeRemaining">calculating...</span>
+    </div>
 
     <script src="scripts.js"></script>
 </body>
