@@ -26,6 +26,7 @@ const elements = {
     fontDecrease: document.querySelector('.font-decrease'),
     fontIncrease: document.querySelector('.font-increase'),
     floatingFontControls: document.getElementById('floatingFontControls'),
+    bottomFontControls: document.getElementById('bottomFontControls'),
     scrollIndicator: document.getElementById('scrollIndicator'),
     navMenu: document.getElementById('navMenu'),
     navClose: document.querySelector('.nav-close'),
@@ -297,16 +298,35 @@ function initializeFontSizeControls() {
     
     function showFloatingControls() {
         if (window.scrollY > 200) { // Show after scrolling 200px
-            elements.floatingFontControls.classList.add('visible');
-            elements.floatingFontControls.classList.remove('auto-hide');
+            // Show desktop floating controls
+            if (elements.floatingFontControls) {
+                elements.floatingFontControls.classList.add('visible');
+                elements.floatingFontControls.classList.remove('auto-hide');
+            }
+            
+            // Show mobile bottom controls
+            if (elements.bottomFontControls) {
+                elements.bottomFontControls.classList.add('visible');
+                elements.bottomFontControls.classList.remove('auto-hide');
+            }
             
             // Auto-hide after 2 seconds of no scrolling
             clearTimeout(hideTimeout);
             hideTimeout = setTimeout(() => {
-                elements.floatingFontControls.classList.add('auto-hide');
+                if (elements.floatingFontControls) {
+                    elements.floatingFontControls.classList.add('auto-hide');
+                }
+                if (elements.bottomFontControls) {
+                    elements.bottomFontControls.classList.add('auto-hide');
+                }
             }, 2000);
         } else {
-            elements.floatingFontControls.classList.remove('visible');
+            if (elements.floatingFontControls) {
+                elements.floatingFontControls.classList.remove('visible');
+            }
+            if (elements.bottomFontControls) {
+                elements.bottomFontControls.classList.remove('visible');
+            }
         }
         lastScrollY = window.scrollY;
     }
@@ -332,17 +352,33 @@ function initializeFontSizeControls() {
     });
     
     // Keep visible on hover/interaction
-    elements.floatingFontControls.addEventListener('mouseenter', () => {
-        clearTimeout(hideTimeout);
-        elements.floatingFontControls.classList.remove('auto-hide');
-    });
+    if (elements.floatingFontControls) {
+        elements.floatingFontControls.addEventListener('mouseenter', () => {
+            clearTimeout(hideTimeout);
+            elements.floatingFontControls.classList.remove('auto-hide');
+        });
+    }
+    
+    if (elements.bottomFontControls) {
+        elements.bottomFontControls.addEventListener('mouseenter', () => {
+            clearTimeout(hideTimeout);
+            elements.bottomFontControls.classList.remove('auto-hide');
+        });
+    }
     
     // Hide controls when clicking on main content
     document.addEventListener('click', (e) => {
-        // Only hide if controls are visible and click is outside the controls
-        if (elements.floatingFontControls.classList.contains('visible') && 
-            !elements.floatingFontControls.contains(e.target)) {
-            elements.floatingFontControls.classList.add('auto-hide');
+        // Check if click is outside both control sets
+        const isOutsideFloating = !elements.floatingFontControls || !elements.floatingFontControls.contains(e.target);
+        const isOutsideBottom = !elements.bottomFontControls || !elements.bottomFontControls.contains(e.target);
+        
+        if (isOutsideFloating && isOutsideBottom) {
+            if (elements.floatingFontControls && elements.floatingFontControls.classList.contains('visible')) {
+                elements.floatingFontControls.classList.add('auto-hide');
+            }
+            if (elements.bottomFontControls && elements.bottomFontControls.classList.contains('visible')) {
+                elements.bottomFontControls.classList.add('auto-hide');
+            }
         }
     });
 }
