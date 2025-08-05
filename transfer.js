@@ -97,7 +97,7 @@ class DeviceTransfer {
         const encryptedData = await this.encryptData(userData, encryptionKey);
 
         try {
-            const response = await fetch('/.netlify/functions/store-transfer', {
+            const response = await fetch('/.netlify/functions/store-transfer-redis', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -131,7 +131,7 @@ class DeviceTransfer {
     async importData(code) {
         try {
             const { storageKey, encryptionKey } = this.splitTransferCode(code);
-            const response = await fetch(`/.netlify/functions/retrieve-transfer?code=${storageKey}`);
+            const response = await fetch(`/.netlify/functions/retrieve-transfer-redis?code=${storageKey}`);
             
             if (!response.ok) {
                 if (response.status === 404) {
