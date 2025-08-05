@@ -232,6 +232,11 @@ body {
         opacity: 1;
         pointer-events: auto;
     }
+    
+    /* Hide desktop floating controls on mobile */
+    .floating-font-controls {
+        display: none !important;
+    }
 }
 
 /* Floating Font Controls (legacy - kept for desktop) */
@@ -1505,11 +1510,6 @@ body.font-2xl .content p {
     
     .fade-bottom {
         height: 180px;
-    }
-    
-    /* Hide legacy floating controls on mobile */
-    .floating-font-controls {
-        display: none;
     }
     
     /* Style bottom controls for mobile */
