@@ -10,7 +10,11 @@ const state = {
     scrollPosition: 0,
     readingSpeed: 0,
     sectionWordCounts: {}, // Store word counts for each section
-    averageReadingSpeed: 225 // words per minute
+    averageReadingSpeed: 225, // words per minute
+    totalTimeOnSite: parseInt(localStorage.getItem('totalTimeOnSite')) || 0,
+    siteStartTime: Date.now(),
+    isNotesMode: localStorage.getItem('notesMode') === 'true' || false,
+    notes: JSON.parse(localStorage.getItem('userNotes')) || {}
 };
 
 // DOM Elements
@@ -47,6 +51,8 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeSmoothScroll();
     initializeReadingTimeEstimator();
     initializeTitleClick();
+    initializeTotalTimeTracking();
+    initializeNotesFeature();
     loadMarkdownContent();
     loadGuideContent();
     
@@ -591,15 +597,25 @@ function getReadingLevel(milliseconds) {
 
 // Show easter egg notes section
 function showEasterEgg() {
-    const notesSection = document.getElementById('notes');
-    if (notesSection && notesSection.style.display === 'none') {
-        console.log('Revealing easter egg Notes section!');
-        notesSection.style.display = 'block';
-        
-        // Smooth scroll to make it noticeable
-        setTimeout(() => {
-            notesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 500);
+    // Check if user has spent at least 1 hour on site
+    const timeSpentThisSession = Date.now() - state.siteStartTime;
+    const totalTime = state.totalTimeOnSite + timeSpentThisSession;
+    const oneHour = 60 * 60 * 1000; // 1 hour in milliseconds
+    
+    // Only show if user has spent 1+ hour AND read all sections
+    if (totalTime >= oneHour) {
+        const notesSection = document.getElementById('notes');
+        if (notesSection && notesSection.style.display === 'none') {
+            console.log('Revealing easter egg Notes section after 1 hour!');
+            notesSection.style.display = 'block';
+            
+            // Smooth scroll to make it noticeable
+            setTimeout(() => {
+                notesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 500);
+        }
+    } else {
+        console.log('Easter egg requires 1 hour on site. Current time:', (totalTime / 1000 / 60).toFixed(1), 'minutes');
     }
 }
 
@@ -811,6 +827,13 @@ async function loadMarkdownContent() {
         
         // Update reading time estimates after content loads
         setTimeout(updateBottomReadingTime, 300);
+        
+        // Re-add note buttons if notes mode is active (for dynamically loaded content)
+        if (state.isNotesMode) {
+            setTimeout(() => {
+                addParagraphNoteButtons();
+            }, 400);
+        }
         
     } catch (error) {
         console.error('Error loading content:', error);
@@ -1158,5 +1181,545 @@ function initializeTitleClick() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     }
+}
+
+// Track total time spent on site
+function initializeTotalTimeTracking() {
+    // Update total time every 30 seconds
+    setInterval(() => {
+        const timeSpentThisSession = Date.now() - state.siteStartTime;
+        const newTotalTime = state.totalTimeOnSite + timeSpentThisSession;
+        localStorage.setItem('totalTimeOnSite', newTotalTime);
+        
+        // Update the notes button visibility
+        updateNotesButtonVisibility();
+    }, 30000); // Every 30 seconds
+    
+    // Also save on page unload
+    window.addEventListener('beforeunload', () => {
+        const timeSpentThisSession = Date.now() - state.siteStartTime;
+        const newTotalTime = state.totalTimeOnSite + timeSpentThisSession;
+        localStorage.setItem('totalTimeOnSite', newTotalTime);
+    });
+    
+    // Initial check for notes button visibility
+    setTimeout(updateNotesButtonVisibility, 1000);
+}
+
+// Update notes button visibility based on 20-minute threshold
+function updateNotesButtonVisibility() {
+    const timeSpentThisSession = Date.now() - state.siteStartTime;
+    const totalTime = state.totalTimeOnSite + timeSpentThisSession;
+    const twentyMinutes = 0; // Set to 0 for immediate testing (was: 20 * 60 * 1000)
+    
+    const notesButton = document.querySelector('.notes-toggle');
+    if (notesButton) {
+        if (totalTime >= twentyMinutes) {
+            notesButton.style.display = 'flex';
+        } else {
+            notesButton.style.display = 'none';
+        }
+    }
+}
+
+// Initialize notes feature
+function initializeNotesFeature() {
+    // Create and add notes toggle button to floating controls
+    const notesButton = document.createElement('button');
+    notesButton.className = 'font-button notes-toggle';
+    notesButton.setAttribute('aria-label', 'Toggle notes mode');
+    notesButton.style.display = 'none'; // Initially hidden until 20 minutes
+    notesButton.innerHTML = `
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
+            <path d="m15 5 4 4"/>
+        </svg>
+    `;
+    
+    const floatingControls = document.getElementById('floatingFontControls');
+    if (floatingControls) {
+        floatingControls.appendChild(notesButton); // Add at the end instead of beginning
+    }
+    
+    // Add click handler for notes toggle
+    notesButton.addEventListener('click', toggleNotesMode);
+    
+    // Apply saved notes mode state
+    if (state.isNotesMode) {
+        document.body.classList.add('notes-mode');
+        addParagraphNoteButtons();
+    }
+    
+    // Initial visibility check
+    updateNotesButtonVisibility();
+}
+
+// Toggle notes mode
+function toggleNotesMode() {
+    state.isNotesMode = !state.isNotesMode;
+    localStorage.setItem('notesMode', state.isNotesMode);
+    
+    if (state.isNotesMode) {
+        // Store the current plain text mode state before forcing it
+        state.originalPlainTextMode = document.body.classList.contains('plain-text-mode');
+        
+        // Force plain text mode when notes mode is active
+        document.body.classList.add('plain-text-mode');
+        document.body.classList.add('notes-mode');
+        
+        // Force fade overlays to be hidden
+        const fadeTop = document.querySelector('.fade-top');
+        const fadeBottom = document.querySelector('.fade-bottom');
+        if (fadeTop && fadeBottom) {
+            fadeTop.style.opacity = '0';
+            fadeBottom.style.opacity = '0';
+        }
+        
+        // Ensure all content is visible
+        setTimeout(() => {
+            document.querySelectorAll('p, h1, h2, h3, h4, h5, h6').forEach(element => {
+                element.classList.add('visible');
+                element.style.opacity = '1';
+                element.style.transform = 'translateY(0)';
+            });
+        }, 100);
+        
+        addParagraphNoteButtons();
+    } else {
+        document.body.classList.remove('notes-mode');
+        removeParagraphNoteButtons();
+        hideAllNoteInputs();
+        
+        // Restore original plain text mode state
+        if (!state.originalPlainTextMode) {
+            document.body.classList.remove('plain-text-mode');
+            localStorage.setItem('plainTextMode', 'false');
+            
+            // Restore fade overlays when exiting plain text mode
+            const fadeTop = document.querySelector('.fade-top');
+            const fadeBottom = document.querySelector('.fade-bottom');
+            if (fadeTop && fadeBottom) {
+                fadeTop.style.opacity = '';
+                fadeBottom.style.opacity = '';
+                // Trigger fade update immediately
+                if (window.updateFadeOverlays) {
+                    window.updateFadeOverlays(window.pageYOffset);
+                }
+            }
+        }
+    }
+}
+
+// Add + buttons to paragraphs
+function addParagraphNoteButtons() {
+    // Get ALL paragraphs, including those in dynamically loaded content
+    const allParagraphs = document.querySelectorAll('.content p, .section-content p');
+    console.log('Found paragraphs:', allParagraphs.length);
+    
+    allParagraphs.forEach((paragraph, index) => {
+        // Skip if already initialized
+        if (paragraph.dataset.notesInitialized) return;
+        paragraph.dataset.notesInitialized = 'true';
+        
+        // Position button relative to paragraph
+        paragraph.style.position = 'relative';
+        
+        // Create notes container for this paragraph
+        const notesContainer = document.createElement('div');
+        notesContainer.className = 'paragraph-notes-container';
+        paragraph.appendChild(notesContainer);
+        
+        // Load existing notes for this paragraph
+        loadExistingNotes(paragraph, index);
+        
+        // Always show an add button at the end
+        addNewNoteButton(paragraph, index);
+    });
+}
+
+// Load existing notes for a paragraph
+function loadExistingNotes(paragraph, paragraphIndex) {
+    const notesContainer = paragraph.querySelector('.paragraph-notes-container');
+    if (!notesContainer) return;
+    
+    // Get all notes for this paragraph
+    const paragraphNotes = Object.keys(state.notes)
+        .filter(key => key.startsWith(`paragraph-${paragraphIndex}-`))
+        .sort((a, b) => {
+            const aIndex = parseInt(a.split('-')[2]);
+            const bIndex = parseInt(b.split('-')[2]);
+            return aIndex - bIndex;
+        });
+    
+    paragraphNotes.forEach(noteKey => {
+        const noteIndex = parseInt(noteKey.split('-')[2]);
+        const noteData = state.notes[noteKey];
+        addExistingNoteCircle(paragraph, paragraphIndex, noteIndex, noteData);
+    });
+}
+
+// Add a new note button (+ sign)
+function addNewNoteButton(paragraph, paragraphIndex) {
+    const notesContainer = paragraph.querySelector('.paragraph-notes-container');
+    if (!notesContainer) return;
+    
+    // Remove existing add button
+    const existingButton = notesContainer.querySelector('.note-add-button');
+    if (existingButton) existingButton.remove();
+    
+    const noteButton = document.createElement('button');
+    noteButton.className = 'note-add-button';
+    noteButton.setAttribute('aria-label', 'Add note');
+    noteButton.innerHTML = '+';
+    
+    notesContainer.appendChild(noteButton);
+    
+    // Add click handler
+    noteButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const noteIndex = getNextNoteIndex(paragraphIndex);
+        showNoteInput(paragraph, paragraphIndex, noteIndex);
+    });
+}
+
+// Get next available note index for a paragraph
+function getNextNoteIndex(paragraphIndex) {
+    const existingNotes = Object.keys(state.notes)
+        .filter(key => key.startsWith(`paragraph-${paragraphIndex}-`))
+        .map(key => parseInt(key.split('-')[2]));
+    
+    return existingNotes.length > 0 ? Math.max(...existingNotes) + 1 : 0;
+}
+
+// Remove + buttons from paragraphs
+function removeParagraphNoteButtons() {
+    const containers = document.querySelectorAll('.paragraph-notes-container');
+    containers.forEach(container => container.remove());
+    
+    // Reset initialization flag
+    const paragraphs = document.querySelectorAll('.content p');
+    paragraphs.forEach(p => {
+        delete p.dataset.notesInitialized;
+    });
+}
+
+// Show note input box
+function showNoteInput(paragraph, paragraphIndex, noteIndex) {
+    // Hide any existing input boxes AND edit containers
+    hideAllNoteInputs();
+    hideAllEditContainers();
+    
+    const noteKey = `paragraph-${paragraphIndex}-${noteIndex}`;
+    let existingNoteData = null;
+    
+    if (state.notes[noteKey]) {
+        existingNoteData = JSON.parse(state.notes[noteKey]);
+    }
+    
+    // If note exists, show compact edit view
+    if (existingNoteData && existingNoteData.text) {
+        showCompactEditView(paragraph, paragraphIndex, noteIndex, existingNoteData);
+    } else {
+        // Show full input for new notes
+        showFullNoteInput(paragraph, paragraphIndex, noteIndex);
+    }
+}
+
+// Show compact edit view for existing notes
+function showCompactEditView(paragraph, paragraphIndex, noteIndex, noteData) {
+    // Check if already showing for this note
+    const existingEdit = paragraph.querySelector('.note-edit-container');
+    if (existingEdit) {
+        existingEdit.remove();
+        return; // Don't reopen if clicking same note
+    }
+    
+    const editContainer = document.createElement('div');
+    editContainer.className = 'note-edit-container';
+    editContainer.style.backgroundColor = noteData.color;
+    editContainer.dataset.noteIndex = noteIndex; // Track which note this is for
+    
+    const noteText = document.createElement('div');
+    noteText.className = 'note-edit-text';
+    noteText.textContent = noteData.text;
+    
+    const editButton = document.createElement('button');
+    editButton.className = 'note-edit-button';
+    editButton.innerHTML = `
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+        </svg>
+    `;
+    
+    editContainer.appendChild(noteText);
+    editContainer.appendChild(editButton);
+    paragraph.appendChild(editContainer);
+    
+    // Click edit button to open full editor
+    editButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        editContainer.remove();
+        showFullNoteInput(paragraph, paragraphIndex, noteIndex);
+    });
+    
+    // Click outside to close
+    setTimeout(() => {
+        const closeHandler = (e) => {
+            if (!editContainer.contains(e.target)) {
+                editContainer.remove();
+                document.removeEventListener('click', closeHandler);
+            }
+        };
+        document.addEventListener('click', closeHandler);
+    }, 100);
+}
+
+// Show full note input (for new notes or when editing)
+function showFullNoteInput(paragraph, paragraphIndex, noteIndex) {
+    const noteContainer = document.createElement('div');
+    noteContainer.className = 'note-input-container';
+    
+    const noteInput = document.createElement('textarea');
+    noteInput.className = 'note-input';
+    noteInput.placeholder = ''; // No placeholder text
+    noteInput.rows = 3;
+    
+    // Color picker for the note
+    const colorPicker = document.createElement('div');
+    colorPicker.className = 'note-color-picker';
+    
+    const colors = ['#f0d9ef', '#fcdce1', '#ffe6bb', '#e9ecce', '#cde9dc', '#c4dfe5'];
+    colors.forEach((color, index) => {
+        const colorButton = document.createElement('button');
+        colorButton.className = 'color-option';
+        colorButton.style.backgroundColor = color;
+        colorButton.dataset.color = color;
+        colorButton.setAttribute('aria-label', `Color option ${index + 1}`);
+        
+        if (index === 0) colorButton.classList.add('selected');
+        
+        colorButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            colorPicker.querySelectorAll('.color-option').forEach(btn => btn.classList.remove('selected'));
+            colorButton.classList.add('selected');
+        });
+        
+        colorPicker.appendChild(colorButton);
+    });
+    
+    const noteKey = `paragraph-${paragraphIndex}-${noteIndex}`;
+    if (state.notes[noteKey]) {
+        const noteData = JSON.parse(state.notes[noteKey]);
+        noteInput.value = noteData.text;
+        // Select the saved color
+        const savedColorButton = colorPicker.querySelector(`[data-color="${noteData.color}"]`);
+        if (savedColorButton) {
+            colorPicker.querySelectorAll('.color-option').forEach(btn => btn.classList.remove('selected'));
+            savedColorButton.classList.add('selected');
+        }
+    }
+    
+    noteContainer.appendChild(noteInput);
+    noteContainer.appendChild(colorPicker);
+    paragraph.appendChild(noteContainer);
+    
+    // Prevent color picker clicks from closing the input
+    colorPicker.addEventListener('click', (e) => {
+        e.stopPropagation();
+    });
+    
+    // Also prevent blur when clicking anywhere in the container
+    noteContainer.addEventListener('mousedown', (e) => {
+        if (e.target !== noteInput) {
+            e.preventDefault();
+        }
+    });
+    
+    // Focus the input after a small delay
+    setTimeout(() => {
+        noteInput.focus();
+    }, 50);
+    
+    // Save note on blur or click away
+    noteInput.addEventListener('blur', () => {
+        const selectedColor = colorPicker.querySelector('.color-option.selected')?.dataset.color || colors[0];
+        console.log('Saving note with color:', selectedColor);
+        saveNote(paragraph, paragraphIndex, noteIndex, noteInput.value, selectedColor);
+    });
+    
+    // Also save on Enter key (but allow Shift+Enter for new lines)
+    noteInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            noteInput.blur(); // Trigger save
+        }
+    });
+    
+    // Close on Escape
+    noteInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            noteInput.blur();
+        }
+    });
+}
+
+// Save note and show as circle
+function saveNote(paragraph, paragraphIndex, noteIndex, noteText, color) {
+    const noteKey = `paragraph-${paragraphIndex}-${noteIndex}`;
+    
+    if (noteText.trim()) {
+        // Save the note with color
+        const noteData = {
+            text: noteText.trim(),
+            color: color
+        };
+        state.notes[noteKey] = JSON.stringify(noteData);
+        localStorage.setItem('userNotes', JSON.stringify(state.notes));
+        
+        // Show existing note
+        addExistingNoteCircle(paragraph, paragraphIndex, noteIndex, noteData);
+    } else {
+        // Remove empty note
+        delete state.notes[noteKey];
+        localStorage.setItem('userNotes', JSON.stringify(state.notes));
+        
+        // Remove note circle if it exists
+        const existingCircle = paragraph.querySelector(`[data-note-index="${noteIndex}"]`);
+        if (existingCircle) {
+            existingCircle.remove();
+        }
+    }
+    
+    // Remove input container
+    const inputContainer = paragraph.querySelector('.note-input-container');
+    if (inputContainer) {
+        inputContainer.remove();
+    }
+    
+    // Refresh the add button
+    addNewNoteButton(paragraph, paragraphIndex);
+}
+
+// Add existing note circle
+function addExistingNoteCircle(paragraph, paragraphIndex, noteIndex, noteData) {
+    const notesContainer = paragraph.querySelector('.paragraph-notes-container');
+    if (!notesContainer) return;
+    
+    // Remove existing circle if present
+    const existingCircle = notesContainer.querySelector(`[data-note-index="${noteIndex}"]`);
+    if (existingCircle) {
+        existingCircle.remove();
+    }
+    
+    // Parse note data if it's a string
+    let parsedNoteData = noteData;
+    if (typeof noteData === 'string') {
+        try {
+            parsedNoteData = JSON.parse(noteData);
+        } catch (e) {
+            // Fallback for old format
+            parsedNoteData = { text: noteData, color: '#f0d9ef' };
+        }
+    }
+    
+    // Ensure we have a color
+    if (!parsedNoteData.color) {
+        parsedNoteData.color = '#f0d9ef';
+    }
+    
+    // Create note circle container
+    const noteContainer = document.createElement('div');
+    noteContainer.className = 'note-item';
+    noteContainer.dataset.noteIndex = noteIndex;
+    
+    // Create delete button
+    const deleteButton = document.createElement('button');
+    deleteButton.className = 'note-delete';
+    deleteButton.setAttribute('aria-label', 'Delete note');
+    deleteButton.innerHTML = `
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14zM10 11v6M14 11v6"/>
+        </svg>
+    `;
+    
+    // Create note circle
+    const noteCircle = document.createElement('button');
+    noteCircle.className = 'note-circle';
+    noteCircle.setAttribute('aria-label', 'View/edit note');
+    noteCircle.innerHTML = '●';
+    noteCircle.title = parsedNoteData.text; // Show note text on hover
+    noteCircle.style.backgroundColor = parsedNoteData.color;
+    console.log('Setting note circle color to:', parsedNoteData.color);
+    
+    noteContainer.appendChild(deleteButton);
+    noteContainer.appendChild(noteCircle);
+    
+    // Insert before the add button
+    const addButton = notesContainer.querySelector('.note-add-button');
+    if (addButton) {
+        notesContainer.insertBefore(noteContainer, addButton);
+    } else {
+        notesContainer.appendChild(noteContainer);
+    }
+    
+    // Click to edit the note
+    noteCircle.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        showNoteInput(paragraph, paragraphIndex, noteIndex);
+    });
+    
+    // Click to delete the note
+    deleteButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        deleteNote(paragraph, paragraphIndex, noteIndex);
+    });
+}
+
+// Delete a note
+function deleteNote(paragraph, paragraphIndex, noteIndex) {
+    const noteKey = `paragraph-${paragraphIndex}-${noteIndex}`;
+    
+    // Remove from state and localStorage
+    delete state.notes[noteKey];
+    localStorage.setItem('userNotes', JSON.stringify(state.notes));
+    
+    // Remove from DOM
+    const notesContainer = paragraph.querySelector('.paragraph-notes-container');
+    if (notesContainer) {
+        const noteItem = notesContainer.querySelector(`[data-note-index="${noteIndex}"]`);
+        if (noteItem) {
+            noteItem.remove();
+        }
+    }
+    
+    // Also remove any open edit containers for this note
+    const editContainer = paragraph.querySelector(`.note-edit-container[data-note-index="${noteIndex}"]`);
+    if (editContainer) {
+        editContainer.remove();
+    }
+    
+    // And remove any open input containers
+    const inputContainer = paragraph.querySelector('.note-input-container');
+    if (inputContainer) {
+        inputContainer.remove();
+    }
+}
+
+// Hide all note input boxes
+function hideAllNoteInputs() {
+    const inputs = document.querySelectorAll('.note-input-container');
+    inputs.forEach(input => input.remove());
+}
+
+// Hide all edit containers
+function hideAllEditContainers() {
+    const editContainers = document.querySelectorAll('.note-edit-container');
+    editContainers.forEach(container => container.remove());
 }
 

@@ -66,10 +66,11 @@
     --duration-slower: 600ms;
 }
 
-/* Hide scrollbar elegantly */
+/* Hide scrollbar elegantly and enable smooth scrolling */
 html {
     scrollbar-width: none;
     -ms-overflow-style: none;
+    scroll-behavior: smooth;
 }
 
 html::-webkit-scrollbar {
@@ -762,6 +763,312 @@ body.dragging-scroll {
 body.plain-text-mode .plain-text-toggle {
     background-color: var(--color-sage);
     color: white;
+}
+
+/* Highlight notes button when active */
+body.notes-mode .notes-toggle {
+    background-color: var(--color-sage);
+    color: white;
+}
+
+/* Notes Feature Styling */
+.paragraph-notes-container {
+    position: absolute;
+    top: 0.5rem;
+    right: -2rem;
+    display: none;
+    flex-direction: column;
+    gap: var(--space-1);
+    z-index: 10;
+    align-items: center; /* Center align all items */
+    width: 1.25rem; /* Fixed width to prevent alignment issues */
+}
+
+/* Show notes container only in notes mode - handled by rule at bottom */
+
+.note-add-button {
+    width: 1.25rem;
+    height: 1.25rem;
+    background: transparent;
+    color: var(--color-sage);
+    border: none;
+    border-radius: 0;
+    font-size: var(--text-lg);
+    font-weight: 300;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.3;
+    transition: all var(--duration-fast) var(--ease-out);
+    line-height: 1;
+    flex-shrink: 0; /* Prevent shrinking */
+}
+
+.note-add-button:hover {
+    opacity: 0.7;
+    transform: none;
+}
+
+/* Note item container */
+.note-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-1);
+    height: 1.25rem; /* Match circle height for consistent alignment */
+    width: 100%; /* Use full container width */
+}
+
+/* Delete button for notes */
+.note-delete {
+    position: absolute;
+    top: -0.25rem;
+    right: -0.25rem;
+    width: 0.875rem;
+    height: 0.875rem;
+    background: rgba(220, 38, 38, 0.1);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: all var(--duration-fast) var(--ease-out);
+    color: #dc2626;
+    z-index: 1;
+}
+
+.note-item:hover .note-delete {
+    opacity: 1;
+}
+
+.note-delete:hover {
+    background: #dc2626;
+    color: white;
+    transform: scale(1.1);
+}
+
+.note-delete svg {
+    width: 0.625rem;
+    height: 0.625rem;
+    stroke-width: 2.5;
+}
+
+/* Note circle for existing notes */
+.note-circle {
+    width: 1.25rem;
+    height: 1.25rem;
+    border: none;
+    border-radius: 50%;
+    font-size: var(--text-xs);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.9;
+    transition: all var(--duration-fast) var(--ease-out);
+    color: transparent;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+    background-color: #f0d9ef; /* Default fallback color */
+    flex-shrink: 0; /* Prevent shrinking */
+}
+
+.note-circle:hover {
+    opacity: 1;
+    transform: scale(1.1);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Note input container */
+.note-input-container {
+    margin-top: var(--space-5);
+    margin-bottom: var(--space-5);
+    position: relative;
+    z-index: 20;
+}
+
+/* Color picker - below input */
+.note-color-picker {
+    display: flex;
+    gap: var(--space-2);
+    padding: 0;
+    background: transparent;
+    margin-top: var(--space-2);
+    margin-bottom: var(--space-1);
+}
+
+.color-option {
+    width: 1.25rem;
+    height: 1.25rem;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all var(--duration-fast) var(--ease-out);
+    position: relative;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+.color-option:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+.color-option.selected {
+    transform: translateY(-2px);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+}
+
+.color-option.selected::after {
+    content: '•';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: var(--text-xs);
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Compact edit view for existing notes */
+.note-edit-container {
+    margin-top: var(--space-3);
+    margin-bottom: var(--space-3);
+    padding: var(--space-3) var(--space-5);
+    border-radius: var(--space-2);
+    position: relative;
+    display: inline-block;
+    max-width: 80%;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.note-edit-text {
+    color: var(--color-ink-light);
+    font-size: var(--text-sm);
+    line-height: var(--leading-normal);
+    padding-right: var(--space-8); /* Space for edit button */
+    min-height: 1.5rem;
+}
+
+.note-edit-button {
+    position: absolute;
+    top: var(--space-2);
+    right: var(--space-2);
+    width: 1.25rem;
+    height: 1.25rem;
+    background: rgba(255, 255, 255, 0.8);
+    border: none;
+    border-radius: var(--space-1);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--duration-fast) var(--ease-out);
+    color: var(--color-ink);
+}
+
+.note-edit-button:hover {
+    background: white;
+    transform: scale(1.1);
+}
+
+.note-edit-button svg {
+    width: 0.75rem;
+    height: 0.75rem;
+    stroke-width: 2;
+}
+
+/* Note input textarea - sleek modern design */
+.note-input {
+    width: 100%;
+    min-height: 5rem;
+    padding: var(--space-5);
+    border: 1.5px solid var(--color-sage);
+    border-radius: var(--space-2); /* Slight curves */
+    background: white;
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    line-height: var(--leading-relaxed);
+    color: var(--color-ink-light);
+    resize: none; /* Remove resize handle */
+    outline: none;
+    transition: all var(--duration-fast) var(--ease-out);
+}
+
+.note-input:focus {
+    border-color: var(--color-sage-dark);
+    border-width: 1.5px;
+    outline: none;
+}
+
+.note-input::placeholder {
+    display: none; /* No placeholder text as requested */
+}
+
+/* Mobile adjustments for notes */
+@media (max-width: 48rem) {
+    .paragraph-notes-container {
+        right: -1.5rem;
+        width: 1.5rem;
+    }
+    
+    .note-add-button {
+        width: 1.5rem;
+        height: 1.5rem;
+        font-size: var(--text-xl);
+    }
+    
+    .note-circle {
+        width: 1.5rem;
+        height: 1.5rem;
+        font-size: var(--text-sm);
+    }
+    
+    .note-item {
+        height: 1.5rem;
+    }
+    
+    .note-delete {
+        width: 1rem;
+        height: 1rem;
+        top: -0.25rem;
+        right: -0.25rem;
+    }
+    
+    .note-delete svg {
+        width: 0.75rem;
+        height: 0.75rem;
+    }
+    
+    .note-input {
+        font-size: var(--text-base);
+        padding: var(--space-3);
+        min-height: 4rem;
+    }
+    
+    .note-color-picker {
+        padding: 0;
+        gap: var(--space-2);
+    }
+    
+    .color-option {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+}
+
+/* Notes are always visible when notes mode is active, regardless of plain text mode */
+body.notes-mode .paragraph-notes-container {
+    display: flex !important;
+}
+
+/* Only hide notes when notes mode is completely off */
+body:not(.notes-mode) .paragraph-notes-container,
+body:not(.notes-mode) .note-input-container {
+    display: none !important;
 }
 
 /* Ensure plain text button is not highlighted by default */
