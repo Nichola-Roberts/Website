@@ -293,11 +293,11 @@ function initializeFontSizeControls() {
             elements.floatingFontControls.classList.add('visible');
             elements.floatingFontControls.classList.remove('auto-hide');
             
-            // Auto-hide after 3 seconds of no scrolling
+            // Auto-hide after 2 seconds of no scrolling
             clearTimeout(hideTimeout);
             hideTimeout = setTimeout(() => {
                 elements.floatingFontControls.classList.add('auto-hide');
-            }, 3000);
+            }, 2000);
         } else {
             elements.floatingFontControls.classList.remove('visible');
         }
