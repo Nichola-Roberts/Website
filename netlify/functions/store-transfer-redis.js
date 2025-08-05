@@ -98,7 +98,12 @@ exports.handler = async (event, context) => {
         return {
             statusCode: 500,
             headers: { 'Access-Control-Allow-Origin': '*' },
-            body: JSON.stringify({ error: 'Failed to create transfer code' })
+            body: JSON.stringify({ 
+                error: 'Failed to create transfer code',
+                details: error.message,
+                hasRedisUrl: !!process.env.UPSTASH_REDIS_REST_URL,
+                hasRedisToken: !!process.env.UPSTASH_REDIS_REST_TOKEN
+            })
         };
     }
 };
