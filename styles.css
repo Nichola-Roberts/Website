@@ -531,6 +531,11 @@ p.lead {
         max-height: 70vh;
         padding: var(--space-8);
     }
+    
+    /* Reset help section visibility on mobile - let reading progress control it */
+    .help-section.guide-current {
+        opacity: inherit !important;
+    }
 }
 
 /* Help sections styling */

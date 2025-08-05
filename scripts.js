@@ -329,6 +329,15 @@ function initializeFontSizeControls() {
         clearTimeout(hideTimeout);
         elements.floatingFontControls.classList.remove('auto-hide');
     });
+    
+    // Hide controls when clicking on main content
+    document.addEventListener('click', (e) => {
+        // Only hide if controls are visible and click is outside the controls
+        if (elements.floatingFontControls.classList.contains('visible') && 
+            !elements.floatingFontControls.contains(e.target)) {
+            elements.floatingFontControls.classList.add('auto-hide');
+        }
+    });
 }
 
 function applyFontSize(size) {
