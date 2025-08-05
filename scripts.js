@@ -105,6 +105,9 @@ function updateFadeOverlays(scrollY) {
     elements.fadeBottom.style.opacity = bottomOpacity;
 }
 
+// Make updateFadeOverlays globally available
+window.updateFadeOverlays = updateFadeOverlays;
+
 // Navigation
 function initializeNavigation() {
     elements.menuTrigger.addEventListener('click', toggleMenu);
@@ -252,10 +255,18 @@ function initializePlainTextToggle() {
         const isPlainText = document.body.classList.toggle('plain-text-mode');
         localStorage.setItem('plainTextMode', isPlainText);
         
-        // Reset fade overlays
+        // Handle fade overlays immediately
         if (isPlainText) {
             elements.fadeTop.style.opacity = '0';
             elements.fadeBottom.style.opacity = '0';
+        } else {
+            // Restore fade overlays when exiting plain text mode
+            elements.fadeTop.style.opacity = '';
+            elements.fadeBottom.style.opacity = '';
+            // Trigger fade update immediately
+            if (window.updateFadeOverlays) {
+                window.updateFadeOverlays(window.pageYOffset);
+            }
         }
     });
 }
