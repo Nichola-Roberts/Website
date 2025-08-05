@@ -23,6 +23,7 @@ const elements = {
     scrollIndicator: document.getElementById('scrollIndicator'),
     navMenu: document.getElementById('navMenu'),
     helpModal: document.getElementById('helpModal'),
+    modalBackdrop: document.getElementById('modalBackdrop'),
     helpClose: document.querySelector('.help-close'),
     navLinks: document.querySelectorAll('.nav-link'),
     sections: document.querySelectorAll('.content-section'),
@@ -159,7 +160,9 @@ function closeMenu() {
 function initializeHelp() {
     elements.helpTrigger.addEventListener('click', toggleHelp);
     
-    // Close when clicking outside the modal content
+    // Close when clicking backdrop or outside the modal content
+    elements.modalBackdrop.addEventListener('click', closeHelp);
+    
     document.addEventListener('click', (e) => {
         if (state.isHelpOpen && 
             !elements.helpModal.contains(e.target) && 
@@ -181,6 +184,7 @@ function toggleHelp() {
     state.isHelpOpen = !state.isHelpOpen;
     if (state.isHelpOpen) {
         elements.helpModal.classList.add('active');
+        elements.modalBackdrop.classList.add('active');
         console.log('Help opened, current section should be:', state.currentSection);
         // Update guide progress and scroll to current section
         setTimeout(() => {
@@ -189,7 +193,14 @@ function toggleHelp() {
         }, 150); // Slightly longer delay for modal to appear
     } else {
         elements.helpModal.classList.remove('active');
+        elements.modalBackdrop.classList.remove('active');
     }
+}
+
+function closeHelp() {
+    state.isHelpOpen = false;
+    elements.helpModal.classList.remove('active');
+    elements.modalBackdrop.classList.remove('active');
 }
 
 // Track scrolling within the guide to highlight visible sections
@@ -222,10 +233,6 @@ function initializeGuideScrollTracking() {
     });
 }
 
-function closeHelp() {
-    state.isHelpOpen = false;
-    elements.helpModal.classList.remove('active');
-}
 
 // Plain text toggle
 function initializePlainTextToggle() {
