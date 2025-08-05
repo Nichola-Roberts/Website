@@ -1349,6 +1349,20 @@ body:not(.notes-mode) .note-input-container {
     color: #721c24;
 }
 
+/* Fix mobile button stuck hover states */
+@media (hover: none) and (pointer: coarse) {
+    .font-button:hover,
+    .font-decrease:hover,
+    .font-increase:hover,
+    .plain-text-toggle:hover,
+    .notes-toggle:hover,
+    .transfer-toggle:hover {
+        background: transparent !important;
+        color: var(--color-sage) !important;
+        transform: none !important;
+    }
+}
+
 /* Mobile adjustments */
 @media (max-width: 48rem) {
     .transfer-modal-inner {
@@ -1377,6 +1391,11 @@ body:not(.notes-mode) .note-input-container {
         margin-top: var(--space-6);
         padding-top: var(--space-4);
     }
+}
+
+/* Ensure transfer button is always visible */
+.transfer-toggle {
+    display: flex !important;
 }
 
 /* Reset plain text button when not in plain text mode */

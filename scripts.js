@@ -1731,7 +1731,21 @@ function initializeTransferFeature() {
     const transferClose = document.querySelector('.transfer-close');
     const modalBackdrop = document.getElementById('modalBackdrop');
     
-    if (!transferToggle || !transferModal) return;
+    console.log('Transfer feature initialization:', {
+        transferToggle: !!transferToggle,
+        transferModal: !!transferModal,
+        DeviceTransfer: typeof DeviceTransfer
+    });
+    
+    if (!transferToggle || !transferModal) {
+        console.error('Transfer elements not found');
+        return;
+    }
+    
+    if (typeof DeviceTransfer === 'undefined') {
+        console.error('DeviceTransfer class not loaded');
+        return;
+    }
     
     // Initialize transfer system
     const transferSystem = new DeviceTransfer();
