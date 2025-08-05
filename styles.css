@@ -1253,7 +1253,7 @@ body:not(.notes-mode) .note-input-container {
     font-family: inherit;
     font-size: 1rem;
     letter-spacing: normal;
-    padding: var(--space-5) var(--space-4);
+    padding: var(--space-5) var(--space-8);
     border: 1px solid rgba(181, 188, 181, 0.3);
     border-radius: 4px;
     text-align: center;
