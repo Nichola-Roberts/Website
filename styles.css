@@ -220,14 +220,32 @@ body {
         left: 50%;
         display: flex;
         gap: var(--space-1);
-        background: var(--color-sage);
+        background: var(--color-glass);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
         padding: var(--space-2);
         border-radius: var(--space-2);
+        box-shadow: 0 2px 12px rgba(10, 15, 13, 0.1);
+        border: 1px solid rgba(59, 125, 105, 0.1);
         z-index: 1000;
-        opacity: 1;
-        transform: translateX(-50%);
+        opacity: 0;
+        transform: translateX(-50%) translateY(100%);
         transition: all var(--duration-base) var(--ease-out);
+        pointer-events: none;
+    }
+    
+    .bottom-font-controls.visible {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
         pointer-events: auto;
+    }
+    
+    .bottom-font-controls.auto-hide {
+        opacity: 0;
+    }
+    
+    .bottom-font-controls:hover {
+        opacity: 1 !important;
     }
     
     /* Hide desktop floating controls on mobile */
@@ -1514,9 +1532,6 @@ body.font-2xl .content p {
         width: 1.25rem;
         height: 1.25rem;
         font-size: var(--text-xs);
-        background: white;
-        color: var(--color-sage);
-        border: 1px solid white;
     }
     
     .bottom-font-controls .font-button svg {
@@ -1688,8 +1703,7 @@ body.plain-text-mode .section-reading-time {
 
 /* Hide in plain text mode */
 body.plain-text-mode .bottom-reading-time {
-    display: block !important;
-    background: red !important;
+    display: none;
 }
 
 
