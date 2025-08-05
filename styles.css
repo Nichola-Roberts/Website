@@ -91,8 +91,13 @@ body {
 
 /* Selection Colors */
 ::selection {
-    background-color: var(--color-sage);
-    color: var(--color-fog);
+    background-color: var(--color-sage-highlight);
+    color: var(--color-sage-dark);
+}
+
+::-moz-selection {
+    background-color: var(--color-sage-highlight);
+    color: var(--color-sage-dark);
 }
 
 /* Header - Glassmorphism Effect */
@@ -195,7 +200,7 @@ body {
 .floating-font-controls {
     position: fixed;
     top: 50%;
-    right: var(--space-8);
+    left: var(--space-8);
     transform: translateY(-50%);
     display: flex;
     flex-direction: column;
@@ -209,7 +214,7 @@ body {
     border: 1px solid rgba(59, 125, 105, 0.1);
     z-index: 999;
     opacity: 0;
-    transform: translateY(-50%) translateX(100%);
+    transform: translateY(-50%) translateX(-100%);
     transition: all var(--duration-base) var(--ease-out);
     pointer-events: none;
 }
@@ -242,6 +247,8 @@ body {
     font-weight: 600;
     cursor: pointer;
     transition: all var(--duration-fast) var(--ease-out);
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
 }
 
 .font-button:hover {
@@ -433,10 +440,10 @@ p.lead {
 /* Fade Effects - Ultra Subtle */
 .fade-top {
     position: fixed;
-    top: 4rem;
+    top: 0;
     left: 0;
     right: 0;
-    height: var(--space-34);
+    height: 120px;
     background: linear-gradient(to bottom, var(--color-mist), transparent);
     pointer-events: none;
     z-index: 100;
@@ -449,7 +456,7 @@ p.lead {
     bottom: 0;
     left: 0;
     right: 0;
-    height: var(--space-55);
+    height: 120px;
     background: linear-gradient(to top, var(--color-mist), transparent);
     pointer-events: none;
     z-index: 100;
@@ -674,6 +681,33 @@ body.font-2xl .content p {
     
     p.lead {
         font-size: var(--text-lg);
+    }
+    
+    /* Larger fade effects on mobile */
+    .fade-top {
+        height: 180px;
+    }
+    
+    .fade-bottom {
+        height: 180px;
+    }
+    
+    /* Make floating controls more touch-friendly on mobile */
+    .floating-font-controls {
+        left: var(--space-5);
+        padding: var(--space-3);
+        gap: var(--space-2);
+    }
+    
+    .font-button {
+        width: 2rem;
+        height: 2rem;
+        font-size: var(--text-base);
+    }
+    
+    .font-button svg {
+        width: 14px;
+        height: 14px;
     }
 }
 
