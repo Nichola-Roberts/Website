@@ -1829,7 +1829,7 @@ body.font-2xl .content p {
 }
 
 #notes h2 {
-    font-size: 14px !important;
+    display: none !important;
 }
 
 /* Animations */
