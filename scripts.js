@@ -2207,7 +2207,7 @@ function initializeTransferFeature() {
             // Add timeout to the import
             const importPromise = transferSystem.importData(code);
             const timeoutPromise = new Promise((_, reject) => {
-                setTimeout(() => reject(new Error('Import timed out after 30 seconds')), 30000);
+                setTimeout(() => reject(new Error('Import timed out after 8 seconds')), 8000);
             });
             
             const result = await Promise.race([importPromise, timeoutPromise]);
@@ -2231,22 +2231,16 @@ function initializeTransferFeature() {
                 
                 console.log('Has existing notes:', hasExistingNotes);
                 
-                if (hasExistingNotes) {
-                    // Device has notes - show management interface
+                // Check if there are imported notes to manage
+                const importedNotesStr = result.data.data.userNotes;
+                const hasImportedNotes = importedNotesStr && importedNotesStr !== '{}' && Object.keys(JSON.parse(importedNotesStr || '{}')).length > 0;
+                
+                if (hasImportedNotes) {
+                    // Always show management interface for imported notes (they go to left side)
                     console.log('Showing notes management interface');
                     showNotesManagement(currentImportData);
                 } else {
-                    // No existing notes - directly import all notes
-                    const importedNotesStr = result.data.data.userNotes;
-                    if (importedNotesStr && importedNotesStr !== '{}') {
-                        localStorage.setItem('userNotes', importedNotesStr);
-                        // Update current state if available
-                        if (window.state) {
-                            window.state.notes = JSON.parse(importedNotesStr);
-                        }
-                    }
-                    
-                    // Show success message
+                    // No imported notes - just show success
                     document.getElementById('importSuccess').style.display = 'block';
                     document.getElementById('importResult').style.display = 'block';
                 }
