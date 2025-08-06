@@ -2018,11 +2018,15 @@ function initializeTransferFeature() {
         keepList.innerHTML = '';
         
         // Populate imported notes (left side)
+        console.log('Creating imported note items, count:', Object.keys(importedNotes).length);
         Object.keys(importedNotes).forEach(noteKey => {
             const noteData = JSON.parse(importedNotes[noteKey]);
+            console.log('Creating note item for:', noteKey, noteData);
             const noteItem = createNoteItem(noteKey, noteData, 'imported');
+            console.log('Created note item:', noteItem);
             importedList.appendChild(noteItem);
         });
+        console.log('Imported list final state:', importedList.innerHTML);
         
         // Populate notes to keep (right side)
         Object.keys(notesToKeep).forEach(noteKey => {
