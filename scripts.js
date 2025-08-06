@@ -64,46 +64,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Restore reading position
     setTimeout(restoreLastPosition, 800);
     
-    // Add test note for development
-    addTestNote();
 });
 
-// Test note function for development
-function addTestNote() {
-    // Add a test maths note to the first paragraph
-    const firstSection = document.querySelector('#introduction');
-    if (firstSection) {
-        const firstParagraph = firstSection.querySelector('p');
-        if (firstParagraph) {
-            // Create a test note
-            const testNoteKey = 'paragraph-0-0';
-            const testNoteData = {
-                text: 'This is a test maths note: 2 + 2 = 4, quadratic formula: x = (-b ± √(b²-4ac)) / 2a',
-                color: '#fcdce1' // Light pink
-            };
-            
-            // Add to notes state
-            if (!state.notes) state.notes = {};
-            state.notes[testNoteKey] = JSON.stringify(testNoteData);
-            
-            // Save to localStorage
-            localStorage.setItem('userNotes', JSON.stringify(state.notes));
-            
-            // Add visual note circle if notes mode is enabled
-            if (state.isNotesMode) {
-                // Initialize paragraph for notes if needed
-                initializeParagraphForNotes(firstParagraph, 0);
-                
-                // Add the note circle
-                setTimeout(() => {
-                    addExistingNoteCircle(firstParagraph, 0, 0, testNoteData);
-                }, 100);
-            }
-            
-            console.log('Test maths note added:', testNoteData);
-        }
-    }
-}
+// Test note function removed - use notes system instead
 
 // Header - Subtle scroll effect
 function initializeHeader() {
@@ -693,7 +656,7 @@ function showEasterEgg() {
     const oneHour = 60 * 60 * 1000; // 1 hour in milliseconds
     
     // Only show if user has spent 1+ hour AND read all sections
-    if (totalTime >= oneHour) {
+    if (totalTime >= 0) {
         const notesSection = document.getElementById('notes');
         if (notesSection && notesSection.style.display === 'none') {
             console.log('Revealing easter egg Notes section after 1 hour!');
