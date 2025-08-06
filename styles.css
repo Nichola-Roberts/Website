@@ -212,6 +212,8 @@ body {
 @media (max-width: 48rem) {
     .floating-font-controls {
         display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
     }
 }
 
