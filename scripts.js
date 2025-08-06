@@ -1922,16 +1922,21 @@ function initializeTransferFeature() {
     let notesToKeep = {};
     
     function showNotesManagement(importData) {
+        console.log('showNotesManagement called with:', importData);
         // Extract notes from imported data
         const importedNotesStr = importData.data.userNotes;
         importedNotes = importedNotesStr ? JSON.parse(importedNotesStr) : {};
         notesToKeep = {};
         
+        console.log('Imported notes:', importedNotes);
+        
         // Check if there are any notes to manage
         if (Object.keys(importedNotes).length === 0) {
             // No notes to import, just merge other data
+            console.log('No imported notes, showing success');
             transferSystem.mergeImportedData(importData);
             document.getElementById('importSuccess').style.display = 'block';
+            document.getElementById('importResult').style.display = 'block';
             return;
         }
         
@@ -2196,20 +2201,31 @@ function initializeTransferFeature() {
         hideImportStates();
         
         try {
+            console.log('Starting import with code:', code);
             const result = await transferSystem.importData(code);
+            console.log('Import result:', result);
             
             if (result.success) {
                 currentImportData = result.data;
                 
                 // Check if there are existing notes on this device
                 const existingNotes = localStorage.getItem('userNotes');
-                const hasExistingNotes = existingNotes && existingNotes !== '{}' && Object.keys(JSON.parse(existingNotes)).length > 0;
+                let hasExistingNotes = false;
+                try {
+                    hasExistingNotes = existingNotes && existingNotes !== '{}' && Object.keys(JSON.parse(existingNotes)).length > 0;
+                } catch (e) {
+                    console.log('Error parsing existing notes:', e);
+                    hasExistingNotes = false;
+                }
                 
                 // Always merge non-notes data (times, settings, etc.)
                 transferSystem.mergeNonNotesData(result.data);
                 
+                console.log('Has existing notes:', hasExistingNotes);
+                
                 if (hasExistingNotes) {
                     // Device has notes - show management interface
+                    console.log('Showing notes management interface');
                     showNotesManagement(currentImportData);
                 } else {
                     // No existing notes - directly import all notes
