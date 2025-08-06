@@ -7,6 +7,7 @@
 * Mountains represent difficult tasks, but also simple tasks when we're exhausted
 * Valleys are good experainces 
 * The slope guides our decisions like gravity
+* We can only take routes that have paths we know
 
 ## Fluctuations
 * Our landscapes change constantly and unpredictably

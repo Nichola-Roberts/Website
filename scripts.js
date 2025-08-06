@@ -64,7 +64,45 @@ document.addEventListener('DOMContentLoaded', () => {
     // Restore reading position
     setTimeout(restoreLastPosition, 800);
     
+    
+    // Clean up any old test notes
+    cleanupTestNotes();
 });
+
+// Clean up any test notes from localStorage
+function cleanupTestNotes() {
+    const notes = localStorage.getItem('userNotes');
+    if (notes) {
+        try {
+            const notesObj = JSON.parse(notes);
+            let cleaned = false;
+            
+            // Remove any test notes (look for test patterns)
+            Object.keys(notesObj).forEach(key => {
+                const noteData = JSON.parse(notesObj[key]);
+                if (noteData.text && (
+                    noteData.text.includes('test maths') || 
+                    noteData.text.includes('2 + 2 = 4') ||
+                    noteData.text.includes('quadratic formula')
+                )) {
+                    delete notesObj[key];
+                    cleaned = true;
+                    console.log('Removed test note:', key);
+                }
+            });
+            
+            if (cleaned) {
+                localStorage.setItem('userNotes', JSON.stringify(notesObj));
+                if (window.state) {
+                    window.state.notes = notesObj;
+                }
+                console.log('Cleaned up test notes from localStorage');
+            }
+        } catch (e) {
+            console.log('Error cleaning test notes:', e);
+        }
+    }
+}
 
 // Test note function removed - use notes system instead
 

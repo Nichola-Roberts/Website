@@ -5,7 +5,7 @@ Your partner comes over, and asks you how your day was. You snap. You don’t me
 A lot of actions in life can be explained by not having the energy. 
 
 ## Energy Landscape
-Imagine you’re a ball. Standing on a path. In front of a vast landscape. There are hills, mountains and valleys. These represent all the actions you could take. From changing the show on netflix to hanging up the washing. Some paths stretch out far into the distance. You can just about make out that old pathway. The one you used to dream of. Quitting your job and retraining in line with your passion. But it seems so far away these days.
+Imagine you’re a ball. Standing on a path. In front of a vast landscape. There are hills, mountains and valleys. The paths represent all the actions you could take. From changing the show on netflix to hanging up the washing. Some paths stretch out far into the distance. You can just about make out that old pathway. The one you used to dream of. Quitting your job and retraining in line with your passion. But it seems so far away these days.
 
 The valleys are the experiences that feel good. Like a holiday with your family. Or meeting someone and falling in love. 
 
@@ -14,6 +14,8 @@ The mountains feel huge. They feel stressful to even think about. They represent
 Mountains can also represent things that should be easy. Things you’re meant to enjoy. Like a loving conversation with your partner. Some days even that is too hard. 
 
 You can feel the pull of gravity drawing you to the valleys. And the effort of climbing the mountains. You know which paths you want to take. You don’t have to map them out. It’s in the feeling of the slope beneath your feet.
+
+We can only take the routes that have paths.
 
 ## Fluctuations
 Our landscapes fluctuate constantly. The ground shifts below us, and all around us. 
