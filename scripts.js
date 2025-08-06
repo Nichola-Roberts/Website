@@ -1911,10 +1911,13 @@ function initializeTransferFeature() {
     }
     
     function hideImportStates() {
-        document.getElementById('importSuccess').style.display = 'none';
-        document.getElementById('importConflicts').style.display = 'none';
-        document.getElementById('importError').style.display = 'none';
-        document.getElementById('notesManagement').style.display = 'none';
+        const elements = ['importSuccess', 'importError', 'notesManagement'];
+        elements.forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.style.display = 'none';
+            }
+        });
     }
     
     // Notes Management System
