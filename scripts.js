@@ -630,7 +630,7 @@ function updateReadingProgress() {
     
     // Show easter egg if all sections have been read
     console.log('All sections read?', allSectionsRead);
-    if (allSectionsRead) {
+    if (true) { // Temporarily always show for testing
         console.log('Triggering easter egg!');
         showEasterEgg();
     }
