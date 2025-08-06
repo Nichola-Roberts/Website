@@ -28,7 +28,6 @@ const elements = {
     plainTextToggle: document.querySelector('.plain-text-toggle'),
     fontDecrease: document.querySelector('.font-decrease'),
     fontIncrease: document.querySelector('.font-increase'),
-    floatingFontControls: document.getElementById('floatingFontControls'),
     scrollIndicator: document.getElementById('scrollIndicator'),
     navMenu: document.getElementById('navMenu'),
     navClose: document.querySelector('.nav-close'),
@@ -58,6 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeTotalTimeTracking();
     initializeNotesFeature();
     initializeTransferFeature();
+    initializeEasterEgg();
     loadMarkdownContent();
     loadGuideContent();
     
@@ -363,36 +363,6 @@ function initializeFontSizeControls() {
     let currentSizeIndex = sizes.indexOf(localStorage.getItem('fontSize')) || 2; // Default to 'normal'
     applyFontSize(sizes[currentSizeIndex]);
     
-    // Floating controls scroll behavior
-    let hideTimeout;
-    let lastScrollY = 0;
-    
-    function showFloatingControls() {
-        if (window.scrollY > 200) { // Show after scrolling 200px
-            // Show desktop floating controls
-            if (elements.floatingFontControls) {
-                elements.floatingFontControls.classList.add('visible');
-                elements.floatingFontControls.classList.remove('auto-hide');
-            }
-            
-            
-            // Auto-hide after 2 seconds of no scrolling
-            clearTimeout(hideTimeout);
-            hideTimeout = setTimeout(() => {
-                if (elements.floatingFontControls) {
-                    elements.floatingFontControls.classList.add('auto-hide');
-                }
-            }, 2000);
-        } else {
-            if (elements.floatingFontControls) {
-                elements.floatingFontControls.classList.remove('visible');
-            }
-        }
-        lastScrollY = window.scrollY;
-    }
-    
-    // Show/hide on scroll
-    window.addEventListener('scroll', showFloatingControls);
     
     // Font size button handlers - attach to ALL buttons
     document.querySelectorAll('.font-decrease').forEach(button => {
@@ -415,26 +385,6 @@ function initializeFontSizeControls() {
         });
     });
     
-    // Keep visible on hover/interaction
-    if (elements.floatingFontControls) {
-        elements.floatingFontControls.addEventListener('mouseenter', () => {
-            clearTimeout(hideTimeout);
-            elements.floatingFontControls.classList.remove('auto-hide');
-        });
-    }
-    
-    
-    // Hide controls when clicking on main content
-    document.addEventListener('click', (e) => {
-        // Check if click is outside control set
-        const isOutsideFloating = !elements.floatingFontControls || !elements.floatingFontControls.contains(e.target);
-        
-        if (isOutsideFloating) {
-            if (elements.floatingFontControls && elements.floatingFontControls.classList.contains('visible')) {
-                elements.floatingFontControls.classList.add('auto-hide');
-            }
-        }
-    });
 }
 
 function applyFontSize(size) {
@@ -704,7 +654,21 @@ function showEasterEgg() {
             }, 500);
         }
     } else {
+        // Ensure notes section stays hidden
+        const notesSection = document.getElementById('notes');
+        if (notesSection) {
+            notesSection.style.display = 'none';
+        }
         console.log('Easter egg requires 1 hour on site. Current time:', (totalTime / 1000 / 60).toFixed(1), 'minutes');
+    }
+}
+
+// Initialize easter egg - ensure it's hidden on load
+function initializeEasterEgg() {
+    const notesSection = document.getElementById('notes');
+    if (notesSection) {
+        notesSection.style.display = 'none';
+        console.log('Easter egg Notes section initialized as hidden');
     }
 }
 
@@ -1325,11 +1289,6 @@ function initializeNotesFeature() {
         </svg>
     `;
     
-    // Add to desktop floating controls
-    const floatingControls = document.getElementById('floatingFontControls');
-    if (floatingControls) {
-        floatingControls.appendChild(notesButton); // Add at the end instead of beginning
-    }
     
     
     // Add click handler for notes toggle - attach to ALL notes buttons
@@ -1720,11 +1679,33 @@ function saveNote(paragraph, paragraphIndex, noteIndex, noteText, color) {
     
     // Refresh the add button
     addNewNoteButton(paragraph, paragraphIndex);
+    
+    // Update container layout
+    const rightContainer = paragraph.querySelector('.paragraph-notes-container:not(.left-margin)');
+    if (rightContainer) {
+        updateNotesContainerLayout(rightContainer);
+    }
+}
+
+// Update notes container layout based on number of notes
+function updateNotesContainerLayout(container) {
+    if (!container) return;
+    
+    // Count notes (exclude add button)
+    const noteItems = container.querySelectorAll('.note-item');
+    const noteCount = noteItems.length;
+    
+    // Apply has-many-notes class if there are 4 or more notes
+    if (noteCount >= 4) {
+        container.classList.add('has-many-notes');
+    } else {
+        container.classList.remove('has-many-notes');
+    }
 }
 
 // Add existing note circle
 function addExistingNoteCircle(paragraph, paragraphIndex, noteIndex, noteData) {
-    const notesContainer = paragraph.querySelector('.paragraph-notes-container');
+    const notesContainer = paragraph.querySelector('.paragraph-notes-container:not(.left-margin)');
     if (!notesContainer) return;
     
     // Remove existing circle if present
@@ -1784,6 +1765,9 @@ function addExistingNoteCircle(paragraph, paragraphIndex, noteIndex, noteData) {
         notesContainer.appendChild(noteContainer);
     }
     
+    // Update container class based on number of notes
+    updateNotesContainerLayout(notesContainer);
+    
     // Click to edit the note
     noteCircle.addEventListener('click', (e) => {
         e.preventDefault();
@@ -1824,6 +1808,12 @@ function deleteNote(paragraph, paragraphIndex, noteIndex) {
             lineBreak.remove();
         }
         editContainer.remove();
+    }
+    
+    // Update container layout after deletion
+    const rightContainer = paragraph.querySelector('.paragraph-notes-container:not(.left-margin)');
+    if (rightContainer) {
+        updateNotesContainerLayout(rightContainer);
     }
     
     // And remove any open input containers
@@ -1972,21 +1962,19 @@ function initializeTransferFeature() {
         }
     }
     
-    // Notes Management System
-    let importedNotes = {};
-    let notesToKeep = {};
+    // Notes Management System - New margin-based approach
+    let importedNotesData = {};
     
     function showNotesManagement(importData) {
         console.log('showNotesManagement called with:', importData);
         // Extract notes from imported data
         const importedNotesStr = importData.data.userNotes;
-        importedNotes = importedNotesStr ? JSON.parse(importedNotesStr) : {};
-        notesToKeep = {};
+        importedNotesData = importedNotesStr ? JSON.parse(importedNotesStr) : {};
         
-        console.log('Imported notes:', importedNotes);
+        console.log('Imported notes:', importedNotesData);
         
         // Check if there are any notes to manage
-        if (Object.keys(importedNotes).length === 0) {
+        if (Object.keys(importedNotesData).length === 0) {
             // No notes to import, just merge other data
             console.log('No imported notes, showing success');
             transferSystem.mergeImportedData(importData);
@@ -2000,136 +1988,286 @@ function initializeTransferFeature() {
         // Merge non-notes data immediately (reading times, preferences, etc.)
         transferSystem.mergeNonNotesData(importData);
         
-        // Show notes management interface
-        document.getElementById('notesManagement').style.display = 'block';
-        populateImportedNotes();
-        
-        // Add finish button listener
-        const finishBtn = document.getElementById('finishNotesBtn');
-        finishBtn.onclick = finishNotesManagement;
-    }
-    
-    function populateImportedNotes() {
-        const importedList = document.getElementById('importedNotesList');
-        const keepList = document.getElementById('keepNotesList');
-        
-        // Clear existing items
-        importedList.innerHTML = '';
-        keepList.innerHTML = '';
-        
-        // Populate imported notes (left side)
-        console.log('Creating imported note items, count:', Object.keys(importedNotes).length);
-        Object.keys(importedNotes).forEach(noteKey => {
-            const noteData = JSON.parse(importedNotes[noteKey]);
-            console.log('Creating note item for:', noteKey, noteData);
-            const noteItem = createNoteItem(noteKey, noteData, 'imported');
-            console.log('Created note item:', noteItem);
-            importedList.appendChild(noteItem);
-        });
-        console.log('Imported list final state:', importedList.innerHTML);
-        
-        // Populate notes to keep (right side)
-        Object.keys(notesToKeep).forEach(noteKey => {
-            const noteData = JSON.parse(notesToKeep[noteKey]);
-            const noteItem = createNoteItem(noteKey, noteData, 'keep');
-            keepList.appendChild(noteItem);
-        });
-        
-        // Show empty state if no notes
-        if (Object.keys(importedNotes).length === 0) {
-            importedList.innerHTML = '<p style="color: #999; font-style: italic;">No imported notes</p>';
-        }
-        if (Object.keys(notesToKeep).length === 0) {
-            keepList.innerHTML = '<p style="color: #999; font-style: italic;">Move notes here to keep them</p>';
-        }
-    }
-    
-    function createNoteItem(noteKey, noteData, type) {
-        const item = document.createElement('div');
-        item.className = type === 'imported' ? 'imported-note-item' : 'keep-note-item';
-        
-        const preview = document.createElement('div');
-        preview.className = 'note-preview';
-        preview.textContent = noteData.text || 'Empty note';
-        preview.style.backgroundColor = noteData.color || '#f0d9ef';
-        preview.style.padding = '2px 6px';
-        preview.style.borderRadius = '3px';
-        
-        const actions = document.createElement('div');
-        actions.className = 'note-actions';
-        
-        if (type === 'imported') {
-            const moveBtn = document.createElement('button');
-            moveBtn.className = 'note-move-btn';
-            moveBtn.textContent = '→';
-            moveBtn.title = 'Move to keep';
-            moveBtn.onclick = () => moveNoteToKeep(noteKey);
-            
-            const deleteBtn = document.createElement('button');
-            deleteBtn.className = 'note-delete-btn';
-            deleteBtn.textContent = '×';
-            deleteBtn.title = 'Delete note';
-            deleteBtn.onclick = () => deleteImportedNote(noteKey);
-            
-            actions.appendChild(moveBtn);
-            actions.appendChild(deleteBtn);
-        } else {
-            const moveBackBtn = document.createElement('button');
-            moveBackBtn.className = 'note-move-btn';
-            moveBackBtn.textContent = '←';
-            moveBackBtn.title = 'Move back';
-            moveBackBtn.onclick = () => moveNoteBack(noteKey);
-            
-            actions.appendChild(moveBackBtn);
-        }
-        
-        item.appendChild(preview);
-        item.appendChild(actions);
-        
-        return item;
-    }
-    
-    function moveNoteToKeep(noteKey) {
-        notesToKeep[noteKey] = importedNotes[noteKey];
-        delete importedNotes[noteKey];
-        populateImportedNotes();
-    }
-    
-    function moveNoteBack(noteKey) {
-        importedNotes[noteKey] = notesToKeep[noteKey];
-        delete notesToKeep[noteKey];
-        populateImportedNotes();
-    }
-    
-    function deleteImportedNote(noteKey) {
-        delete importedNotes[noteKey];
-        populateImportedNotes();
-    }
-    
-    function finishNotesManagement() {
-        // Save the notes to keep to localStorage
-        const currentNotes = JSON.parse(localStorage.getItem('userNotes') || '{}');
-        Object.assign(currentNotes, notesToKeep);
-        localStorage.setItem('userNotes', JSON.stringify(currentNotes));
-        
-        // Update the state
-        if (window.state) {
-            Object.assign(window.state.notes, notesToKeep);
-        }
+        // Instead of showing modal, place imported notes in left margins
+        placeImportedNotesInMargins();
         
         // Show success message
-        document.getElementById('notesManagement').style.display = 'none';
         document.getElementById('importSuccess').style.display = 'block';
-        // Auto-refresh to ensure notes load properly
-        setTimeout(() => window.location.reload(), 2000);
-        
+        document.getElementById('importResult').style.display = 'block';
         const successMsg = document.querySelector('#importSuccess p');
-        if (Object.keys(notesToKeep).length > 0) {
-            successMsg.textContent = `${Object.keys(notesToKeep).length} notes added successfully!`;
-        } else {
-            successMsg.textContent = 'Import completed. No notes were added.';
+        successMsg.textContent = `${Object.keys(importedNotesData).length} notes imported to left margins. Click transfer (→) to move them to your collection.`;
+        
+        // Auto-refresh to ensure notes mode is active
+        setTimeout(() => {
+            // Force notes mode to be active to see imported notes
+            if (!state.isNotesMode) {
+                toggleNotesMode();
+            } else {
+                // Refresh note buttons to show imported ones
+                removeParagraphNoteButtons();
+                addParagraphNoteButtons();
+            }
+        }, 1000);
+    }
+    
+    // Place imported notes in left margins of paragraphs
+    function placeImportedNotesInMargins() {
+        const allParagraphs = document.querySelectorAll('.content p, .section-content p');
+        const filteredParagraphs = Array.from(allParagraphs).filter(p => !p.closest('#notes'));
+        
+        console.log('Placing imported notes in margins for', filteredParagraphs.length, 'paragraphs');
+        
+        // Create a temporary store for imported notes by paragraph
+        window.importedNotesStore = {};
+        
+        filteredParagraphs.forEach((paragraph, paragraphIndex) => {
+            // Create or get left margin notes container
+            let leftContainer = paragraph.querySelector('.paragraph-notes-container.left-margin');
+            if (!leftContainer) {
+                leftContainer = document.createElement('div');
+                leftContainer.className = 'paragraph-notes-container left-margin';
+                paragraph.style.position = 'relative';
+                paragraph.appendChild(leftContainer);
+            }
+            
+            // Find imported notes for this paragraph
+            const paragraphImportedNotes = Object.keys(importedNotesData)
+                .filter(key => key.startsWith(`paragraph-${paragraphIndex}-`))
+                .sort((a, b) => {
+                    const aIndex = parseInt(a.split('-')[2]);
+                    const bIndex = parseInt(b.split('-')[2]);
+                    return aIndex - bIndex;
+                });
+            
+            if (paragraphImportedNotes.length > 0) {
+                leftContainer.style.display = 'flex';
+                window.importedNotesStore[paragraphIndex] = {};
+                
+                paragraphImportedNotes.forEach(noteKey => {
+                    const noteIndex = parseInt(noteKey.split('-')[2]);
+                    const noteData = importedNotesData[noteKey];
+                    window.importedNotesStore[paragraphIndex][noteIndex] = noteData;
+                    addImportedNoteCircle(leftContainer, paragraphIndex, noteIndex, noteData);
+                });
+            }
+        });
+    }
+    
+    // Add imported note circle to left margin
+    function addImportedNoteCircle(container, paragraphIndex, noteIndex, noteData) {
+        let parsedNoteData = noteData;
+        if (typeof noteData === 'string') {
+            try {
+                parsedNoteData = JSON.parse(noteData);
+            } catch (e) {
+                parsedNoteData = { text: noteData, color: '#ffce54' }; // Yellow for imported
+            }
+        }
+        
+        if (!parsedNoteData.color) {
+            parsedNoteData.color = '#ffce54'; // Default yellow for imported
+        }
+        
+        // Create note item container
+        const noteContainer = document.createElement('div');
+        noteContainer.className = 'note-item imported';
+        noteContainer.dataset.noteIndex = noteIndex;
+        
+        // Create transfer button (→)
+        const transferButton = document.createElement('button');
+        transferButton.className = 'note-transfer';
+        transferButton.setAttribute('aria-label', 'Transfer note to main collection');
+        transferButton.textContent = '→';
+        transferButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            showPrependDialog(paragraphIndex, noteIndex, parsedNoteData);
+        });
+        
+        // Create delete button
+        const deleteButton = document.createElement('button');
+        deleteButton.className = 'note-delete';
+        deleteButton.setAttribute('aria-label', 'Delete imported note');
+        deleteButton.innerHTML = `
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14zM10 11v6M14 11v6"/>
+            </svg>
+        `;
+        deleteButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            deleteImportedNote(paragraphIndex, noteIndex);
+        });
+        
+        // Create note circle
+        const noteCircle = document.createElement('button');
+        noteCircle.className = 'note-circle';
+        noteCircle.setAttribute('aria-label', 'View imported note');
+        noteCircle.innerHTML = '●';
+        noteCircle.title = parsedNoteData.text;
+        noteCircle.style.backgroundColor = parsedNoteData.color;
+        noteCircle.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            showImportedNotePreview(parsedNoteData);
+        });
+        
+        noteContainer.appendChild(transferButton);
+        noteContainer.appendChild(deleteButton);
+        noteContainer.appendChild(noteCircle);
+        container.appendChild(noteContainer);
+        
+        // Update container layout for imported notes too
+        updateNotesContainerLayout(container);
+    }
+    
+    // Show prepend dialog when transferring a note
+    function showPrependDialog(paragraphIndex, noteIndex, noteData) {
+        // Create dialog overlay
+        const overlay = document.createElement('div');
+        overlay.style.position = 'fixed';
+        overlay.style.top = '0';
+        overlay.style.left = '0';
+        overlay.style.width = '100%';
+        overlay.style.height = '100%';
+        overlay.style.backgroundColor = 'rgba(0,0,0,0.3)';
+        overlay.style.zIndex = '999';
+        overlay.addEventListener('click', () => overlay.remove());
+        
+        // Create dialog
+        const dialog = document.createElement('div');
+        dialog.className = 'prepend-dialog';
+        dialog.innerHTML = `
+            <h4>Transfer Note</h4>
+            <p style="margin-bottom: var(--space-3); color: var(--color-ink-light); font-size: var(--text-sm);">Original: "${noteData.text}"</p>
+            <label style="display: block; margin-bottom: var(--space-2); color: var(--color-ink); font-weight: 500;">Prepend text (optional):</label>
+            <textarea placeholder="e.g., 'From Sarah: ' or 'Previous thought: '" rows="2"></textarea>
+            <div class="prepend-dialog-buttons">
+                <button type="button" onclick="this.closest('.prepend-dialog').parentElement.remove()">Cancel</button>
+                <button type="button" class="primary">Transfer</button>
+            </div>
+        `;
+        
+        // Add transfer button logic
+        const transferBtn = dialog.querySelector('.primary');
+        const textarea = dialog.querySelector('textarea');
+        transferBtn.addEventListener('click', () => {
+            const prependText = textarea.value.trim();
+            transferNoteToMainCollection(paragraphIndex, noteIndex, noteData, prependText);
+            overlay.remove();
+        });
+        
+        // Prevent dialog click from closing overlay
+        dialog.addEventListener('click', (e) => e.stopPropagation());
+        
+        overlay.appendChild(dialog);
+        document.body.appendChild(overlay);
+        
+        // Focus textarea
+        setTimeout(() => textarea.focus(), 100);
+    }
+    
+    // Transfer note from left margin to right margin (main collection)
+    function transferNoteToMainCollection(paragraphIndex, noteIndex, noteData, prependText) {
+        const finalText = prependText ? `${prependText}${noteData.text}` : noteData.text;
+        
+        // Find the next available index for the main collection
+        const paragraph = document.querySelectorAll('.content p, .section-content p')[paragraphIndex];
+        if (!paragraph.closest('#notes')) {
+            const existingNotes = Object.keys(state.notes)
+                .filter(key => key.startsWith(`paragraph-${paragraphIndex}-`))
+                .map(key => parseInt(key.split('-')[2]));
+            
+            const newIndex = existingNotes.length > 0 ? Math.max(...existingNotes) + 1 : 0;
+            const newNoteKey = `paragraph-${paragraphIndex}-${newIndex}`;
+            
+            // Save to main collection
+            const newNoteData = {
+                text: finalText,
+                color: noteData.color || '#f0d9ef'
+            };
+            state.notes[newNoteKey] = JSON.stringify(newNoteData);
+            localStorage.setItem('userNotes', JSON.stringify(state.notes));
+            
+            // Remove from imported notes store
+            if (window.importedNotesStore && window.importedNotesStore[paragraphIndex]) {
+                delete window.importedNotesStore[paragraphIndex][noteIndex];
+            }
+            
+            // Update UI - remove from left margin and add to right margin
+            const leftContainer = paragraph.querySelector('.paragraph-notes-container.left-margin');
+            if (leftContainer) {
+                const noteItem = leftContainer.querySelector(`[data-note-index="${noteIndex}"]`);
+                if (noteItem) noteItem.remove();
+                
+                // Hide left container if empty
+                if (leftContainer.children.length === 0) {
+                    leftContainer.style.display = 'none';
+                }
+            }
+            
+            // Add to right margin (main collection)
+            const rightContainer = paragraph.querySelector('.paragraph-notes-container:not(.left-margin)');
+            if (rightContainer) {
+                addExistingNoteCircle(paragraph, paragraphIndex, newIndex, newNoteData);
+                // Refresh add button
+                addNewNoteButton(paragraph, paragraphIndex);
+            }
         }
     }
+    
+    // Delete imported note
+    function deleteImportedNote(paragraphIndex, noteIndex) {
+        const paragraph = document.querySelectorAll('.content p, .section-content p')[paragraphIndex];
+        if (paragraph && !paragraph.closest('#notes')) {
+            // Remove from imported notes store
+            if (window.importedNotesStore && window.importedNotesStore[paragraphIndex]) {
+                delete window.importedNotesStore[paragraphIndex][noteIndex];
+            }
+            
+            // Remove from UI
+            const leftContainer = paragraph.querySelector('.paragraph-notes-container.left-margin');
+            if (leftContainer) {
+                const noteItem = leftContainer.querySelector(`[data-note-index="${noteIndex}"]`);
+                if (noteItem) noteItem.remove();
+                
+                // Hide left container if empty
+                if (leftContainer.children.length === 0) {
+                    leftContainer.style.display = 'none';
+                }
+            }
+        }
+    }
+    
+    // Show imported note preview
+    function showImportedNotePreview(noteData) {
+        // Simple preview - could be enhanced
+        const preview = document.createElement('div');
+        preview.style.position = 'fixed';
+        preview.style.top = '50%';
+        preview.style.left = '50%';
+        preview.style.transform = 'translate(-50%, -50%)';
+        preview.style.background = 'white';
+        preview.style.border = '2px solid ' + (noteData.color || '#ffce54');
+        preview.style.borderRadius = '8px';
+        preview.style.padding = '16px';
+        preview.style.maxWidth = '300px';
+        preview.style.zIndex = '1000';
+        preview.style.boxShadow = '0 8px 32px rgba(0,0,0,0.1)';
+        preview.innerHTML = `
+            <div style="color: var(--color-ink); margin-bottom: 8px; font-weight: 600;">Imported Note:</div>
+            <div style="color: var(--color-ink-light);">${noteData.text}</div>
+            <button style="margin-top: 12px; padding: 4px 12px; border: 1px solid var(--color-sage); background: white; color: var(--color-sage); border-radius: 4px; cursor: pointer;" onclick="this.parentElement.remove()">Close</button>
+        `;
+        document.body.appendChild(preview);
+        
+        // Auto-close after 3 seconds
+        setTimeout(() => {
+            if (preview.parentElement) preview.remove();
+        }, 3000);
+    }
+    
+    // No longer need finishNotesManagement as we handle transfers individually
     
     
     // Event listeners - attach to ALL transfer toggles
@@ -2164,67 +2302,8 @@ function initializeTransferFeature() {
                 document.getElementById('exportResult').style.display = 'block';
                 document.getElementById('inputSection').style.display = 'none';
                 
-                // Generate QR code
-                const qrContainer = document.getElementById('qrCodeContainer');
-                qrContainer.innerHTML = ''; // Clear previous QR code
-                
-                try {
-                    console.log('Checking QR library availability:', typeof QRCode);
-                    // Check if QR library is available
-                    if (typeof QRCode !== 'undefined' && QRCode.toCanvas) {
-                        // Responsive QR code size
-                        const isMobile = window.innerWidth <= 768;
-                        const qrSize = isMobile ? 100 : 120;
-                        
-                        QRCode.toCanvas(result.code, { 
-                            width: qrSize, 
-                            height: qrSize,
-                            margin: 1,
-                            color: {
-                                dark: '#3B7D69',  // Use theme color
-                                light: '#FFFFFF'
-                            }
-                        }, (error, canvas) => {
-                            if (error) {
-                                console.error('QR Code error:', error);
-                                qrContainer.innerHTML = '<div style="color: #999; font-size: 0.8rem;">QR unavailable</div>';
-                            } else {
-                                qrContainer.appendChild(canvas);
-                            }
-                        });
-                    } else {
-                        // Fallback: create a simple text display
-                        qrContainer.innerHTML = `<div style="color: #999; font-size: 0.7rem; line-height: 1.2;">QR library<br>not loaded</div>`;
-                        console.warn('QR Code library not found');
-                    }
-                } catch (error) {
-                    console.error('QR Code generation failed:', error);
-                    // Try loading fallback QR library
-                    const script = document.createElement('script');
-                    script.src = 'https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js';
-                    script.onload = () => {
-                        console.log('Fallback QR library loaded, retrying...');
-                        try {
-                            QRCode.toCanvas(result.code, { 
-                                width: qrSize, 
-                                height: qrSize,
-                                margin: 1,
-                                color: { dark: '#3B7D69', light: '#FFFFFF' }
-                            }, (err, canvas) => {
-                                if (!err && canvas) {
-                                    qrContainer.innerHTML = '';
-                                    qrContainer.appendChild(canvas);
-                                } else {
-                                    qrContainer.innerHTML = '<div style="color: #999; font-size: 0.8rem;">QR unavailable</div>';
-                                }
-                            });
-                        } catch (e) {
-                            qrContainer.innerHTML = '<div style="color: #999; font-size: 0.8rem;">QR unavailable</div>';
-                        }
-                    };
-                    script.onerror = () => qrContainer.innerHTML = '<div style="color: #999; font-size: 0.8rem;">QR unavailable</div>';
-                    document.head.appendChild(script);
-                }
+                // Generate QR code with robust loading
+                generateQRCode(result.code);
                 
                 generateCodeBtn.textContent = 'Generated ✓';
             } else {
@@ -2376,11 +2455,147 @@ function initializeTransferFeature() {
                 window.state.currentSection = 0;
             }
             
-            showTransferMessage('All local data has been deleted. Page will refresh.', 'info');
-            
-            // Refresh the page to reset everything
-            window.location.reload();
+            // Refresh the page to reset everything (no message popup)
+            setTimeout(() => {
+                window.location.reload();
+            }, 100);
         }
     });
+
+    // Robust QR Code generation with multiple fallbacks
+    async function generateQRCode(code) {
+        const qrContainer = document.getElementById('qrCodeContainer');
+        if (!qrContainer) return;
+        
+        // Show loading state
+        qrContainer.innerHTML = '<div style="color: var(--color-sage); font-size: 0.75rem; text-align: center; padding: 20px;">Loading QR...</div>';
+        
+        try {
+            // First, try to use existing QR library if already loaded
+            if (typeof QRCode !== 'undefined' && QRCode.toCanvas) {
+                await createQRCanvas(code, qrContainer);
+                return;
+            }
+            
+            // Try to load QR library dynamically with multiple CDN fallbacks
+            const cdnSources = [
+                'https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js',
+                'https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js',
+                'https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js'
+            ];
+            
+            for (const src of cdnSources) {
+                try {
+                    console.log(`Attempting to load QR library from: ${src}`);
+                    await loadScript(src);
+                    
+                    // Check if library loaded successfully
+                    if (typeof QRCode !== 'undefined' && QRCode.toCanvas) {
+                        console.log('QR library loaded successfully');
+                        await createQRCanvas(code, qrContainer);
+                        return;
+                    }
+                } catch (error) {
+                    console.warn(`Failed to load QR library from ${src}:`, error);
+                    continue;
+                }
+            }
+            
+            // All CDN sources failed - show error
+            throw new Error('All QR library sources failed to load');
+            
+        } catch (error) {
+            console.error('QR Code generation failed completely:', error);
+            qrContainer.innerHTML = `
+                <div style="
+                    color: #999; 
+                    font-size: 0.7rem; 
+                    text-align: center; 
+                    padding: 15px; 
+                    border: 1px dashed #ddd; 
+                    border-radius: 4px; 
+                    line-height: 1.3;
+                ">
+                    <div>QR code unavailable</div>
+                    <div style="font-size: 0.6rem; margin-top: 4px;">Network issue or library blocked</div>
+                </div>
+            `;
+        }
+    }
+    
+    // Helper function to load script dynamically
+    function loadScript(src) {
+        return new Promise((resolve, reject) => {
+            // Don't load if already exists
+            if (document.querySelector(`script[src="${src}"]`)) {
+                resolve();
+                return;
+            }
+            
+            const script = document.createElement('script');
+            script.src = src;
+            
+            // Set timeout for slow networks
+            const timeout = setTimeout(() => {
+                script.onload = null;
+                script.onerror = null;
+                reject(new Error(`Timeout loading ${src}`));
+            }, 10000); // 10 second timeout
+            
+            script.onload = () => {
+                clearTimeout(timeout);
+                console.log(`Script loaded: ${src}`);
+                resolve();
+            };
+            
+            script.onerror = () => {
+                clearTimeout(timeout);
+                console.error(`Script failed to load: ${src}`);
+                reject(new Error(`Failed to load ${src}`));
+            };
+            
+            document.head.appendChild(script);
+        });
+    }
+    
+    // Helper function to create QR canvas
+    async function createQRCanvas(code, container) {
+        return new Promise((resolve, reject) => {
+            try {
+                // Responsive QR code size
+                const isMobile = window.innerWidth <= 768;
+                const qrSize = isMobile ? 100 : 120;
+                
+                const options = {
+                    width: qrSize,
+                    height: qrSize,
+                    margin: 1,
+                    color: {
+                        dark: '#3B7D69',  // Use theme color
+                        light: '#FFFFFF'
+                    }
+                };
+                
+                QRCode.toCanvas(code, options, (error, canvas) => {
+                    if (error) {
+                        console.error('QR Canvas generation error:', error);
+                        reject(error);
+                    } else {
+                        container.innerHTML = '';
+                        container.appendChild(canvas);
+                        console.log('QR Code generated successfully');
+                        resolve();
+                    }
+                });
+                
+            } catch (error) {
+                console.error('QR Canvas creation failed:', error);
+                reject(error);
+            }
+        });
+    }
+
+    // Make generateQRCode globally available for reuse
+    window.generateQRCode = generateQRCode;
 }
 

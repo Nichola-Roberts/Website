@@ -208,14 +208,7 @@ body {
 }
 
 
-/* Hide desktop floating controls on mobile */
-@media (max-width: 48rem) {
-    .floating-font-controls {
-        display: none !important;
-        visibility: hidden !important;
-        opacity: 0 !important;
-    }
-}
+/* Floating controls removed - using only header accessibility panel */
 
 /* Accessibility Panel */
 .accessibility-panel {
@@ -297,28 +290,6 @@ body.plain-text-mode .accessibility-panel .plain-text-toggle {
     color: white !important;
 }
 
-/* Floating Font Controls (legacy - kept for desktop) */
-.floating-font-controls {
-    display: none;
-    opacity: 0;
-    transform: translateY(-50%) translateX(-100%);
-    transition: all var(--duration-base) var(--ease-out);
-    pointer-events: none;
-}
-
-.floating-font-controls.visible {
-    opacity: 1;
-    transform: translateY(-50%) translateX(0);
-    pointer-events: auto;
-}
-
-.floating-font-controls.auto-hide {
-    opacity: 0;
-}
-
-.floating-font-controls:hover {
-    opacity: 1 !important;
-}
 
 .font-button {
     background: transparent;
@@ -349,26 +320,6 @@ body.plain-text-mode .accessibility-panel .plain-text-toggle {
     stroke-width: 1.5;
 }
 
-/* Plain text button styling */
-.floating-font-controls .plain-text-toggle {
-    width: 1.5rem;
-    height: 1.5rem;
-    border: 1px solid var(--color-sage);
-}
-
-/* Make plain text button same size as others on mobile */
-@media (max-width: 48rem) {
-    .floating-font-controls .plain-text-toggle {
-        width: 1.75rem;
-        height: 1.75rem;
-    }
-}
-
-/* Highlight plain text button when active */
-body.plain-text-mode .floating-font-controls .plain-text-toggle {
-    background-color: var(--color-sage);
-    color: white;
-}
 
 /* Navigation Drawer - Minimal */
 .nav-menu {
@@ -854,10 +805,131 @@ body.notes-mode .notes-toggle {
     right: -2rem;
     display: none;
     flex-direction: column;
+    flex-wrap: wrap;
     gap: var(--space-1);
     z-index: 10;
-    align-items: center; /* Center align all items */
-    width: 1.25rem; /* Fixed width to prevent alignment issues */
+    align-items: flex-start;
+    width: 1.25rem;
+    max-height: 15rem; /* Allow overflow to next column after this height */
+    align-content: flex-start;
+}
+
+/* Left margin notes container for imported notes */
+.paragraph-notes-container.left-margin {
+    right: auto;
+    left: -2rem;
+    background: rgba(255, 206, 84, 0.1); /* Light yellow background for imported */
+    padding: var(--space-1);
+    border-radius: var(--space-1);
+    border-left: 2px solid #ffce54;
+}
+
+/* Multi-column overflow support */
+.paragraph-notes-container.has-many-notes {
+    width: 2.5rem; /* Wider when there are many notes to accommodate columns */
+}
+
+.paragraph-notes-container.has-many-notes .note-item,
+.paragraph-notes-container.has-many-notes .note-add-button {
+    align-self: center; /* Center items within each column */
+}
+
+/* Transfer button for imported notes */
+.note-transfer {
+    position: absolute;
+    top: -0.25rem;
+    left: -0.25rem;
+    width: 0.875rem;
+    height: 0.875rem;
+    background: rgba(59, 125, 105, 0.1);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: all var(--duration-fast) var(--ease-out);
+    color: var(--color-sage);
+    z-index: 1;
+    font-size: 0.6rem;
+    font-weight: bold;
+}
+
+.note-item.imported:hover .note-transfer {
+    opacity: 1;
+}
+
+.note-transfer:hover {
+    background: var(--color-sage);
+    color: white;
+    transform: scale(1.1);
+}
+
+/* Prepend dialog */
+.prepend-dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    border: 2px solid var(--color-sage);
+    border-radius: var(--space-2);
+    padding: var(--space-5);
+    z-index: 1000;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    min-width: 300px;
+    max-width: 90vw;
+}
+
+.prepend-dialog h4 {
+    margin: 0 0 var(--space-3) 0;
+    color: var(--color-sage);
+    font-size: var(--text-base);
+}
+
+.prepend-dialog textarea {
+    width: 100%;
+    min-height: 3rem;
+    padding: var(--space-3);
+    border: 1px solid var(--color-sage);
+    border-radius: var(--space-1);
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    resize: vertical;
+    outline: none;
+}
+
+.prepend-dialog textarea:focus {
+    border-color: var(--color-sage-dark);
+}
+
+.prepend-dialog-buttons {
+    display: flex;
+    gap: var(--space-2);
+    margin-top: var(--space-3);
+    justify-content: flex-end;
+}
+
+.prepend-dialog-buttons button {
+    padding: var(--space-2) var(--space-4);
+    border: 1px solid var(--color-sage);
+    border-radius: var(--space-1);
+    background: white;
+    color: var(--color-sage);
+    cursor: pointer;
+    font-size: var(--text-sm);
+    transition: all var(--duration-fast) var(--ease-out);
+}
+
+.prepend-dialog-buttons button:hover,
+.prepend-dialog-buttons button.primary {
+    background: var(--color-sage);
+    color: white;
+}
+
+.prepend-dialog-buttons button.primary {
+    font-weight: 600;
 }
 
 /* Show notes container only in notes mode - handled by rule at bottom */
@@ -1103,6 +1175,16 @@ body.notes-mode .notes-toggle {
     .paragraph-notes-container {
         right: calc(var(--space-8) * -1);
         width: 1.5rem;
+        max-height: 18rem; /* Taller on mobile before column overflow */
+    }
+    
+    .paragraph-notes-container.left-margin {
+        left: calc(var(--space-8) * -1);
+        width: 1.5rem;
+    }
+    
+    .paragraph-notes-container.has-many-notes {
+        width: 3rem; /* Even wider on mobile for columns */
     }
     
     .note-add-button {
@@ -1731,11 +1813,6 @@ body:not(.plain-text-mode) .plain-text-toggle {
     color: var(--color-sage) !important;
 }
 
-/* Reset in floating controls when not in plain text mode */
-body:not(.plain-text-mode) .floating-font-controls .plain-text-toggle {
-    background: transparent !important;
-    color: var(--color-sage) !important;
-}
 
 /* Font Size Controls - Only affect content paragraphs */
 body.font-xs .content p {
