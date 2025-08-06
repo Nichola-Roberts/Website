@@ -1814,6 +1814,33 @@ body.font-2xl .content p {
     }
 }
 
+/* Custom Transfer Messages */
+.transfer-message {
+    padding: var(--space-3);
+    margin: var(--space-3) 0;
+    border-radius: var(--space-1);
+    font-size: var(--text-sm);
+    text-align: center;
+}
+
+.transfer-message.error {
+    background-color: rgba(220, 53, 69, 0.1);
+    border: 1px solid rgba(220, 53, 69, 0.3);
+    color: #dc3545;
+}
+
+.transfer-message.warning {
+    background-color: rgba(255, 193, 7, 0.1);
+    border: 1px solid rgba(255, 193, 7, 0.3);
+    color: #856404;
+}
+
+.transfer-message.info {
+    background-color: rgba(13, 202, 240, 0.1);
+    border: 1px solid rgba(13, 202, 240, 0.3);
+    color: #087990;
+}
+
 /* Easter Egg Notes Section - Small font size */
 #notes {
     font-size: 10px !important;

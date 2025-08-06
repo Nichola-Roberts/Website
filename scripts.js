@@ -1911,13 +1911,29 @@ function initializeTransferFeature() {
     }
     
     function hideImportStates() {
-        const elements = ['importSuccess', 'importError', 'notesManagement'];
+        const elements = ['importSuccess', 'importError', 'notesManagement', 'transferMessage'];
         elements.forEach(id => {
             const element = document.getElementById(id);
             if (element) {
                 element.style.display = 'none';
             }
         });
+    }
+    
+    function showTransferMessage(message, type = 'error') {
+        const messageEl = document.getElementById('transferMessage');
+        if (messageEl) {
+            messageEl.textContent = message;
+            messageEl.className = `transfer-message ${type}`;
+            messageEl.style.display = 'block';
+            
+            // Auto-hide after 5 seconds for non-error messages
+            if (type !== 'error') {
+                setTimeout(() => {
+                    messageEl.style.display = 'none';
+                }, 5000);
+            }
+        }
     }
     
     // Notes Management System
@@ -2109,6 +2125,7 @@ function initializeTransferFeature() {
                 qrContainer.innerHTML = ''; // Clear previous QR code
                 
                 try {
+                    console.log('Checking QR library availability:', typeof QRCode);
                     // Check if QR library is available
                     if (typeof QRCode !== 'undefined' && QRCode.toCanvas) {
                         // Responsive QR code size
@@ -2143,12 +2160,12 @@ function initializeTransferFeature() {
                 
                 generateCodeBtn.textContent = 'Generated ✓';
             } else {
-                alert('Failed to generate transfer code: ' + result.error);
+                showTransferMessage('Failed to generate transfer code: ' + result.error);
                 generateCodeBtn.disabled = false;
                 generateCodeBtn.textContent = 'Generate';
             }
         } catch (error) {
-            alert('Error: ' + error.message);
+            showTransferMessage('Error: ' + error.message);
             generateCodeBtn.disabled = false;
             generateCodeBtn.textContent = 'Generate';
         }
@@ -2193,7 +2210,7 @@ function initializeTransferFeature() {
         const code = importCodeInput.value.trim();
         
         if (!code || code.length !== 8) {
-            alert('Please enter a valid 8-character transfer code');
+            showTransferMessage('Please enter a valid 8-character transfer code');
             return;
         }
         
@@ -2291,7 +2308,7 @@ function initializeTransferFeature() {
                 window.state.currentSection = 0;
             }
             
-            alert('All local data has been deleted. The page will refresh.');
+            showTransferMessage('All local data has been deleted. Page will refresh.', 'info');
             
             // Refresh the page to reset everything
             window.location.reload();
