@@ -204,6 +204,37 @@ class DeviceTransfer {
         };
     }
 
+    // Merge only non-notes data (for use with notes management interface)
+    mergeNonNotesData(importedData) {
+        Object.keys(importedData.data).forEach(key => {
+            if (key === 'userNotes') {
+                return; // Skip notes - they'll be handled separately
+            }
+            
+            const existingValue = localStorage.getItem(key);
+            
+            if (key === 'totalTimeOnSite') {
+                // Always add times together
+                const existingTime = parseInt(existingValue || '0');
+                const importedTime = parseInt(importedData.data[key] || '0');
+                localStorage.setItem(key, (existingTime + importedTime).toString());
+            } else if (key === 'readingTimes') {
+                // Merge reading times
+                const existingTimes = JSON.parse(existingValue || '{}');
+                const importedTimes = JSON.parse(importedData.data[key] || '{}');
+                const mergedTimes = { ...existingTimes, ...importedTimes };
+                localStorage.setItem(key, JSON.stringify(mergedTimes));
+            } else {
+                // For other settings, import if not already set
+                if (!existingValue) {
+                    localStorage.setItem(key, importedData.data[key]);
+                }
+            }
+        });
+        
+        console.log('Non-notes data merged successfully');
+    }
+
     // Merge imported data with existing (for conflict resolution)
     mergeImportedData(importedData, strategy = 'newer') {
         Object.keys(importedData.data).forEach(key => {

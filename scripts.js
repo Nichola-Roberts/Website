@@ -64,7 +64,47 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Restore reading position
     setTimeout(restoreLastPosition, 800);
+    
+    // Add test note for development
+    addTestNote();
 });
+
+// Test note function for development
+function addTestNote() {
+    // Add a test maths note to the first paragraph
+    const firstSection = document.querySelector('#introduction');
+    if (firstSection) {
+        const firstParagraph = firstSection.querySelector('p');
+        if (firstParagraph) {
+            // Create a test note
+            const testNoteKey = 'paragraph-0-0';
+            const testNoteData = {
+                text: 'This is a test maths note: 2 + 2 = 4, quadratic formula: x = (-b ± √(b²-4ac)) / 2a',
+                color: '#fcdce1' // Light pink
+            };
+            
+            // Add to notes state
+            if (!state.notes) state.notes = {};
+            state.notes[testNoteKey] = JSON.stringify(testNoteData);
+            
+            // Save to localStorage
+            localStorage.setItem('userNotes', JSON.stringify(state.notes));
+            
+            // Add visual note circle if notes mode is enabled
+            if (state.isNotesMode) {
+                // Initialize paragraph for notes if needed
+                initializeParagraphForNotes(firstParagraph, 0);
+                
+                // Add the note circle
+                setTimeout(() => {
+                    addExistingNoteCircle(firstParagraph, 0, 0, testNoteData);
+                }, 100);
+            }
+            
+            console.log('Test maths note added:', testNoteData);
+        }
+    }
+}
 
 // Header - Subtle scroll effect
 function initializeHeader() {
@@ -1936,6 +1976,153 @@ function initializeTransferFeature() {
         document.getElementById('importSuccess').style.display = 'none';
         document.getElementById('importConflicts').style.display = 'none';
         document.getElementById('importError').style.display = 'none';
+        document.getElementById('notesManagement').style.display = 'none';
+    }
+    
+    // Notes Management System
+    let importedNotes = {};
+    let notesToKeep = {};
+    
+    function showNotesManagement(importData) {
+        // Extract notes from imported data
+        const importedNotesStr = importData.data.userNotes;
+        importedNotes = importedNotesStr ? JSON.parse(importedNotesStr) : {};
+        notesToKeep = {};
+        
+        // Check if there are any notes to manage
+        if (Object.keys(importedNotes).length === 0) {
+            // No notes to import, just merge other data
+            transferSystem.mergeImportedData(importData);
+            document.getElementById('importSuccess').style.display = 'block';
+            return;
+        }
+        
+        // Merge non-notes data immediately (reading times, preferences, etc.)
+        transferSystem.mergeNonNotesData(importData);
+        
+        // Show notes management interface
+        document.getElementById('notesManagement').style.display = 'block';
+        populateImportedNotes();
+        
+        // Add finish button listener
+        const finishBtn = document.getElementById('finishNotesBtn');
+        finishBtn.onclick = finishNotesManagement;
+    }
+    
+    function populateImportedNotes() {
+        const importedList = document.getElementById('importedNotesList');
+        const keepList = document.getElementById('keepNotesList');
+        
+        // Clear existing items
+        importedList.innerHTML = '';
+        keepList.innerHTML = '';
+        
+        // Populate imported notes (left side)
+        Object.keys(importedNotes).forEach(noteKey => {
+            const noteData = JSON.parse(importedNotes[noteKey]);
+            const noteItem = createNoteItem(noteKey, noteData, 'imported');
+            importedList.appendChild(noteItem);
+        });
+        
+        // Populate notes to keep (right side)
+        Object.keys(notesToKeep).forEach(noteKey => {
+            const noteData = JSON.parse(notesToKeep[noteKey]);
+            const noteItem = createNoteItem(noteKey, noteData, 'keep');
+            keepList.appendChild(noteItem);
+        });
+        
+        // Show empty state if no notes
+        if (Object.keys(importedNotes).length === 0) {
+            importedList.innerHTML = '<p style="color: #999; font-style: italic;">No imported notes</p>';
+        }
+        if (Object.keys(notesToKeep).length === 0) {
+            keepList.innerHTML = '<p style="color: #999; font-style: italic;">Move notes here to keep them</p>';
+        }
+    }
+    
+    function createNoteItem(noteKey, noteData, type) {
+        const item = document.createElement('div');
+        item.className = type === 'imported' ? 'imported-note-item' : 'keep-note-item';
+        
+        const preview = document.createElement('div');
+        preview.className = 'note-preview';
+        preview.textContent = noteData.text || 'Empty note';
+        preview.style.backgroundColor = noteData.color || '#f0d9ef';
+        preview.style.padding = '2px 6px';
+        preview.style.borderRadius = '3px';
+        
+        const actions = document.createElement('div');
+        actions.className = 'note-actions';
+        
+        if (type === 'imported') {
+            const moveBtn = document.createElement('button');
+            moveBtn.className = 'note-move-btn';
+            moveBtn.textContent = '→';
+            moveBtn.title = 'Move to keep';
+            moveBtn.onclick = () => moveNoteToKeep(noteKey);
+            
+            const deleteBtn = document.createElement('button');
+            deleteBtn.className = 'note-delete-btn';
+            deleteBtn.textContent = '×';
+            deleteBtn.title = 'Delete note';
+            deleteBtn.onclick = () => deleteImportedNote(noteKey);
+            
+            actions.appendChild(moveBtn);
+            actions.appendChild(deleteBtn);
+        } else {
+            const moveBackBtn = document.createElement('button');
+            moveBackBtn.className = 'note-move-btn';
+            moveBackBtn.textContent = '←';
+            moveBackBtn.title = 'Move back';
+            moveBackBtn.onclick = () => moveNoteBack(noteKey);
+            
+            actions.appendChild(moveBackBtn);
+        }
+        
+        item.appendChild(preview);
+        item.appendChild(actions);
+        
+        return item;
+    }
+    
+    function moveNoteToKeep(noteKey) {
+        notesToKeep[noteKey] = importedNotes[noteKey];
+        delete importedNotes[noteKey];
+        populateImportedNotes();
+    }
+    
+    function moveNoteBack(noteKey) {
+        importedNotes[noteKey] = notesToKeep[noteKey];
+        delete notesToKeep[noteKey];
+        populateImportedNotes();
+    }
+    
+    function deleteImportedNote(noteKey) {
+        delete importedNotes[noteKey];
+        populateImportedNotes();
+    }
+    
+    function finishNotesManagement() {
+        // Save the notes to keep to localStorage
+        const currentNotes = JSON.parse(localStorage.getItem('userNotes') || '{}');
+        Object.assign(currentNotes, notesToKeep);
+        localStorage.setItem('userNotes', JSON.stringify(currentNotes));
+        
+        // Update the state
+        if (window.state) {
+            Object.assign(window.state.notes, notesToKeep);
+        }
+        
+        // Show success message
+        document.getElementById('notesManagement').style.display = 'none';
+        document.getElementById('importSuccess').style.display = 'block';
+        
+        const successMsg = document.querySelector('#importSuccess p');
+        if (Object.keys(notesToKeep).length > 0) {
+            successMsg.textContent = `${Object.keys(notesToKeep).length} notes added successfully!`;
+        } else {
+            successMsg.textContent = 'Import completed. No notes were added.';
+        }
     }
     
     
@@ -1975,16 +2162,39 @@ function initializeTransferFeature() {
                 const qrContainer = document.getElementById('qrCodeContainer');
                 qrContainer.innerHTML = ''; // Clear previous QR code
                 
-                if (window.QRCode) {
-                    QRCode.toCanvas(result.code, { width: 120, height: 120 }, (error, canvas) => {
-                        if (error) {
-                            qrContainer.innerHTML = '<div style="color: #999; font-size: 0.8rem;">QR unavailable</div>';
-                        } else {
-                            qrContainer.appendChild(canvas);
-                        }
-                    });
-                } else {
-                    qrContainer.innerHTML = '<div style="color: #999; font-size: 0.8rem;">QR unavailable</div>';
+                try {
+                    // Try different ways the QR library might be available
+                    const QRLib = window.QRCode || window.qrcode || QRCode;
+                    
+                    if (QRLib && QRLib.toCanvas) {
+                        // Responsive QR code size
+                        const isMobile = window.innerWidth <= 768;
+                        const qrSize = isMobile ? 100 : 120;
+                        
+                        QRLib.toCanvas(result.code, { 
+                            width: qrSize, 
+                            height: qrSize,
+                            margin: 1,
+                            color: {
+                                dark: '#3B7D69',  // Use theme color
+                                light: '#FFFFFF'
+                            }
+                        }, (error, canvas) => {
+                            if (error) {
+                                console.error('QR Code error:', error);
+                                qrContainer.innerHTML = '<div style="color: #999; font-size: 0.8rem;">QR unavailable</div>';
+                            } else {
+                                qrContainer.appendChild(canvas);
+                            }
+                        });
+                    } else {
+                        // Fallback: create a simple text display
+                        qrContainer.innerHTML = `<div style="color: #999; font-size: 0.7rem; line-height: 1.2;">QR library<br>not loaded</div>`;
+                        console.warn('QR Code library not found');
+                    }
+                } catch (error) {
+                    console.error('QR Code generation failed:', error);
+                    qrContainer.innerHTML = '<div style="color: #999; font-size: 0.8rem;">QR error</div>';
                 }
                 
                 generateCodeBtn.textContent = 'Generated ✓';
@@ -2029,8 +2239,6 @@ function initializeTransferFeature() {
     // Import functionality
     const importDataBtn = document.getElementById('importDataBtn');
     const importCodeInput = document.getElementById('importCode');
-    const mergeDataBtn = document.getElementById('mergeDataBtn');
-    const replaceDataBtn = document.getElementById('replaceDataBtn');
     
     // Format input as user types - allow all alphanumeric
     importCodeInput.addEventListener('input', (e) => {
@@ -2055,16 +2263,29 @@ function initializeTransferFeature() {
             if (result.success) {
                 currentImportData = result.data;
                 
-                // Try to apply directly first
-                const applyResult = transferSystem.applyImportedData(result.data);
+                // Check if there are existing notes on this device
+                const existingNotes = localStorage.getItem('userNotes');
+                const hasExistingNotes = existingNotes && existingNotes !== '{}' && Object.keys(JSON.parse(existingNotes)).length > 0;
                 
-                if (applyResult.success) {
-                    // Success - no conflicts
-                    document.getElementById('importSuccess').style.display = 'block';
-                    document.getElementById('importResult').style.display = 'block';
+                // Always merge non-notes data (times, settings, etc.)
+                transferSystem.mergeNonNotesData(result.data);
+                
+                if (hasExistingNotes) {
+                    // Device has notes - show management interface
+                    showNotesManagement(currentImportData);
                 } else {
-                    // Conflicts detected
-                    document.getElementById('importConflicts').style.display = 'block';
+                    // No existing notes - directly import all notes
+                    const importedNotesStr = result.data.data.userNotes;
+                    if (importedNotesStr && importedNotesStr !== '{}') {
+                        localStorage.setItem('userNotes', importedNotesStr);
+                        // Update current state if available
+                        if (window.state) {
+                            window.state.notes = JSON.parse(importedNotesStr);
+                        }
+                    }
+                    
+                    // Show success message
+                    document.getElementById('importSuccess').style.display = 'block';
                     document.getElementById('importResult').style.display = 'block';
                 }
             } else {
@@ -2078,33 +2299,10 @@ function initializeTransferFeature() {
             document.getElementById('importResult').style.display = 'block';
         } finally {
             importDataBtn.disabled = false;
-            importDataBtn.textContent = 'Import Data';
+            importDataBtn.textContent = 'Import';
         }
     });
     
-    // Conflict resolution
-    mergeDataBtn.addEventListener('click', () => {
-        if (currentImportData) {
-            transferSystem.mergeImportedData(currentImportData);
-            document.getElementById('importConflicts').style.display = 'none';
-            document.getElementById('importSuccess').style.display = 'block';
-        }
-    });
-    
-    replaceDataBtn.addEventListener('click', () => {
-        if (currentImportData && confirm('This will replace ALL your current data. Are you sure?')) {
-            // Clear existing data first
-            transferSystem.STORAGE_KEYS.forEach(key => {
-                localStorage.removeItem(key);
-            });
-            
-            // Apply imported data
-            transferSystem.applyImportedData(currentImportData);
-            
-            document.getElementById('importConflicts').style.display = 'none';
-            document.getElementById('importSuccess').style.display = 'block';
-        }
-    });
 
     // Delete local data functionality
     const deleteLocalDataBtn = document.getElementById('deleteLocalDataBtn');

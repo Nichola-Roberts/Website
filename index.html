@@ -170,16 +170,24 @@
                         <p class="refresh-note">Refresh the page to see your imported notes and progress.</p>
                     </div>
                     
-                    <div class="import-conflicts" id="importConflicts" style="display: none;">
-                        <h4>⚠️ Data Conflicts Detected</h4>
-                        <p>You already have data on this device. How would you like to handle this?</p>
-                        <button class="transfer-button secondary" id="mergeDataBtn">
-                            Merge Data (Recommended)
-                        </button>
-                        <button class="transfer-button danger" id="replaceDataBtn">
-                            Replace All Data
-                        </button>
+                    <div class="notes-management" id="notesManagement" style="display: none;">
+                        <h4>📝 Notes Added to Left Side</h4>
+                        <p>This will replace all notes on the left. Continue?</p>
+                        <div class="notes-sides">
+                            <div class="notes-left">
+                                <h5>Imported Notes (Left)</h5>
+                                <div id="importedNotesList"></div>
+                            </div>
+                            <div class="notes-right">
+                                <h5>Keep These (Right)</h5>
+                                <div id="keepNotesList"></div>
+                            </div>
+                        </div>
+                        <div class="notes-actions">
+                            <button class="transfer-button" id="finishNotesBtn">Finish</button>
+                        </div>
                     </div>
+                    
                     
                     <div class="import-error" id="importError" style="display: none;">
                         <h4>❌ Import Failed</h4>

@@ -1569,6 +1569,197 @@ body:not(.notes-mode) .note-input-container {
     }
 }
 
+/* Notes Management Interface */
+.notes-management {
+    margin-top: var(--space-4);
+}
+
+.notes-sides {
+    display: flex;
+    gap: var(--space-4);
+    margin: var(--space-4) 0;
+}
+
+.notes-left, .notes-right {
+    flex: 1;
+    border: 1px solid rgba(59, 125, 105, 0.2);
+    border-radius: var(--space-1);
+    padding: var(--space-3);
+    min-height: 120px;
+}
+
+.notes-left {
+    background: rgba(255, 206, 84, 0.1); /* Light yellow */
+}
+
+.notes-right {
+    background: rgba(59, 125, 105, 0.05); /* Light green */
+}
+
+.notes-sides h5 {
+    margin: 0 0 var(--space-2) 0;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-ink);
+}
+
+.imported-note-item, .keep-note-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-2);
+    margin: var(--space-1) 0;
+    background: white;
+    border-radius: var(--space-1);
+    border: 1px solid rgba(0,0,0,0.1);
+}
+
+.note-preview {
+    flex: 1;
+    font-size: var(--text-sm);
+    color: var(--color-ink-light);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.note-actions {
+    display: flex;
+    gap: var(--space-1);
+}
+
+.note-move-btn, .note-delete-btn {
+    background: none;
+    border: 1px solid currentColor;
+    padding: var(--space-1);
+    border-radius: var(--space-1);
+    cursor: pointer;
+    font-size: var(--text-xs);
+}
+
+.note-move-btn {
+    color: var(--color-sage);
+}
+
+.note-move-btn:hover {
+    background: var(--color-sage);
+    color: white;
+}
+
+.note-delete-btn {
+    color: #dc2626;
+}
+
+.note-delete-btn:hover {
+    background: #dc2626;
+    color: white;
+}
+
+.notes-actions {
+    text-align: center;
+    margin-top: var(--space-4);
+}
+
+/* Mobile adjustments for notes management */
+@media (max-width: 48rem) {
+    .notes-sides {
+        flex-direction: column;
+        gap: var(--space-3);
+    }
+}
+
+/* Transfer Modal Result States - Clean and Minimal */
+.import-success, .import-error, .import-conflicts {
+    padding: var(--space-4);
+    border-radius: var(--space-2);
+    margin: var(--space-3) 0;
+    border-left: 3px solid;
+}
+
+.import-success {
+    background: rgba(59, 125, 105, 0.05);
+    border-left-color: var(--color-sage);
+}
+
+.import-success h4 {
+    color: var(--color-sage);
+    margin: 0 0 var(--space-2) 0;
+    font-size: var(--text-base);
+    font-weight: 600;
+}
+
+.import-success p {
+    color: var(--color-ink-light);
+    margin: var(--space-1) 0;
+    font-size: var(--text-sm);
+}
+
+.import-error {
+    background: rgba(220, 38, 38, 0.03);
+    border-left-color: #dc2626;
+}
+
+.import-error h4 {
+    color: #dc2626;
+    margin: 0 0 var(--space-2) 0;
+    font-size: var(--text-base);
+    font-weight: 600;
+}
+
+.import-error p {
+    color: var(--color-ink-light);
+    margin: var(--space-1) 0;
+    font-size: var(--text-sm);
+}
+
+.import-conflicts {
+    background: rgba(249, 250, 249, 0.5);
+    border-left-color: var(--color-ink-light);
+}
+
+.import-conflicts h4 {
+    color: var(--color-ink);
+    margin: 0 0 var(--space-2) 0;
+    font-size: var(--text-base);
+    font-weight: 600;
+}
+
+.import-conflicts p {
+    color: var(--color-ink-light);
+    margin: var(--space-2) 0;
+    font-size: var(--text-sm);
+}
+
+.notes-management {
+    background: rgba(249, 250, 249, 0.3);
+    border-left: 3px solid var(--color-sage);
+    padding: var(--space-4);
+    border-radius: var(--space-2);
+    margin: var(--space-3) 0;
+}
+
+.notes-management h4 {
+    color: var(--color-ink);
+    margin: 0 0 var(--space-2) 0;
+    font-size: var(--text-base);
+    font-weight: 600;
+}
+
+.notes-management p {
+    color: var(--color-ink-light);
+    margin: var(--space-2) 0;
+    font-size: var(--text-sm);
+}
+
+/* Clean up the transfer expiry text */
+.transfer-expiry {
+    color: var(--color-ink-light) !important;
+    font-size: var(--text-xs) !important;
+    font-style: italic;
+    text-align: center;
+    margin: var(--space-2) 0 0 0 !important;
+}
+
 /* Ensure transfer button is always visible */
 .transfer-toggle {
     display: flex !important;
