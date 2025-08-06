@@ -851,9 +851,45 @@ body.notes-mode .notes-toggle {
     opacity: 0;
     transition: all var(--duration-fast) var(--ease-out);
     color: var(--color-sage);
-    z-index: 1;
+    z-index: 2;
     font-size: 0.6rem;
     font-weight: bold;
+}
+
+/* Delete button for imported notes */
+.note-delete {
+    position: absolute;
+    top: -0.25rem;
+    right: -0.25rem;
+    width: 0.875rem;
+    height: 0.875rem;
+    background: rgba(220, 53, 69, 0.1);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: all var(--duration-fast) var(--ease-out);
+    color: #dc3545;
+    z-index: 2;
+    font-size: 0.5rem;
+}
+
+.note-item.imported:hover .note-delete {
+    opacity: 1;
+}
+
+.note-delete:hover {
+    background: #dc3545;
+    color: white;
+    transform: scale(1.1);
+}
+
+.note-delete svg {
+    width: 0.6rem;
+    height: 0.6rem;
 }
 
 .note-item.imported:hover .note-transfer {
@@ -866,20 +902,21 @@ body.notes-mode .notes-toggle {
     transform: scale(1.1);
 }
 
-/* Prepend dialog */
+/* Prepend dialog - match transfer modal styling */
 .prepend-dialog {
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     background: white;
-    border: 2px solid var(--color-sage);
-    border-radius: var(--space-2);
-    padding: var(--space-5);
+    border-radius: var(--space-3);
+    padding: var(--space-6);
     z-index: 1000;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    min-width: 300px;
-    max-width: 90vw;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15), 0 8px 25px rgba(0, 0, 0, 0.1);
+    min-width: 320px;
+    max-width: 400px;
+    width: 90vw;
+    border: 1px solid rgba(59, 125, 105, 0.2);
 }
 
 .prepend-dialog h4 {
@@ -890,14 +927,16 @@ body.notes-mode .notes-toggle {
 
 .prepend-dialog textarea {
     width: 100%;
-    min-height: 3rem;
+    min-height: 2.5rem;
     padding: var(--space-3);
-    border: 1px solid var(--color-sage);
-    border-radius: var(--space-1);
+    border: 2px solid rgba(59, 125, 105, 0.3);
+    border-radius: var(--space-2);
     font-family: var(--font-body);
     font-size: var(--text-sm);
-    resize: vertical;
+    resize: none;
     outline: none;
+    transition: border-color var(--duration-fast) var(--ease-out);
+    box-sizing: border-box;
 }
 
 .prepend-dialog textarea:focus {
@@ -912,14 +951,16 @@ body.notes-mode .notes-toggle {
 }
 
 .prepend-dialog-buttons button {
-    padding: var(--space-2) var(--space-4);
-    border: 1px solid var(--color-sage);
-    border-radius: var(--space-1);
+    padding: var(--space-3) var(--space-5);
+    border: 2px solid var(--color-sage);
+    border-radius: var(--space-2);
     background: white;
     color: var(--color-sage);
     cursor: pointer;
     font-size: var(--text-sm);
+    font-weight: 500;
     transition: all var(--duration-fast) var(--ease-out);
+    min-width: 80px;
 }
 
 .prepend-dialog-buttons button:hover,
@@ -1953,9 +1994,15 @@ body.font-2xl .content p {
     color: #087990;
 }
 
-/* Easter Egg Notes Section - Small font size */
+/* Easter Egg Notes Section - Hidden until 1 hour, small font when visible */
 #notes {
+    display: none !important;
     font-size: 10px !important;
+}
+
+/* Only show notes section when explicitly enabled via JavaScript */
+#notes.easter-egg-visible {
+    display: block !important;
 }
 
 #notes * {

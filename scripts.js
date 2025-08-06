@@ -644,9 +644,9 @@ function showEasterEgg() {
     // Only show if user has spent 1+ hour
     if (totalTime >= oneHour) {
         const notesSection = document.getElementById('notes');
-        if (notesSection && notesSection.style.display === 'none') {
+        if (notesSection && !notesSection.classList.contains('easter-egg-visible')) {
             console.log('Revealing easter egg Notes section after 1 hour!');
-            notesSection.style.display = 'block';
+            notesSection.classList.add('easter-egg-visible');
             
             // Smooth scroll to make it noticeable
             setTimeout(() => {
@@ -657,7 +657,7 @@ function showEasterEgg() {
         // Ensure notes section stays hidden
         const notesSection = document.getElementById('notes');
         if (notesSection) {
-            notesSection.style.display = 'none';
+            notesSection.classList.remove('easter-egg-visible');
         }
         console.log('Easter egg requires 1 hour on site. Current time:', (totalTime / 1000 / 60).toFixed(1), 'minutes');
     }
@@ -667,7 +667,7 @@ function showEasterEgg() {
 function initializeEasterEgg() {
     const notesSection = document.getElementById('notes');
     if (notesSection) {
-        notesSection.style.display = 'none';
+        notesSection.classList.remove('easter-egg-visible');
         console.log('Easter egg Notes section initialized as hidden');
     }
 }
@@ -2141,7 +2141,7 @@ function initializeTransferFeature() {
             <h4>Transfer Note</h4>
             <p style="margin-bottom: var(--space-3); color: var(--color-ink-light); font-size: var(--text-sm);">Original: "${noteData.text}"</p>
             <label style="display: block; margin-bottom: var(--space-2); color: var(--color-ink); font-weight: 500;">Prepend text (optional):</label>
-            <textarea placeholder="e.g., 'From Sarah: ' or 'Previous thought: '" rows="2"></textarea>
+            <textarea placeholder="example Nichola:" rows="2"></textarea>
             <div class="prepend-dialog-buttons">
                 <button type="button" onclick="this.closest('.prepend-dialog').parentElement.remove()">Cancel</button>
                 <button type="button" class="primary">Transfer</button>
@@ -2169,7 +2169,7 @@ function initializeTransferFeature() {
     
     // Transfer note from left margin to right margin (main collection)
     function transferNoteToMainCollection(paragraphIndex, noteIndex, noteData, prependText) {
-        const finalText = prependText ? `${prependText}${noteData.text}` : noteData.text;
+        const finalText = prependText ? `${prependText} ${noteData.text}` : noteData.text;
         
         // Find the next available index for the main collection
         const paragraph = document.querySelectorAll('.content p, .section-content p')[paragraphIndex];
@@ -2200,9 +2200,9 @@ function initializeTransferFeature() {
                 const noteItem = leftContainer.querySelector(`[data-note-index="${noteIndex}"]`);
                 if (noteItem) noteItem.remove();
                 
-                // Hide left container if empty
+                // Remove left container if empty
                 if (leftContainer.children.length === 0) {
-                    leftContainer.style.display = 'none';
+                    leftContainer.remove();
                 }
             }
             
@@ -2231,9 +2231,9 @@ function initializeTransferFeature() {
                 const noteItem = leftContainer.querySelector(`[data-note-index="${noteIndex}"]`);
                 if (noteItem) noteItem.remove();
                 
-                // Hide left container if empty
+                // Remove left container if empty
                 if (leftContainer.children.length === 0) {
-                    leftContainer.style.display = 'none';
+                    leftContainer.remove();
                 }
             }
         }
