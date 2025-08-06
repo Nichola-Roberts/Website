@@ -254,23 +254,89 @@ body {
     }
 }
 
-/* Floating Font Controls (legacy - kept for desktop) */
-.floating-font-controls {
+/* Accessibility Panel */
+.accessibility-panel {
     position: fixed;
-    top: 50%;
-    left: var(--space-8);
-    transform: translateY(-50%);
+    top: 42px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100%);
+    max-width: 42rem;
+    width: 100%;
+    padding: 0 var(--space-13);
+    z-index: 999;
+    transition: transform var(--duration-base) var(--ease-out), visibility 0s var(--duration-base);
+    pointer-events: none; /* Prevent interaction when hidden */
+    visibility: hidden; /* Completely hide when not visible */
+}
+
+.accessibility-panel.visible {
+    transform: translateX(-50%) translateY(-2px);
+    pointer-events: auto; /* Allow interaction when visible */
+    visibility: visible;
+    transition: transform var(--duration-base) var(--ease-out), visibility 0s;
+}
+
+.accessibility-panel-inner {
     display: flex;
-    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.accessibility-panel-content {
+    display: flex;
+    align-items: center;
     gap: var(--space-1);
-    background: var(--color-glass);
+    padding: var(--space-2);
+    background: var(--color-glass); /* Same transparency as header */
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    padding: var(--space-2);
-    border-radius: var(--space-2);
-    box-shadow: 0 2px 12px rgba(10, 15, 13, 0.1);
     border: 1px solid rgba(59, 125, 105, 0.1);
-    z-index: 999;
+    border-top: none;
+}
+
+/* Mobile adjustments for accessibility panel */
+@media (max-width: 48rem) {
+    .accessibility-panel {
+        padding: 0 var(--space-8);
+    }
+}
+
+/* Accessibility panel buttons */
+.accessibility-panel .font-button {
+    width: 1.5rem;
+    height: 1.5rem;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    background: transparent;
+    border: 1px solid var(--color-sage);
+    color: var(--color-sage);
+    cursor: pointer;
+    transition: all var(--duration-fast) var(--ease-out);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--space-1);
+}
+
+.accessibility-panel .font-button:hover {
+    background-color: var(--color-sage) !important;
+    color: white !important;
+}
+
+.accessibility-panel .font-button svg {
+    width: 12px;
+    height: 12px;
+    pointer-events: none;
+}
+
+/* Highlight plain text button when active */
+body.plain-text-mode .accessibility-panel .plain-text-toggle {
+    background-color: var(--color-sage) !important;
+    color: white !important;
+}
+
+/* Floating Font Controls (legacy - kept for desktop) */
+.floating-font-controls {
+    display: none;
     opacity: 0;
     transform: translateY(-50%) translateX(-100%);
     transition: all var(--duration-base) var(--ease-out);
@@ -934,10 +1000,13 @@ body.notes-mode .notes-toggle {
 
 /* Note input container */
 .note-input-container {
+    display: block;
+    width: 100%;
     margin-top: var(--space-5);
     margin-bottom: var(--space-5);
     position: relative;
     z-index: 20;
+    clear: both; /* Force new line */
 }
 
 /* Color picker - below input */
@@ -1095,8 +1164,8 @@ body.notes-mode .notes-toggle {
     .note-delete {
         width: 1rem;
         height: 1rem;
-        top: -0.25rem;
-        right: -0.25rem;
+        top: -0.6rem;
+        right: -0.8rem; /* Move further away to avoid accidental clicks */
     }
     
     .note-delete svg {
@@ -1175,6 +1244,15 @@ body:not(.notes-mode) .note-input-container {
     filter: none !important;
 }
 
+.transfer-title {
+    font-family: var(--font-body);
+    font-size: var(--text-xl);
+    font-weight: 600;
+    color: var(--color-ink);
+    margin: 0 0 var(--space-5) 0;
+    text-align: center;
+}
+
 .transfer-close {
     position: absolute;
     top: var(--space-5);
@@ -1244,9 +1322,40 @@ body:not(.notes-mode) .note-input-container {
 }
 
 /* Transfer Code Display */
+.transfer-methods {
+    display: flex;
+    gap: var(--space-5);
+    align-items: center;
+    justify-content: center;
+    margin: var(--space-4) 0;
+}
+
 .transfer-code-display {
     text-align: center;
-    margin: var(--space-4) 0;
+    flex: 1;
+}
+
+.transfer-qr-section {
+    text-align: center;
+    flex: 1;
+}
+
+.qr-code-container {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto var(--space-2);
+    background: #f8f9fa;
+    border: 1px solid var(--color-sage);
+    border-radius: var(--space-1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.qr-label {
+    font-size: var(--text-sm);
+    color: var(--color-ink-light);
+    margin: 0;
 }
 
 .transfer-code-display label {
@@ -1357,8 +1466,8 @@ body:not(.notes-mode) .note-input-container {
 
 /* Delete Section */
 .delete-section {
-    margin-top: var(--space-8);
-    padding-top: var(--space-6);
+    margin-top: var(--space-5);
+    padding-top: var(--space-3);
     border-top: 1px solid rgba(181, 188, 181, 0.2);
     text-align: center;
 }
@@ -1406,7 +1515,8 @@ body:not(.notes-mode) .note-input-container {
     .font-increase:hover,
     .plain-text-toggle:hover,
     .notes-toggle:hover,
-    .transfer-toggle:hover {
+    .transfer-toggle:hover,
+    .accessibility-panel .font-button:hover {
         background: transparent !important;
         color: var(--color-sage) !important;
         transform: none !important;
@@ -1440,6 +1550,22 @@ body:not(.notes-mode) .note-input-container {
     .delete-section {
         margin-top: var(--space-6);
         padding-top: var(--space-4);
+    }
+    
+    /* Stack transfer methods vertically on mobile */
+    .transfer-methods {
+        flex-direction: column;
+        gap: var(--space-4);
+    }
+    
+    .transfer-title {
+        font-size: var(--text-lg);
+    }
+    
+    /* Slightly smaller QR code on mobile */
+    .qr-code-container {
+        width: 100px;
+        height: 100px;
     }
 }
 

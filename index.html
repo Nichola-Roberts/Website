@@ -17,6 +17,9 @@
     <link rel="preload" as="fetch" href="./content.md" crossorigin>
     <link rel="preload" as="fetch" href="./guide.md" crossorigin>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <!-- QR Code generation -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
 </head>
 <body>
     <!-- Header -->
@@ -28,21 +31,57 @@
             </div>
             
             <nav class="header-nav">
+                <button class="nav-button help-trigger" aria-label="Guide">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M8 8a4 4 0 0 1 8 0c0 2.5-4 4-4 4"/>
+                        <circle cx="12" cy="18" r="0.5" fill="currentColor"/>
+                    </svg>
+                </button>
+                <button class="nav-button accessibility-trigger" aria-label="Accessibility controls">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <line x1="4" y1="8" x2="20" y2="8"/>
+                        <circle cx="8" cy="8" r="2"/>
+                        <line x1="4" y1="16" x2="20" y2="16"/>
+                        <circle cx="16" cy="16" r="2"/>
+                    </svg>
+                </button>
                 <button class="nav-button menu-trigger" aria-label="Navigation">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                         <path d="M4 6h16M4 12h16M4 18h16"/>
-                    </svg>
-                </button>
-                <button class="nav-button help-trigger" aria-label="Guide">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
-                        <circle cx="12" cy="17" r="0.5" fill="currentColor"/>
                     </svg>
                 </button>
             </nav>
         </div>
     </header>
 
+    <!-- Accessibility Panel -->
+    <div class="accessibility-panel" id="accessibilityPanel">
+        <div class="accessibility-panel-inner">
+            <div class="accessibility-panel-content">
+                <button class="plain-text-toggle font-button" aria-label="Plain text">
+                <svg viewBox="0 0 24 24" fill="none">
+                    <path d="M6 6h12M6 10h12M6 14h12M6 18h8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+            <button class="font-button font-decrease" aria-label="Decrease font size">-</button>
+            <button class="font-button font-increase" aria-label="Increase font size">+</button>
+            <button class="font-button transfer-toggle" aria-label="Transfer data between devices" title="Transfer your notes and progress to another device">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M17 1l4 4-4 4"/>
+                    <path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+                    <path d="M7 23l-4-4 4-4"/>
+                    <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+                </svg>
+            </button>
+            <button class="notes-toggle font-button" aria-label="Toggle notes mode">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
+                    <path d="m15 5 4 4"/>
+                </svg>
+            </button>
+            </div>
+        </div>
+    </div>
 
     <!-- Custom Scroll Indicator -->
     <div class="scroll-indicator" id="scrollIndicator"></div>
@@ -91,16 +130,24 @@
             <button class="transfer-close" aria-label="Close transfer">&times;</button>
             
             <div class="transfer-content">
+                <h3 class="transfer-title">Transfer data between devices</h3>
+                
                 <!-- Generate Code Button -->
                 <button class="transfer-button" id="generateCodeBtn">
-                    Generate
+                    Generate Code
                 </button>
                 
                 <!-- Generated Code Result -->
                 <div class="transfer-result" id="exportResult" style="display: none;">
-                    <div class="transfer-code-display">
-                        <div class="code-display" id="transferCode"></div>
-                        <button class="copy-code-btn" id="copyCodeBtn">Copy Code</button>
+                    <div class="transfer-methods">
+                        <div class="transfer-code-display">
+                            <div class="code-display" id="transferCode"></div>
+                            <button class="copy-code-btn" id="copyCodeBtn">Copy Code</button>
+                        </div>
+                        <div class="transfer-qr-section">
+                            <div class="qr-code-container" id="qrCodeContainer"></div>
+                            <p class="qr-label">Or scan QR code</p>
+                        </div>
                     </div>
                     <p class="transfer-expiry">Active for 2 hours</p>
                 </div>
@@ -330,24 +377,6 @@
         </article>
     </main>
 
-    <!-- Desktop Floating Controls -->
-    <div class="floating-font-controls" id="floatingFontControls">
-        <button class="plain-text-toggle font-button" aria-label="Plain text">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path d="M6 6h12M6 10h12M6 14h12M6 18h8"/>
-            </svg>
-        </button>
-        <button class="font-button font-decrease" aria-label="Decrease font size">-</button>
-        <button class="font-button font-increase" aria-label="Increase font size">+</button>
-        <button class="font-button transfer-toggle" aria-label="Transfer data between devices" title="Transfer your notes and progress to another device">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path d="M17 1l4 4-4 4"/>
-                <path d="M3 11V9a4 4 0 0 1 4-4h14"/>
-                <path d="M7 23l-4-4 4-4"/>
-                <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
-            </svg>
-        </button>
-    </div>
 
     <!-- Mobile Bottom Controls -->
     <div class="bottom-font-controls" id="bottomFontControls">

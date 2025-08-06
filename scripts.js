@@ -7,6 +7,7 @@ const state = {
     readingTimes: JSON.parse(localStorage.getItem('readingTimes')) || {},
     isMenuOpen: false,
     isHelpOpen: false,
+    isAccessibilityOpen: false,
     scrollPosition: 0,
     readingSpeed: 0,
     sectionWordCounts: {}, // Store word counts for each section
@@ -22,6 +23,8 @@ const elements = {
     header: document.querySelector('.site-header'),
     menuTrigger: document.querySelector('.menu-trigger'),
     helpTrigger: document.querySelector('.help-trigger'),
+    accessibilityTrigger: document.querySelector('.accessibility-trigger'),
+    accessibilityPanel: document.getElementById('accessibilityPanel'),
     plainTextToggle: document.querySelector('.plain-text-toggle'),
     fontDecrease: document.querySelector('.font-decrease'),
     fontIncrease: document.querySelector('.font-increase'),
@@ -43,6 +46,7 @@ const elements = {
 document.addEventListener('DOMContentLoaded', () => {
     initializeHeader();
     initializeNavigation();
+    initializeAccessibilityPanel();
     initializeHelp();
     initializePlainTextToggle();
     initializeFontSizeControls();
@@ -172,6 +176,30 @@ function toggleMenu() {
 function closeMenu() {
     state.isMenuOpen = false;
     elements.navMenu.classList.remove('active');
+}
+
+// Accessibility Panel
+function initializeAccessibilityPanel() {
+    elements.accessibilityTrigger.addEventListener('click', toggleAccessibilityPanel);
+    
+    // Close on outside click
+    document.addEventListener('click', (e) => {
+        if (state.isAccessibilityOpen && 
+            !elements.accessibilityPanel.contains(e.target) && 
+            !elements.accessibilityTrigger.contains(e.target)) {
+            closeAccessibilityPanel();
+        }
+    });
+}
+
+function toggleAccessibilityPanel() {
+    state.isAccessibilityOpen = !state.isAccessibilityOpen;
+    elements.accessibilityPanel.classList.toggle('visible');
+}
+
+function closeAccessibilityPanel() {
+    state.isAccessibilityOpen = false;
+    elements.accessibilityPanel.classList.remove('visible');
 }
 
 // Help modal
@@ -1461,6 +1489,18 @@ function removeParagraphNoteButtons() {
 
 // Show note input box
 function showNoteInput(paragraph, paragraphIndex, noteIndex) {
+    // Check if clicking the same note that's already open
+    const existingEdit = paragraph.querySelector('.note-edit-container');
+    if (existingEdit && existingEdit.dataset.noteIndex === String(noteIndex)) {
+        // Just close it
+        const lineBreak = existingEdit.previousElementSibling;
+        if (lineBreak && lineBreak.classList.contains('note-edit-line-break')) {
+            lineBreak.remove();
+        }
+        existingEdit.remove();
+        return;
+    }
+    
     // Hide any existing input boxes AND edit containers
     hideAllNoteInputs();
     hideAllEditContainers();
@@ -1483,17 +1523,12 @@ function showNoteInput(paragraph, paragraphIndex, noteIndex) {
 
 // Show compact edit view for existing notes
 function showCompactEditView(paragraph, paragraphIndex, noteIndex, noteData) {
-    // Check if already showing for this note
-    const existingEdit = paragraph.querySelector('.note-edit-container');
-    if (existingEdit) {
-        existingEdit.remove();
-        return; // Don't reopen if clicking same note
-    }
+    // Note: same-note check is now handled in showNoteInput
     
     const editContainer = document.createElement('div');
     editContainer.className = 'note-edit-container';
     editContainer.style.backgroundColor = noteData.color;
-    editContainer.dataset.noteIndex = noteIndex; // Track which note this is for
+    editContainer.dataset.noteIndex = String(noteIndex); // Track which note this is for
     
     const noteText = document.createElement('div');
     noteText.className = 'note-edit-text';
@@ -1510,26 +1545,28 @@ function showCompactEditView(paragraph, paragraphIndex, noteIndex, noteData) {
     
     editContainer.appendChild(noteText);
     editContainer.appendChild(editButton);
+    
+    // Force a line break before the edit container (but check if one already exists)
+    const existingBreak = paragraph.querySelector('.note-line-break, .note-edit-line-break');
+    if (!existingBreak) {
+        const lineBreak = document.createElement('br');
+        lineBreak.className = 'note-edit-line-break';
+        paragraph.appendChild(lineBreak);
+    }
     paragraph.appendChild(editContainer);
     
     // Click edit button to open full editor
     editButton.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
+        // Remove the line break too
+        const lineBreak = editContainer.previousElementSibling;
+        if (lineBreak && lineBreak.classList.contains('note-edit-line-break')) {
+            lineBreak.remove();
+        }
         editContainer.remove();
         showFullNoteInput(paragraph, paragraphIndex, noteIndex);
     });
-    
-    // Click outside to close
-    setTimeout(() => {
-        const closeHandler = (e) => {
-            if (!editContainer.contains(e.target)) {
-                editContainer.remove();
-                document.removeEventListener('click', closeHandler);
-            }
-        };
-        document.addEventListener('click', closeHandler);
-    }, 100);
 }
 
 // Show full note input (for new notes or when editing)
@@ -1580,6 +1617,14 @@ function showFullNoteInput(paragraph, paragraphIndex, noteIndex) {
     
     noteContainer.appendChild(noteInput);
     noteContainer.appendChild(colorPicker);
+    
+    // Force a line break before the note input (but check if one already exists)
+    const existingBreak = paragraph.querySelector('.note-line-break, .note-edit-line-break');
+    if (!existingBreak) {
+        const lineBreak = document.createElement('br');
+        lineBreak.className = 'note-line-break';
+        paragraph.appendChild(lineBreak);
+    }
     paragraph.appendChild(noteContainer);
     
     // Prevent color picker clicks from closing the input
@@ -1649,9 +1694,13 @@ function saveNote(paragraph, paragraphIndex, noteIndex, noteText, color) {
         }
     }
     
-    // Remove input container
+    // Remove input container and line break
     const inputContainer = paragraph.querySelector('.note-input-container');
     if (inputContainer) {
+        const lineBreak = inputContainer.previousElementSibling;
+        if (lineBreak && lineBreak.classList.contains('note-line-break')) {
+            lineBreak.remove();
+        }
         inputContainer.remove();
     }
     
@@ -1756,12 +1805,20 @@ function deleteNote(paragraph, paragraphIndex, noteIndex) {
     // Also remove any open edit containers for this note
     const editContainer = paragraph.querySelector(`.note-edit-container[data-note-index="${noteIndex}"]`);
     if (editContainer) {
+        const lineBreak = editContainer.previousElementSibling;
+        if (lineBreak && lineBreak.classList.contains('note-edit-line-break')) {
+            lineBreak.remove();
+        }
         editContainer.remove();
     }
     
     // And remove any open input containers
     const inputContainer = paragraph.querySelector('.note-input-container');
     if (inputContainer) {
+        const lineBreak = inputContainer.previousElementSibling;
+        if (lineBreak && lineBreak.classList.contains('note-line-break')) {
+            lineBreak.remove();
+        }
         inputContainer.remove();
     }
 }
@@ -1769,13 +1826,25 @@ function deleteNote(paragraph, paragraphIndex, noteIndex) {
 // Hide all note input boxes
 function hideAllNoteInputs() {
     const inputs = document.querySelectorAll('.note-input-container');
-    inputs.forEach(input => input.remove());
+    inputs.forEach(input => {
+        const lineBreak = input.previousElementSibling;
+        if (lineBreak && lineBreak.classList.contains('note-line-break')) {
+            lineBreak.remove();
+        }
+        input.remove();
+    });
 }
 
 // Hide all edit containers
 function hideAllEditContainers() {
     const editContainers = document.querySelectorAll('.note-edit-container');
-    editContainers.forEach(container => container.remove());
+    editContainers.forEach(container => {
+        const lineBreak = container.previousElementSibling;
+        if (lineBreak && lineBreak.classList.contains('note-edit-line-break')) {
+            lineBreak.remove();
+        }
+        container.remove();
+    });
 }
 
 // Initialize transfer feature
@@ -1848,7 +1917,13 @@ function initializeTransferFeature() {
         // Reset export
         document.getElementById('exportResult').style.display = 'none';
         document.getElementById('generateCodeBtn').disabled = false;
-        document.getElementById('generateCodeBtn').textContent = 'Generate';
+        document.getElementById('generateCodeBtn').textContent = 'Generate Code';
+        
+        // Clear QR code
+        const qrContainer = document.getElementById('qrCodeContainer');
+        if (qrContainer) {
+            qrContainer.innerHTML = '';
+        }
         
         // Reset import
         document.getElementById('importResult').style.display = 'none';
@@ -1895,6 +1970,22 @@ function initializeTransferFeature() {
                 document.getElementById('transferCode').textContent = result.code;
                 document.getElementById('exportResult').style.display = 'block';
                 document.getElementById('inputSection').style.display = 'none';
+                
+                // Generate QR code
+                const qrContainer = document.getElementById('qrCodeContainer');
+                qrContainer.innerHTML = ''; // Clear previous QR code
+                
+                if (window.QRCode) {
+                    QRCode.toCanvas(result.code, { width: 120, height: 120 }, (error, canvas) => {
+                        if (error) {
+                            qrContainer.innerHTML = '<div style="color: #999; font-size: 0.8rem;">QR unavailable</div>';
+                        } else {
+                            qrContainer.appendChild(canvas);
+                        }
+                    });
+                } else {
+                    qrContainer.innerHTML = '<div style="color: #999; font-size: 0.8rem;">QR unavailable</div>';
+                }
                 
                 generateCodeBtn.textContent = 'Generated ✓';
             } else {
