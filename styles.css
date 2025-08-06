@@ -1814,6 +1814,24 @@ body.font-2xl .content p {
     }
 }
 
+/* Easter Egg Notes Section - Small font size */
+#notes {
+    font-size: 10px !important;
+}
+
+#notes * {
+    font-size: 10px !important;
+}
+
+#notes p {
+    font-size: 10px !important;
+    line-height: 1.4 !important;
+}
+
+#notes h2 {
+    font-size: 14px !important;
+}
+
 /* Animations */
 @keyframes breathe {
     0%, 100% { opacity: 0.06; }

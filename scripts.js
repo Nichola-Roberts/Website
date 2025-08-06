@@ -1369,11 +1369,15 @@ function toggleNotesMode() {
 
 // Add + buttons to paragraphs
 function addParagraphNoteButtons() {
-    // Get ALL paragraphs, including those in dynamically loaded content
+    // Get ALL paragraphs, excluding those in the Notes easter egg section
     const allParagraphs = document.querySelectorAll('.content p, .section-content p');
-    console.log('Found paragraphs:', allParagraphs.length);
+    const filteredParagraphs = Array.from(allParagraphs).filter(p => {
+        // Exclude paragraphs in the Notes section
+        return !p.closest('#notes');
+    });
+    console.log('Found paragraphs:', allParagraphs.length, 'Filtered:', filteredParagraphs.length);
     
-    allParagraphs.forEach((paragraph, index) => {
+    filteredParagraphs.forEach((paragraph, index) => {
         // Skip if already initialized
         if (paragraph.dataset.notesInitialized) return;
         paragraph.dataset.notesInitialized = 'true';
