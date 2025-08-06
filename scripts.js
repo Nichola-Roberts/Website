@@ -2109,15 +2109,13 @@ function initializeTransferFeature() {
                 qrContainer.innerHTML = ''; // Clear previous QR code
                 
                 try {
-                    // Try different ways the QR library might be available
-                    const QRLib = window.QRCode || window.qrcode || QRCode;
-                    
-                    if (QRLib && QRLib.toCanvas) {
+                    // Check if QR library is available
+                    if (typeof QRCode !== 'undefined' && QRCode.toCanvas) {
                         // Responsive QR code size
                         const isMobile = window.innerWidth <= 768;
                         const qrSize = isMobile ? 100 : 120;
                         
-                        QRLib.toCanvas(result.code, { 
+                        QRCode.toCanvas(result.code, { 
                             width: qrSize, 
                             height: qrSize,
                             margin: 1,
@@ -2205,7 +2203,14 @@ function initializeTransferFeature() {
         
         try {
             console.log('Starting import with code:', code);
-            const result = await transferSystem.importData(code);
+            
+            // Add timeout to the import
+            const importPromise = transferSystem.importData(code);
+            const timeoutPromise = new Promise((_, reject) => {
+                setTimeout(() => reject(new Error('Import timed out after 30 seconds')), 30000);
+            });
+            
+            const result = await Promise.race([importPromise, timeoutPromise]);
             console.log('Import result:', result);
             
             if (result.success) {
