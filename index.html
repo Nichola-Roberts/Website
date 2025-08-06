@@ -20,6 +20,12 @@
     
     <!-- QR Code generation -->
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script>
+        // Ensure QR code library is loaded
+        window.addEventListener('load', () => {
+            console.log('QRCode library check on load:', typeof QRCode);
+        });
+    </script>
 </head>
 <body>
     <!-- Header -->

@@ -628,12 +628,10 @@ function updateReadingProgress() {
     // Update help sections with progressive disclosure
     updateHelpSections();
     
-    // Show easter egg if all sections have been read
+    // Show easter egg based on time only (call it every time to check)
     console.log('All sections read?', allSectionsRead);
-    if (true) { // Temporarily always show for testing
-        console.log('Triggering easter egg!');
-        showEasterEgg();
-    }
+    console.log('Checking easter egg based on time only');
+    showEasterEgg();
 }
 
 
@@ -655,8 +653,8 @@ function showEasterEgg() {
     const totalTime = state.totalTimeOnSite + timeSpentThisSession;
     const oneHour = 60 * 60 * 1000; // 1 hour in milliseconds
     
-    // Only show if user has spent 1+ hour AND read all sections
-    if (totalTime >= 0) {
+    // Only show if user has spent 1+ hour
+    if (totalTime >= oneHour) {
         const notesSection = document.getElementById('notes');
         if (notesSection && notesSection.style.display === 'none') {
             console.log('Revealing easter egg Notes section after 1 hour!');
@@ -1956,6 +1954,8 @@ function initializeTransferFeature() {
             transferSystem.mergeImportedData(importData);
             document.getElementById('importSuccess').style.display = 'block';
             document.getElementById('importResult').style.display = 'block';
+            // Auto-refresh to ensure data loads properly
+            setTimeout(() => window.location.reload(), 2000);
             return;
         }
         
@@ -2078,6 +2078,8 @@ function initializeTransferFeature() {
         // Show success message
         document.getElementById('notesManagement').style.display = 'none';
         document.getElementById('importSuccess').style.display = 'block';
+        // Auto-refresh to ensure notes load properly
+        setTimeout(() => window.location.reload(), 2000);
         
         const successMsg = document.querySelector('#importSuccess p');
         if (Object.keys(notesToKeep).length > 0) {
@@ -2155,7 +2157,31 @@ function initializeTransferFeature() {
                     }
                 } catch (error) {
                     console.error('QR Code generation failed:', error);
-                    qrContainer.innerHTML = '<div style="color: #999; font-size: 0.8rem;">QR error</div>';
+                    // Try loading fallback QR library
+                    const script = document.createElement('script');
+                    script.src = 'https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js';
+                    script.onload = () => {
+                        console.log('Fallback QR library loaded, retrying...');
+                        try {
+                            QRCode.toCanvas(result.code, { 
+                                width: qrSize, 
+                                height: qrSize,
+                                margin: 1,
+                                color: { dark: '#3B7D69', light: '#FFFFFF' }
+                            }, (err, canvas) => {
+                                if (!err && canvas) {
+                                    qrContainer.innerHTML = '';
+                                    qrContainer.appendChild(canvas);
+                                } else {
+                                    qrContainer.innerHTML = '<div style="color: #999; font-size: 0.8rem;">QR unavailable</div>';
+                                }
+                            });
+                        } catch (e) {
+                            qrContainer.innerHTML = '<div style="color: #999; font-size: 0.8rem;">QR unavailable</div>';
+                        }
+                    };
+                    script.onerror = () => qrContainer.innerHTML = '<div style="color: #999; font-size: 0.8rem;">QR unavailable</div>';
+                    document.head.appendChild(script);
                 }
                 
                 generateCodeBtn.textContent = 'Generated ✓';
