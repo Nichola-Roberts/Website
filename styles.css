@@ -207,48 +207,9 @@ body {
     stroke-width: 1.5;
 }
 
-/* Bottom Font Controls - hidden on desktop */
-.bottom-font-controls {
-    display: none;
-}
 
-/* Show bottom controls on mobile only */
+/* Hide desktop floating controls on mobile */
 @media (max-width: 48rem) {
-    .bottom-font-controls {
-        position: fixed;
-        bottom: 1.5rem;
-        left: 50%;
-        display: flex;
-        gap: var(--space-1);
-        background: var(--color-glass);
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
-        padding: var(--space-2);
-        border-radius: var(--space-2);
-        box-shadow: 0 2px 12px rgba(10, 15, 13, 0.1);
-        border: 1px solid rgba(59, 125, 105, 0.1);
-        z-index: 1000;
-        opacity: 0;
-        transform: translateX(-50%) translateY(100%);
-        transition: all var(--duration-base) var(--ease-out);
-        pointer-events: none;
-    }
-    
-    .bottom-font-controls.visible {
-        opacity: 1;
-        transform: translateX(-50%) translateY(0);
-        pointer-events: auto;
-    }
-    
-    .bottom-font-controls.auto-hide {
-        opacity: 0;
-    }
-    
-    .bottom-font-controls:hover {
-        opacity: 1 !important;
-    }
-    
-    /* Hide desktop floating controls on mobile */
     .floating-font-controls {
         display: none !important;
     }
@@ -387,8 +348,7 @@ body.plain-text-mode .accessibility-panel .plain-text-toggle {
 }
 
 /* Plain text button styling */
-.floating-font-controls .plain-text-toggle,
-.bottom-font-controls .plain-text-toggle {
+.floating-font-controls .plain-text-toggle {
     width: 1.5rem;
     height: 1.5rem;
     border: 1px solid var(--color-sage);
@@ -396,16 +356,14 @@ body.plain-text-mode .accessibility-panel .plain-text-toggle {
 
 /* Make plain text button same size as others on mobile */
 @media (max-width: 48rem) {
-    .floating-font-controls .plain-text-toggle,
-    .bottom-font-controls .plain-text-toggle {
+    .floating-font-controls .plain-text-toggle {
         width: 1.75rem;
         height: 1.75rem;
     }
 }
 
 /* Highlight plain text button when active */
-body.plain-text-mode .floating-font-controls .plain-text-toggle,
-body.plain-text-mode .bottom-font-controls .plain-text-toggle {
+body.plain-text-mode .floating-font-controls .plain-text-toggle {
     background-color: var(--color-sage);
     color: white;
 }
@@ -1772,8 +1730,7 @@ body:not(.plain-text-mode) .plain-text-toggle {
 }
 
 /* Reset in floating controls when not in plain text mode */
-body:not(.plain-text-mode) .floating-font-controls .plain-text-toggle,
-body:not(.plain-text-mode) .bottom-font-controls .plain-text-toggle {
+body:not(.plain-text-mode) .floating-font-controls .plain-text-toggle {
     background: transparent !important;
     color: var(--color-sage) !important;
 }
@@ -1844,17 +1801,6 @@ body.font-2xl .content p {
         height: 180px;
     }
     
-    /* Style bottom controls for mobile */
-    .bottom-font-controls .font-button {
-        width: 1.25rem;
-        height: 1.25rem;
-        font-size: var(--text-xs);
-    }
-    
-    .bottom-font-controls .font-button svg {
-        width: 10px;
-        height: 10px;
-    }
     
     .font-button {
         width: 1.75rem;
