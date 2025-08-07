@@ -1803,9 +1803,11 @@ function showImportedNoteInput(paragraph, paragraphIndex, noteIndex, noteData) {
     transferButton.style.backgroundColor = 'var(--color-sage)';
     transferButton.style.color = 'white';
     transferButton.style.border = '1px solid var(--color-sage)';
-    transferButton.style.padding = 'var(--space-2) var(--space-3)';
+    transferButton.style.padding = 'var(--space-4) var(--space-6)';
     transferButton.style.borderRadius = 'var(--space-1)';
-    transferButton.style.fontSize = 'var(--text-sm)';
+    transferButton.style.fontSize = 'var(--text-base)';
+    transferButton.style.whiteSpace = 'nowrap';
+    transferButton.style.minWidth = 'auto';
     
     // Delete button
     const deleteButton = document.createElement('button');
