@@ -818,14 +818,12 @@ body.notes-mode .notes-toggle {
 .paragraph-notes-container.left-margin {
     right: auto;
     left: -2rem;
+    display: none; /* Hidden by default */
 }
 
-/* Only show background when container has notes */
-.paragraph-notes-container.left-margin:not(:empty) {
-    background: rgba(255, 206, 84, 0.1); /* Light yellow background for imported */
-    padding: var(--space-1);
-    border-radius: var(--space-1);
-    border-left: 2px solid #ffce54;
+/* Only show when has-notes class is added */
+.paragraph-notes-container.left-margin.has-notes {
+    display: flex;
 }
 
 /* Multi-column overflow support */
@@ -838,27 +836,6 @@ body.notes-mode .notes-toggle {
     align-self: center; /* Center items within each column */
 }
 
-/* Transfer button for imported notes */
-.note-transfer {
-    position: absolute;
-    top: -0.25rem;
-    left: -0.25rem;
-    width: 0.875rem;
-    height: 0.875rem;
-    background: rgba(59, 125, 105, 0.1);
-    border: none;
-    border-radius: 50%;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: all var(--duration-fast) var(--ease-out);
-    color: var(--color-sage);
-    z-index: 2;
-    font-size: 0.6rem;
-    font-weight: bold;
-}
 
 /* Delete button for imported notes */
 .note-delete {
@@ -896,86 +873,7 @@ body.notes-mode .notes-toggle {
     height: 0.6rem;
 }
 
-.note-item.imported:hover .note-transfer {
-    opacity: 1;
-}
 
-.note-transfer:hover {
-    background: var(--color-sage);
-    color: white;
-    transform: scale(1.1);
-}
-
-/* Prepend dialog - match transfer modal styling */
-.prepend-dialog {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: white;
-    border-radius: var(--space-3);
-    padding: var(--space-6);
-    z-index: 1000;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15), 0 8px 25px rgba(0, 0, 0, 0.1);
-    min-width: 320px;
-    max-width: 400px;
-    width: 90vw;
-    border: 1px solid rgba(59, 125, 105, 0.2);
-}
-
-.prepend-dialog h4 {
-    margin: 0 0 var(--space-3) 0;
-    color: var(--color-sage);
-    font-size: var(--text-base);
-}
-
-.prepend-dialog textarea {
-    width: 100%;
-    min-height: 2.5rem;
-    padding: var(--space-3);
-    border: 2px solid rgba(59, 125, 105, 0.3);
-    border-radius: var(--space-2);
-    font-family: var(--font-body);
-    font-size: var(--text-sm);
-    resize: none;
-    outline: none;
-    transition: border-color var(--duration-fast) var(--ease-out);
-    box-sizing: border-box;
-}
-
-.prepend-dialog textarea:focus {
-    border-color: var(--color-sage-dark);
-}
-
-.prepend-dialog-buttons {
-    display: flex;
-    gap: var(--space-2);
-    margin-top: var(--space-3);
-    justify-content: flex-end;
-}
-
-.prepend-dialog-buttons button {
-    padding: var(--space-3) var(--space-5);
-    border: 2px solid var(--color-sage);
-    border-radius: var(--space-2);
-    background: white;
-    color: var(--color-sage);
-    cursor: pointer;
-    font-size: var(--text-sm);
-    font-weight: 500;
-    transition: all var(--duration-fast) var(--ease-out);
-    min-width: 80px;
-}
-
-.prepend-dialog-buttons button:hover,
-.prepend-dialog-buttons button.primary {
-    background: var(--color-sage);
-    color: white;
-}
-
-.prepend-dialog-buttons button.primary {
-    font-weight: 600;
-}
 
 /* Show notes container only in notes mode - handled by rule at bottom */
 

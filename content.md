@@ -347,3 +347,9 @@ And the hard truth is. You do exhaust people with your protective structure. You
 Note:
 The mathematical formulation of this framework is trivial to derive. Through evolution emotions became the proxy for energy. And we started optimising emotional responses rather than energy.  Because this allowed the reward to gradually move further away from the outcome. The sum of emotions for each action should tend to the energy change. Though in reality, life is not that clean. Emotions are blurry cocktails of brain chemicals. Changes in emotions are measured by changes in these brain chemicals. Each with their own learning properties, including decay rates and cut offs. Processing emotions allows us to learn from them. Minimising the landscape or prediction error. But this consumes energy. Energy is ATP. It’s deep reinforcement learning with gradient descent.
 
+Coming:
+* Pathways link to neural pathways
+* Consciousness 
+* Insights vs emotional processing
+* Altered low energy states
+* Social rewards
