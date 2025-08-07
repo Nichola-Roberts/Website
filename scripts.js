@@ -619,6 +619,13 @@ function updateReadingProgress() {
     // Only check easter egg periodically, not on every reading update
     console.log('All sections read?', allSectionsRead);
     
+    // Don't check easter egg on initial page load or too frequently
+    const timeSincePageLoad = Date.now() - state.siteStartTime;
+    if (timeSincePageLoad < 5000) { // Don't check in first 5 seconds
+        console.log('Skipping easter egg check - too soon after page load');
+        return;
+    }
+    
     // Add a throttling mechanism to prevent constant checking
     if (!window.lastEasterEggCheck || Date.now() - window.lastEasterEggCheck > 60000) { // Check at most once per minute
         console.log('Checking easter egg based on time (throttled)');
@@ -656,10 +663,13 @@ function showEasterEgg() {
             console.log('Revealing easter egg Notes section after 1 hour!');
             notesSection.classList.add('easter-egg-visible');
             
-            // Smooth scroll to make it noticeable
-            setTimeout(() => {
-                notesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }, 500);
+            // Only scroll if user has been on page for a while (not on initial load)
+            const timeSincePageLoad = Date.now() - state.siteStartTime;
+            if (timeSincePageLoad > 60000) { // Only scroll if been on page > 1 minute
+                setTimeout(() => {
+                    notesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 500);
+            }
         }
     } else {
         // Ensure notes section stays hidden
@@ -676,8 +686,16 @@ function initializeEasterEgg() {
     const notesSection = document.getElementById('notes');
     if (notesSection) {
         notesSection.classList.remove('easter-egg-visible');
+        notesSection.style.display = 'none'; // Force hide with inline style
         console.log('Easter egg Notes section initialized as hidden');
+        
+        // Debug time tracking
+        const currentTotal = parseInt(localStorage.getItem('totalTimeOnSite') || '0');
+        console.log('Current stored total time on init:', (currentTotal / 1000 / 60).toFixed(2), 'minutes');
     }
+    
+    // Reset the easter egg check timestamp
+    window.lastEasterEggCheck = 0;
 }
 
 // Content reveal on scroll
