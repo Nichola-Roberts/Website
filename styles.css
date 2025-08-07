@@ -818,6 +818,10 @@ body.notes-mode .notes-toggle {
 .paragraph-notes-container.left-margin {
     right: auto;
     left: -2rem;
+}
+
+/* Only show background when container has notes */
+.paragraph-notes-container.left-margin:not(:empty) {
     background: rgba(255, 206, 84, 0.1); /* Light yellow background for imported */
     padding: var(--space-1);
     border-radius: var(--space-1);

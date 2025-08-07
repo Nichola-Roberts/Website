@@ -616,10 +616,15 @@ function updateReadingProgress() {
     // Update help sections with progressive disclosure
     updateHelpSections();
     
-    // Show easter egg based on time only (call it every time to check)
+    // Only check easter egg periodically, not on every reading update
     console.log('All sections read?', allSectionsRead);
-    console.log('Checking easter egg based on time only');
-    showEasterEgg();
+    
+    // Add a throttling mechanism to prevent constant checking
+    if (!window.lastEasterEggCheck || Date.now() - window.lastEasterEggCheck > 60000) { // Check at most once per minute
+        console.log('Checking easter egg based on time (throttled)');
+        window.lastEasterEggCheck = Date.now();
+        showEasterEgg();
+    }
 }
 
 
@@ -640,6 +645,9 @@ function showEasterEgg() {
     const timeSpentThisSession = Date.now() - state.siteStartTime;
     const totalTime = state.totalTimeOnSite + timeSpentThisSession;
     const oneHour = 60 * 60 * 1000; // 1 hour in milliseconds
+    
+    console.log('Easter egg check - Total time:', (totalTime / 1000 / 60).toFixed(2), 'minutes, Required:', (oneHour / 1000 / 60), 'minutes');
+    console.log('This session:', (timeSpentThisSession / 1000 / 60).toFixed(2), 'minutes, Previous total:', (state.totalTimeOnSite / 1000 / 60).toFixed(2), 'minutes');
     
     // Only show if user has spent 1+ hour
     if (totalTime >= oneHour) {
@@ -1391,6 +1399,27 @@ function addParagraphNoteButtons() {
         // Always show an add button at the end
         addNewNoteButton(paragraph, index);
     });
+    
+    // Load any existing imported notes
+    loadExistingImportedNotes();
+}
+
+// Load existing imported notes from localStorage
+function loadExistingImportedNotes() {
+    const persistentImportedNotes = JSON.parse(localStorage.getItem('importedNotes') || '{}');
+    
+    if (Object.keys(persistentImportedNotes).length > 0) {
+        console.log('Loading existing imported notes:', Object.keys(persistentImportedNotes).length, 'notes');
+        
+        // Set up the imported notes data for placement
+        if (typeof window.importedNotesData === 'undefined') {
+            window.importedNotesData = {};
+        }
+        Object.assign(window.importedNotesData, persistentImportedNotes);
+        
+        // Place them in the margins
+        placeImportedNotesInMargins();
+    }
 }
 
 // Load existing notes for a paragraph
@@ -1988,6 +2017,9 @@ function initializeTransferFeature() {
         // Merge non-notes data immediately (reading times, preferences, etc.)
         transferSystem.mergeNonNotesData(importData);
         
+        // Store imported notes permanently in separate localStorage key
+        localStorage.setItem('importedNotes', JSON.stringify(importedNotesData));
+        
         // Instead of showing modal, place imported notes in left margins
         placeImportedNotesInMargins();
         
@@ -2194,6 +2226,12 @@ function initializeTransferFeature() {
                 delete window.importedNotesStore[paragraphIndex][noteIndex];
             }
             
+            // Remove from persistent storage
+            const persistentNotes = JSON.parse(localStorage.getItem('importedNotes') || '{}');
+            const noteKey = `paragraph-${paragraphIndex}-${noteIndex}`;
+            delete persistentNotes[noteKey];
+            localStorage.setItem('importedNotes', JSON.stringify(persistentNotes));
+            
             // Update UI - remove from left margin and add to right margin
             const leftContainer = paragraph.querySelector('.paragraph-notes-container.left-margin');
             if (leftContainer) {
@@ -2224,6 +2262,12 @@ function initializeTransferFeature() {
             if (window.importedNotesStore && window.importedNotesStore[paragraphIndex]) {
                 delete window.importedNotesStore[paragraphIndex][noteIndex];
             }
+            
+            // Remove from persistent storage
+            const persistentNotes = JSON.parse(localStorage.getItem('importedNotes') || '{}');
+            const noteKey = `paragraph-${paragraphIndex}-${noteIndex}`;
+            delete persistentNotes[noteKey];
+            localStorage.setItem('importedNotes', JSON.stringify(persistentNotes));
             
             // Remove from UI
             const leftContainer = paragraph.querySelector('.paragraph-notes-container.left-margin');
@@ -2453,6 +2497,11 @@ function initializeTransferFeature() {
                 window.state.totalTimeOnSite = 0;
                 window.state.readingTimes = {};
                 window.state.currentSection = 0;
+            }
+            
+            // Reset site start time to ensure proper time tracking after deletion
+            if (window.state) {
+                window.state.siteStartTime = Date.now();
             }
             
             // Refresh the page to reset everything (no message popup)
