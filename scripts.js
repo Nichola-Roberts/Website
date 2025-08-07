@@ -1440,6 +1440,110 @@ function loadExistingImportedNotes() {
     }
 }
 
+// Place imported notes in left margins of paragraphs
+function placeImportedNotesInMargins() {
+    const allParagraphs = document.querySelectorAll('.content p, .section-content p');
+    const filteredParagraphs = Array.from(allParagraphs).filter(p => !p.closest('#notes'));
+    
+    console.log('Placing imported notes in margins for', filteredParagraphs.length, 'paragraphs');
+    
+    // Create a temporary store for imported notes by paragraph
+    window.importedNotesStore = {};
+    
+    filteredParagraphs.forEach((paragraph, paragraphIndex) => {
+        // Create or get left margin notes container
+        let leftContainer = paragraph.querySelector('.paragraph-notes-container.left-margin');
+        if (!leftContainer) {
+            leftContainer = document.createElement('div');
+            leftContainer.className = 'paragraph-notes-container left-margin';
+            paragraph.style.position = 'relative';
+            paragraph.appendChild(leftContainer);
+        }
+        
+        // Find imported notes for this paragraph
+        const paragraphImportedNotes = Object.keys(window.importedNotesData)
+            .filter(key => key.startsWith(`paragraph-${paragraphIndex}-`))
+            .sort((a, b) => {
+                const aIndex = parseInt(a.split('-')[2]);
+                const bIndex = parseInt(b.split('-')[2]);
+                return aIndex - bIndex;
+            });
+        
+        if (paragraphImportedNotes.length > 0) {
+            leftContainer.style.display = 'flex';
+            window.importedNotesStore[paragraphIndex] = {};
+            
+            paragraphImportedNotes.forEach(noteKey => {
+                const noteIndex = parseInt(noteKey.split('-')[2]);
+                const noteData = window.importedNotesData[noteKey];
+                window.importedNotesStore[paragraphIndex][noteIndex] = noteData;
+                addImportedNoteCircle(leftContainer, paragraphIndex, noteIndex, noteData);
+            });
+        }
+    });
+}
+
+// Add imported note circle to left margin
+function addImportedNoteCircle(container, paragraphIndex, noteIndex, noteData) {
+    let parsedNoteData = noteData;
+    if (typeof noteData === 'string') {
+        try {
+            parsedNoteData = JSON.parse(noteData);
+        } catch (e) {
+            parsedNoteData = { text: noteData, color: '#f0d9ef' }; // Default color like regular notes
+        }
+    }
+    
+    if (!parsedNoteData.color) {
+        parsedNoteData.color = '#f0d9ef'; // Default color like regular notes
+    }
+    
+    // Create note item container
+    const noteContainer = document.createElement('div');
+    noteContainer.className = 'note-item imported';
+    noteContainer.dataset.noteIndex = noteIndex;
+    
+    // Create delete button (same as regular notes)
+    const deleteButton = document.createElement('button');
+    deleteButton.className = 'note-delete';
+    deleteButton.setAttribute('aria-label', 'Delete imported note');
+    deleteButton.innerHTML = `
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14zM10 11v6M14 11v6"/>
+        </svg>
+    `;
+    deleteButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        deleteImportedNote(paragraphIndex, noteIndex);
+    });
+    
+    // Create note circle
+    const noteCircle = document.createElement('button');
+    noteCircle.className = 'note-circle';
+    noteCircle.setAttribute('aria-label', 'View/edit imported note');
+    noteCircle.innerHTML = '●';
+    noteCircle.title = parsedNoteData.text;
+    noteCircle.style.backgroundColor = parsedNoteData.color;
+    noteCircle.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        // Find the paragraph element
+        const paragraphContainer = container.closest('.section-inner');
+        const paragraph = paragraphContainer ? paragraphContainer.querySelector('p') : null;
+        if (paragraph) {
+            showImportedNoteInput(paragraph, paragraphIndex, noteIndex, parsedNoteData);
+        }
+    });
+    
+    noteContainer.appendChild(deleteButton);
+    noteContainer.appendChild(noteCircle);
+    container.appendChild(noteContainer);
+    
+    // Update container layout for imported notes too
+    updateNotesContainerLayout(container);
+}
+
 // Load existing notes for a paragraph
 function loadExistingNotes(paragraph, paragraphIndex) {
     const notesContainer = paragraph.querySelector('.paragraph-notes-container');
@@ -2226,110 +2330,6 @@ function initializeTransferFeature() {
                 addParagraphNoteButtons();
             }
         }, 1000);
-    }
-    
-    // Place imported notes in left margins of paragraphs
-    function placeImportedNotesInMargins() {
-        const allParagraphs = document.querySelectorAll('.content p, .section-content p');
-        const filteredParagraphs = Array.from(allParagraphs).filter(p => !p.closest('#notes'));
-        
-        console.log('Placing imported notes in margins for', filteredParagraphs.length, 'paragraphs');
-        
-        // Create a temporary store for imported notes by paragraph
-        window.importedNotesStore = {};
-        
-        filteredParagraphs.forEach((paragraph, paragraphIndex) => {
-            // Create or get left margin notes container
-            let leftContainer = paragraph.querySelector('.paragraph-notes-container.left-margin');
-            if (!leftContainer) {
-                leftContainer = document.createElement('div');
-                leftContainer.className = 'paragraph-notes-container left-margin';
-                paragraph.style.position = 'relative';
-                paragraph.appendChild(leftContainer);
-            }
-            
-            // Find imported notes for this paragraph
-            const paragraphImportedNotes = Object.keys(window.importedNotesData)
-                .filter(key => key.startsWith(`paragraph-${paragraphIndex}-`))
-                .sort((a, b) => {
-                    const aIndex = parseInt(a.split('-')[2]);
-                    const bIndex = parseInt(b.split('-')[2]);
-                    return aIndex - bIndex;
-                });
-            
-            if (paragraphImportedNotes.length > 0) {
-                leftContainer.style.display = 'flex';
-                window.importedNotesStore[paragraphIndex] = {};
-                
-                paragraphImportedNotes.forEach(noteKey => {
-                    const noteIndex = parseInt(noteKey.split('-')[2]);
-                    const noteData = window.importedNotesData[noteKey];
-                    window.importedNotesStore[paragraphIndex][noteIndex] = noteData;
-                    addImportedNoteCircle(leftContainer, paragraphIndex, noteIndex, noteData);
-                });
-            }
-        });
-    }
-    
-    // Add imported note circle to left margin
-    function addImportedNoteCircle(container, paragraphIndex, noteIndex, noteData) {
-        let parsedNoteData = noteData;
-        if (typeof noteData === 'string') {
-            try {
-                parsedNoteData = JSON.parse(noteData);
-            } catch (e) {
-                parsedNoteData = { text: noteData, color: '#f0d9ef' }; // Default color like regular notes
-            }
-        }
-        
-        if (!parsedNoteData.color) {
-            parsedNoteData.color = '#f0d9ef'; // Default color like regular notes
-        }
-        
-        // Create note item container
-        const noteContainer = document.createElement('div');
-        noteContainer.className = 'note-item imported';
-        noteContainer.dataset.noteIndex = noteIndex;
-        
-        // Create delete button (same as regular notes)
-        const deleteButton = document.createElement('button');
-        deleteButton.className = 'note-delete';
-        deleteButton.setAttribute('aria-label', 'Delete imported note');
-        deleteButton.innerHTML = `
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14zM10 11v6M14 11v6"/>
-            </svg>
-        `;
-        deleteButton.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            deleteImportedNote(paragraphIndex, noteIndex);
-        });
-        
-        // Create note circle
-        const noteCircle = document.createElement('button');
-        noteCircle.className = 'note-circle';
-        noteCircle.setAttribute('aria-label', 'View/edit imported note');
-        noteCircle.innerHTML = '●';
-        noteCircle.title = parsedNoteData.text;
-        noteCircle.style.backgroundColor = parsedNoteData.color;
-        noteCircle.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            // Find the paragraph element
-            const paragraphContainer = container.closest('.section-inner');
-            const paragraph = paragraphContainer ? paragraphContainer.querySelector('p') : null;
-            if (paragraph) {
-                showImportedNoteInput(paragraph, paragraphIndex, noteIndex, parsedNoteData);
-            }
-        });
-        
-        noteContainer.appendChild(deleteButton);
-        noteContainer.appendChild(noteCircle);
-        container.appendChild(noteContainer);
-        
-        // Update container layout for imported notes too
-        updateNotesContainerLayout(container);
     }
     
     // Show prepend dialog when transferring a note
