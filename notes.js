@@ -764,6 +764,85 @@ if (document.readyState === 'loading') {
     NotesSystem.init();
 }
 
+// Place imported notes in left margins (for transfer system)
+NotesSystem.placeImportedNotesInMargins = function() {
+    if (!window.importedNotesData || Object.keys(window.importedNotesData).length === 0) {
+        console.log('No imported notes data to place');
+        return;
+    }
+    
+    console.log('Placing imported notes in left margins:', window.importedNotesData);
+    
+    const allParagraphs = document.querySelectorAll('p');
+    const filteredParagraphs = Array.from(allParagraphs).filter(p => !p.closest('#notes'));
+    
+    // Clear existing left margin containers
+    document.querySelectorAll('.paragraph-notes-container[data-side="left"]').forEach(container => {
+        container.remove();
+    });
+    
+    // Create left margin containers and place imported notes
+    filteredParagraphs.forEach((paragraph, paragraphIndex) => {
+        // Set paragraph index if not set
+        if (!paragraph.dataset.paragraphIndex) {
+            paragraph.dataset.paragraphIndex = paragraphIndex;
+        }
+        
+        // Find imported notes for this paragraph
+        const importedNotesForParagraph = Object.keys(window.importedNotesData).filter(key => {
+            // Handle both old format (paragraph-X-Y) and new format (pX-Y)
+            return key.startsWith(`paragraph-${paragraphIndex}-`) || key.startsWith(`p${paragraphIndex}-`);
+        });
+        
+        if (importedNotesForParagraph.length > 0) {
+            // Create left margin container using the same structure as right margin
+            const leftContainer = document.createElement('div');
+            leftContainer.className = 'paragraph-notes-container';
+            leftContainer.dataset.side = 'left';
+            
+            // Add button for left side (like the existing system)
+            const addButton = document.createElement('button');
+            addButton.className = 'note-add-button';
+            addButton.innerHTML = '+';
+            addButton.title = 'Add note (left side)';
+            addButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                // This would add a new note on the left side - for now just log
+                console.log('Add note on left side clicked');
+            });
+            
+            leftContainer.appendChild(addButton);
+            paragraph.appendChild(leftContainer);
+            
+            // Now create imported notes using the existing createNoteCircle function
+            importedNotesForParagraph.forEach(noteKey => {
+                const noteDataStr = window.importedNotesData[noteKey];
+                const noteId = noteKey.split('-')[2];
+                
+                // Parse note data and ensure it has the right format
+                let noteData;
+                try {
+                    noteData = JSON.parse(noteDataStr);
+                } catch (e) {
+                    // Handle plain string notes
+                    noteData = { text: noteDataStr, color: '#f0d9ef' };
+                }
+                
+                // Ensure color exists and set side to left
+                if (!noteData.color) {
+                    noteData.color = '#f0d9ef';
+                }
+                noteData.side = 'left'; // Force to left side
+                
+                // Use the existing createNoteCircle function
+                NotesSystem.createNoteCircle(paragraph, paragraphIndex, noteId, noteData);
+            });
+        }
+    });
+    
+    console.log('Imported notes placed in left margins using existing note system');
+};
+
 // Export for external access
 window.NotesSystem = NotesSystem;
 

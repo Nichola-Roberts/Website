@@ -23,14 +23,22 @@ const TransferSystem = {
     // Export data (only right margin notes + reading progress)
     async exportData() {
         try {
-            // Get right margin notes only
+            // Get right margin notes only (for privacy - don't export left/imported notes)
             const allNotes = JSON.parse(localStorage.getItem('userNotes') || '{}');
             const rightMarginNotes = {};
             
-            // Filter for right margin notes (these are the main notes, not imported ones)
+            // Filter for right margin notes only
             Object.keys(allNotes).forEach(key => {
-                // Include all userNotes as these are the right margin notes
-                rightMarginNotes[key] = allNotes[key];
+                try {
+                    const noteData = JSON.parse(allNotes[key]);
+                    // Only include notes that are explicitly right side or have no side specified (default right)
+                    if (!noteData.side || noteData.side === 'right') {
+                        rightMarginNotes[key] = allNotes[key];
+                    }
+                } catch (e) {
+                    // If parsing fails, assume it's a right margin note (backwards compatibility)
+                    rightMarginNotes[key] = allNotes[key];
+                }
             });
             
             // Get reading progress data
@@ -166,24 +174,19 @@ const TransferSystem = {
                 }
             });
             
-            // Handle imported notes - place them on left margin
+            // Handle imported notes - place them on left margin (always replace)
             if (notes && Object.keys(notes).length > 0) {
-                if (replaceExisting) {
-                    // Replace all existing imported notes
-                    localStorage.setItem('persistentImportedNotes', JSON.stringify(notes));
-                } else {
-                    // Merge with existing imported notes
-                    const existingImported = JSON.parse(localStorage.getItem('persistentImportedNotes') || '{}');
-                    const mergedNotes = { ...existingImported, ...notes };
-                    localStorage.setItem('persistentImportedNotes', JSON.stringify(mergedNotes));
-                }
+                // Always replace existing imported notes
+                localStorage.setItem('persistentImportedNotes', JSON.stringify(notes));
                 
                 // Set up for notes system to place them in left margins
-                window.importedNotesData = JSON.parse(localStorage.getItem('persistentImportedNotes') || '{}');
+                window.importedNotesData = notes;
                 
                 // Refresh notes display if notes mode is active
-                if (window.NotesSystem && window.NotesSystem.isNotesMode) {
+                if (window.NotesSystem && window.NotesSystem.placeImportedNotesInMargins) {
                     window.NotesSystem.placeImportedNotesInMargins();
+                } else {
+                    console.log('NotesSystem or placeImportedNotesInMargins not available');
                 }
             }
             

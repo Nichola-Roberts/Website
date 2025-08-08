@@ -309,23 +309,18 @@ const TransferModal = {
             importResultSection.innerHTML = `
                 <div class="import-warning">
                     <h4>⚠️ Existing Imported Notes Found</h4>
-                    <p>You have existing imported notes on the left margin. What would you like to do?</p>
+                    <p>Notes will import on the left margin, replacing current notes on the left.</p>
                     <p><strong>Found:</strong> ${importResult.noteCount} notes to import</p>
                     <div class="import-choices">
-                        <button class="transfer-button" id="mergeNotesBtn">Merge (Keep Both)</button>
-                        <button class="transfer-button secondary" id="replaceNotesBtn">Replace (Overwrite)</button>
+                        <button class="transfer-button" id="replaceNotesBtn">Continue (Replace Left Notes)</button>
                         <button class="transfer-button cancel" id="cancelImportBtn">Cancel</button>
                     </div>
                 </div>
             `;
             
             // Add event handlers for choice buttons
-            document.getElementById('mergeNotesBtn')?.addEventListener('click', () => {
-                this.completeImport(importResult, false);
-            });
-            
             document.getElementById('replaceNotesBtn')?.addEventListener('click', () => {
-                this.completeImport(importResult, true);
+                this.completeImport(importResult, true); // Always replace
             });
             
             document.getElementById('cancelImportBtn')?.addEventListener('click', () => {
