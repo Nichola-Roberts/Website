@@ -991,11 +991,11 @@ body.notes-mode .notes-toggle {
 .note-input-container {
     display: block;
     width: 100%;
-    margin-top: var(--space-5);
-    margin-bottom: var(--space-5);
+    margin-top: 0;
+    margin-bottom: 0;
     position: relative;
     z-index: 20;
-    clear: both; /* Force new line */
+    clear: none;
 }
 
 /* Color picker - below input */
@@ -1043,8 +1043,8 @@ body.notes-mode .notes-toggle {
 
 /* Compact edit view for existing notes */
 .note-edit-container {
-    margin-top: var(--space-3);
-    margin-bottom: var(--space-3);
+    margin-top: 0;
+    margin-bottom: 0;
     padding: var(--space-3) var(--space-5);
     border-radius: var(--space-2);
     position: relative;
@@ -1257,11 +1257,11 @@ body:not(.notes-mode) .note-input-container {
 .note-input-container {
     display: block;
     width: 100%;
-    margin-top: var(--space-5);
-    margin-bottom: var(--space-5);
+    margin-top: 0;
+    margin-bottom: 0;
     position: relative;
     z-index: 20;
-    clear: both;
+    clear: none;
 }
 
 .note-input-header {
@@ -1324,7 +1324,7 @@ body:not(.notes-mode) .note-input-container {
 }
 
 .color-option.selected {
-    border-color: #333;
+    border-color: transparent;
     transform: scale(1.1);
 }
 

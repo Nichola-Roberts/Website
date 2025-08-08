@@ -73,11 +73,19 @@ const NotesSystem = {
         
         // Force plain text mode when notes are active
         if (!this.wasPlainTextModeActive) {
-            document.body.classList.add('plain-text-mode');
-            localStorage.setItem('plainTextMode', 'true');
+            // Trigger the plain text toggle functionality properly
+            const plainTextButton = document.querySelector('.plain-text-toggle');
+            if (plainTextButton) {
+                plainTextButton.click();
+            } else {
+                // Fallback if button not found
+                document.body.classList.add('plain-text-mode');
+                localStorage.setItem('plainTextMode', 'true');
+            }
         }
         
         this.addNotesToParagraphs();
+        this.showAllTextRanges();
     },
     
     // Disable notes mode
@@ -86,12 +94,20 @@ const NotesSystem = {
         
         // Restore previous plain text mode state
         if (!this.wasPlainTextModeActive) {
-            document.body.classList.remove('plain-text-mode');
-            localStorage.setItem('plainTextMode', 'false');
+            // Trigger the plain text toggle functionality properly to turn it off
+            const plainTextButton = document.querySelector('.plain-text-toggle');
+            if (plainTextButton && document.body.classList.contains('plain-text-mode')) {
+                plainTextButton.click();
+            } else {
+                // Fallback if button not found
+                document.body.classList.remove('plain-text-mode');
+                localStorage.setItem('plainTextMode', 'false');
+            }
         }
         
         this.removeNotesFromParagraphs();
         this.clearHighlights();
+        this.clearAllGeneralHighlights();
     },
     
     // Add note UI to all paragraphs
@@ -240,6 +256,17 @@ const NotesSystem = {
         noteCircle.addEventListener('click', (e) => {
             e.stopPropagation();
             const noteKey = `p${paragraphIndex}-${noteId}`;
+            
+            // Check if this note's dialog is already open
+            const existingDialog = document.querySelector('.note-input-container');
+            if (existingDialog && this.activeNoteKey === noteKey) {
+                // Same note clicked - close the dialog
+                this.closeDialog(true);
+                return;
+            }
+            
+            // Different note or no dialog open - show this note's dialog
+            this.clearHighlights();
             this.showNoteDialog(paragraph, paragraphIndex, noteKey);
         });
         
@@ -250,8 +277,11 @@ const NotesSystem = {
     
     // Show note dialog
     showNoteDialog(paragraph, paragraphIndex, noteKey = null, selectedSide = null) {
-        // Close any existing dialog
-        this.closeDialog();
+        // Close any existing dialog (including view boxes)
+        this.closeDialog(false); // Don't clear highlights yet, we'll show new ones
+        
+        // Clear all general highlights since we're opening a specific note
+        this.clearAllGeneralHighlights();
         
         // Create new dialog
         const dialog = document.createElement('div');
@@ -271,9 +301,10 @@ const NotesSystem = {
             // Generate new note ID
             noteId = Date.now().toString(36);
             noteKey = `p${paragraphIndex}-${noteId}`;
+            console.log('selectedTextRange when creating noteData:', this.selectedTextRange);
             noteData = {
-                text: this.selectedTextRange ? this.selectedTextRange.text : '',
-                color: '#f0d9ef',
+                text: '',
+                color: '#F0D9EF',
                 side: selectedSide || 'right',
                 textRange: this.selectedTextRange
             };
@@ -329,13 +360,26 @@ const NotesSystem = {
         });
         
         // Position below paragraph - insert directly after the paragraph
+        // Remove all spacing to eliminate line gaps - use !important to override CSS
+        dialog.style.setProperty('margin', '0', 'important');
+        dialog.style.setProperty('margin-top', '0', 'important');
+        dialog.style.setProperty('margin-bottom', '0', 'important');
+        dialog.style.setProperty('padding', '0', 'important');
+        dialog.style.setProperty('clear', 'none', 'important');
+        dialog.style.setProperty('display', 'block', 'important');
+        dialog.style.setProperty('vertical-align', 'top', 'important');
+        dialog.style.setProperty('position', 'relative', 'important');
+        
+        // Remove bottom margin from the paragraph when dialog is attached
+        paragraph.style.setProperty('margin-bottom', '0', 'important');
+        
         if (paragraph.nextSibling) {
             paragraph.parentNode.insertBefore(dialog, paragraph.nextSibling);
         } else {
             paragraph.parentNode.appendChild(dialog);
         }
         
-        // Highlight associated text
+        // Highlight associated text immediately when dialog opens
         console.log('Checking for text range to highlight:', noteData.textRange);
         if (noteData.textRange) {
             this.highlightText(paragraph, noteData.textRange, noteData.color);
@@ -349,7 +393,7 @@ const NotesSystem = {
         dialog.innerHTML = `
             <textarea class="note-input" placeholder="">${noteData.text}</textarea>
             <div class="note-color-picker">
-                ${['#f0d9ef', '#d9f0ef', '#f0efd9', '#efd9f0', '#d9eff0'].map(color => 
+                ${['#F0D9EF', '#FCDCE1', '#FFE6BB', '#E9ECCE', '#CDE9DC', '#C4DFE5'].map(color => 
                     `<button class="color-option ${noteData.color === color ? 'selected' : ''}" 
                             style="background-color: ${color}" 
                             data-color="${color}"></button>`
@@ -360,6 +404,11 @@ const NotesSystem = {
         // Focus textarea
         const textarea = dialog.querySelector('.note-input');
         textarea.focus();
+        
+        // Show initial highlighting if there's selected text
+        if (noteData.textRange) {
+            this.highlightText(paragraph, noteData.textRange, noteData.color);
+        }
         
         // Color picker
         let selectedColor = noteData.color;
@@ -449,11 +498,61 @@ const NotesSystem = {
         console.log('Text breakdown - before:', before.length, 'highlighted:', highlighted, 'after:', after.length);
         
         if (highlighted) {
-            paragraph.innerHTML = 
-                this.escapeHtml(before) + 
-                `<span class="note-highlight" style="background-color: ${color}80">${this.escapeHtml(highlighted)}</span>` +
-                this.escapeHtml(after);
-            console.log('Highlight applied to paragraph');
+            // Create the highlight span without touching the note containers
+            const walker = document.createTreeWalker(
+                paragraph,
+                NodeFilter.SHOW_TEXT,
+                null,
+                false
+            );
+            
+            let currentOffset = 0;
+            let textNode;
+            let startNode = null;
+            let endNode = null;
+            let startNodeOffset = 0;
+            let endNodeOffset = 0;
+            
+            // Find the text nodes that contain our range
+            while (textNode = walker.nextNode()) {
+                const nodeLength = textNode.textContent.length;
+                
+                if (startNode === null && currentOffset + nodeLength > textRange.startOffset) {
+                    startNode = textNode;
+                    startNodeOffset = textRange.startOffset - currentOffset;
+                }
+                
+                if (endNode === null && currentOffset + nodeLength >= textRange.endOffset) {
+                    endNode = textNode;
+                    endNodeOffset = textRange.endOffset - currentOffset;
+                    break;
+                }
+                
+                currentOffset += nodeLength;
+            }
+            
+            if (startNode && endNode) {
+                const range = document.createRange();
+                range.setStart(startNode, startNodeOffset);
+                range.setEnd(endNode, endNodeOffset);
+                
+                const highlightSpan = document.createElement('span');
+                highlightSpan.className = 'note-highlight';
+                highlightSpan.style.backgroundColor = color + '80';
+                
+                try {
+                    range.surroundContents(highlightSpan);
+                    console.log('Highlight applied to paragraph');
+                } catch (e) {
+                    console.log('Could not apply highlight, falling back to innerHTML method');
+                    // Fallback to original method if range spans multiple elements
+                    paragraph.innerHTML = 
+                        this.escapeHtml(before) + 
+                        `<span class="note-highlight" style="background-color: ${color}80">${this.escapeHtml(highlighted)}</span>` +
+                        this.escapeHtml(after);
+                    this.restoreNoteContainers(paragraph);
+                }
+            }
         } else {
             console.log('No highlighted text found');
         }
@@ -468,12 +567,156 @@ const NotesSystem = {
         });
     },
     
+    // Restore note containers after innerHTML replacement
+    restoreNoteContainers(paragraph) {
+        const existingNotes = Object.keys(this.notes)
+            .filter(key => key.startsWith(`p${paragraph.dataset.paragraphIndex}-`))
+            .map(key => {
+                const noteData = JSON.parse(this.notes[key]);
+                const noteId = key.split('-')[1];
+                return { noteId, noteData };
+            });
+        
+        // Recreate containers
+        ['left', 'right'].forEach(side => {
+            const container = document.createElement('div');
+            container.className = 'paragraph-notes-container';
+            container.dataset.side = side;
+            
+            // Add button for this side
+            const addButton = document.createElement('button');
+            addButton.className = 'note-add-button';
+            addButton.innerHTML = '+';
+            addButton.title = `Add note (${side} side)`;
+            addButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const paragraphIndex = parseInt(paragraph.dataset.paragraphIndex);
+                this.captureSelectedText(paragraph);
+                this.showNoteDialog(paragraph, paragraphIndex, null, side);
+            });
+            
+            container.appendChild(addButton);
+            paragraph.appendChild(container);
+        });
+        
+        // Restore existing notes
+        existingNotes.forEach(({noteId, noteData}) => {
+            this.createNoteCircle(paragraph, parseInt(paragraph.dataset.paragraphIndex), noteId, noteData);
+        });
+    },
+    
     // Close dialog
-    closeDialog() {
-        document.querySelector('.note-input-container')?.remove();
-        this.clearHighlights();
+    closeDialog(clearHighlights = true) {
+        const dialog = document.querySelector('.note-input-container');
+        if (dialog) {
+            // Restore paragraph margin before removing dialog
+            const paragraphs = document.querySelectorAll('p');
+            paragraphs.forEach(p => {
+                if (p.style.marginBottom === '0px') {
+                    p.style.removeProperty('margin-bottom');
+                }
+            });
+            dialog.remove();
+        }
+        if (clearHighlights) {
+            this.clearHighlights();
+        }
         this.activeNoteKey = null;
-        this.selectedTextRange = null;
+        if (clearHighlights) {
+            this.selectedTextRange = null;
+        }
+        
+        // Show all text ranges in light green when no dialog is open
+        this.showAllTextRanges();
+    },
+    
+    // Show all text ranges in light green when no dialog is open
+    showAllTextRanges() {
+        if (this.activeNoteKey) return; // Don't show if a dialog is open
+        
+        const paragraphs = document.querySelectorAll('p[data-notes-initialized]');
+        paragraphs.forEach(paragraph => {
+            const paragraphIndex = parseInt(paragraph.dataset.paragraphIndex);
+            const paragraphNotes = Object.keys(this.notes)
+                .filter(key => key.startsWith(`p${paragraphIndex}-`));
+            
+            paragraphNotes.forEach(noteKey => {
+                const noteData = JSON.parse(this.notes[noteKey]);
+                if (noteData.textRange) {
+                    this.highlightTextRange(paragraph, noteData.textRange, '#CDE9DC40', 'general-highlight');
+                }
+            });
+        });
+    },
+    
+    // Clear all general (light green) highlights
+    clearAllGeneralHighlights() {
+        document.querySelectorAll('.general-highlight').forEach(highlight => {
+            const parent = highlight.parentNode;
+            parent.replaceChild(document.createTextNode(highlight.textContent), highlight);
+            parent.normalize();
+        });
+    },
+    
+    // Highlight text range with custom class
+    highlightTextRange(paragraph, textRange, color, className = 'note-highlight') {
+        if (!textRange) return;
+        
+        const text = paragraph.textContent;
+        const before = text.substring(0, textRange.startOffset);
+        const highlighted = text.substring(textRange.startOffset, textRange.endOffset);
+        const after = text.substring(textRange.endOffset);
+        
+        if (highlighted) {
+            // Use TreeWalker approach for precise highlighting
+            const walker = document.createTreeWalker(
+                paragraph,
+                NodeFilter.SHOW_TEXT,
+                null,
+                false
+            );
+            
+            let currentOffset = 0;
+            let textNode;
+            let startNode = null;
+            let endNode = null;
+            let startNodeOffset = 0;
+            let endNodeOffset = 0;
+            
+            while (textNode = walker.nextNode()) {
+                const nodeLength = textNode.textContent.length;
+                
+                if (startNode === null && currentOffset + nodeLength > textRange.startOffset) {
+                    startNode = textNode;
+                    startNodeOffset = textRange.startOffset - currentOffset;
+                }
+                
+                if (endNode === null && currentOffset + nodeLength >= textRange.endOffset) {
+                    endNode = textNode;
+                    endNodeOffset = textRange.endOffset - currentOffset;
+                    break;
+                }
+                
+                currentOffset += nodeLength;
+            }
+            
+            if (startNode && endNode) {
+                const range = document.createRange();
+                range.setStart(startNode, startNodeOffset);
+                range.setEnd(endNode, endNodeOffset);
+                
+                const highlightSpan = document.createElement('span');
+                highlightSpan.className = className;
+                highlightSpan.style.backgroundColor = color;
+                
+                try {
+                    range.surroundContents(highlightSpan);
+                } catch (e) {
+                    // Fallback for complex cases - skip this highlight
+                    console.log('Could not apply general highlight');
+                }
+            }
+        }
     },
     
     // Escape HTML
@@ -494,7 +737,7 @@ const NotesSystem = {
         document.addEventListener('click', (e) => {
             const dialog = document.querySelector('.note-input-container');
             if (dialog && !dialog.contains(e.target) && !e.target.closest('.note-circle') && !e.target.closest('.note-add-button')) {
-                this.closeDialog();
+                this.closeDialog(true); // Clear highlights when clicking outside
             }
         });
         
@@ -508,7 +751,7 @@ const NotesSystem = {
         // Escape key to close
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
-                this.closeDialog();
+                this.closeDialog(true); // Clear highlights when pressing escape
             }
         });
     }
