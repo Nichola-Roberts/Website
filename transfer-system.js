@@ -2,78 +2,27 @@
 // Handles data export/import functionality for notes and reading progress
 
 const TransferSystem = {
-    // Generate a random 8-character code (avoiding 0, O for clarity)
+    // Generate a random 8-character code (4 digits access + 4 digits encryption)
     generateCode() {
         const chars = 'ABCDEFGHIJKLMNPQRSTUVWXYZ123456789'; // Removed O and 0
         let code = '';
-        let attempts = 0;
-        const maxAttempts = 50;
-        
-        do {
-            code = '';
-            for (let i = 0; i < 8; i++) {
-                code += chars.charAt(Math.floor(Math.random() * chars.length));
-            }
-            attempts++;
-        } while (this.codeExists(code) && attempts < maxAttempts);
-        
-        if (attempts >= maxAttempts) {
-            throw new Error('Failed to generate unique code after multiple attempts');
+        for (let i = 0; i < 8; i++) {
+            code += chars.charAt(Math.floor(Math.random() * chars.length));
         }
-        
         return code;
     },
     
-    // Check if transfer code already exists
-    codeExists(code) {
-        const existingData = localStorage.getItem(`transfer_${code}`);
-        if (!existingData) return false;
-        
-        try {
-            const parsedData = JSON.parse(existingData);
-            // Check if expired
-            if (Date.now() > parsedData.expires) {
-                // Clean up expired code
-                localStorage.removeItem(`transfer_${code}`);
-                return false;
-            }
-            return true;
-        } catch (error) {
-            // Clean up corrupted data
-            localStorage.removeItem(`transfer_${code}`);
-            return false;
-        }
-    },
-    
-    // Clean up expired transfer codes
-    cleanupExpiredCodes() {
-        const keysToRemove = [];
-        
-        for (let i = 0; i < localStorage.length; i++) {
-            const key = localStorage.key(i);
-            if (key && key.startsWith('transfer_')) {
-                try {
-                    const data = JSON.parse(localStorage.getItem(key));
-                    if (Date.now() > data.expires) {
-                        keysToRemove.push(key);
-                    }
-                } catch (error) {
-                    // Clean up corrupted data
-                    keysToRemove.push(key);
-                }
-            }
-        }
-        
-        keysToRemove.forEach(key => localStorage.removeItem(key));
-        console.log(`Cleaned up ${keysToRemove.length} expired transfer codes`);
+    // Split 8-digit code into access (first 4) and encryption (last 4)
+    splitCode(fullCode) {
+        return {
+            accessCode: fullCode.substring(0, 4),
+            encryptionKey: fullCode.substring(4, 8)
+        };
     },
     
     // Export data (only right margin notes + reading progress)
     async exportData() {
         try {
-            // Clean up expired codes first
-            this.cleanupExpiredCodes();
-            
             // Get right margin notes only
             const allNotes = JSON.parse(localStorage.getItem('userNotes') || '{}');
             const rightMarginNotes = {};
@@ -96,26 +45,38 @@ const TransferSystem = {
                 exportTimestamp: Date.now()
             };
             
-            const code = this.generateCode();
+            const fullCode = this.generateCode();
+            const { accessCode, encryptionKey } = this.splitCode(fullCode);
+            const expiresAt = Date.now() + (2 * 60 * 60 * 1000); // 2 hours
             
-            // Store data with expiration (2 hours) - persistent until used or expired
-            const storageData = {
-                data: exportData,
-                expires: Date.now() + (2 * 60 * 60 * 1000), // 2 hours
-                created: Date.now(),
-                usageCount: 0 // Track how many times this code has been used
-            };
+            // Simple encryption using the encryption key (basic XOR for demo)
+            const encryptedData = this.encryptData(JSON.stringify(exportData), encryptionKey);
             
-            // Store in localStorage (simulating Redis persistence)
-            // In production, this would be stored in Redis with TTL
-            localStorage.setItem(`transfer_${code}`, JSON.stringify(storageData));
+            // Store in Redis via Netlify function using only the access code (first 4 digits)
+            const response = await fetch('/.netlify/functions/store-transfer-redis', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    code: accessCode, // Only first 4 digits go to Redis
+                    data: encryptedData, // Encrypted data
+                    expiresAt: expiresAt
+                })
+            });
+            
+            const result = await response.json();
+            
+            if (!response.ok || !result.success) {
+                throw new Error(result.error || 'Failed to store transfer data');
+            }
             
             console.log('Export data:', exportData);
-            console.log(`Data exported with code: ${code} (${Object.keys(rightMarginNotes).length} notes)`);
+            console.log(`Data exported with code: ${fullCode} (${Object.keys(rightMarginNotes).length} notes)`);
             
             return {
                 success: true,
-                code: code,
+                code: fullCode, // Return full 8-digit code
                 noteCount: Object.keys(rightMarginNotes).length
             };
             
@@ -129,42 +90,34 @@ const TransferSystem = {
     },
     
     // Import data (places notes on left margin)
-    async importData(code) {
+    async importData(fullCode) {
         try {
-            if (!code || code.length !== 8) {
+            if (!fullCode || fullCode.length !== 8) {
                 return {
                     success: false,
                     error: 'Invalid transfer code'
                 };
             }
             
-            // Get stored data
-            const storedData = localStorage.getItem(`transfer_${code.toUpperCase()}`);
-            if (!storedData) {
+            const { accessCode, encryptionKey } = this.splitCode(fullCode);
+            
+            // Get data from Redis via Netlify function using access code (first 4 digits)
+            const response = await fetch(`/.netlify/functions/retrieve-transfer-redis?code=${accessCode.toUpperCase()}`);
+            const result = await response.json();
+            
+            if (!response.ok || !result.success) {
                 return {
                     success: false,
-                    error: 'Transfer code not found or expired'
+                    error: result.error || 'Transfer code not found or expired'
                 };
             }
             
-            const parsedData = JSON.parse(storedData);
+            // Decrypt the data using the encryption key (last 4 digits)
+            const decryptedDataStr = this.decryptData(result.data, encryptionKey);
+            const importedData = JSON.parse(decryptedDataStr);
             
-            // Check expiration
-            if (Date.now() > parsedData.expires) {
-                localStorage.removeItem(`transfer_${code.toUpperCase()}`);
-                return {
-                    success: false,
-                    error: 'Transfer code has expired'
-                };
-            }
-            
-            // Track usage (but don't remove - allow multiple uses within 2 hours)
-            parsedData.usageCount = (parsedData.usageCount || 0) + 1;
-            localStorage.setItem(`transfer_${code.toUpperCase()}`, JSON.stringify(parsedData));
-            
-            const importedData = parsedData.data;
             console.log('Import data:', importedData);
-            console.log(`Code ${code} used ${parsedData.usageCount} times`);
+            console.log(`Code ${fullCode} retrieved successfully`);
             
             // Check if there are existing left margin notes
             const existingImportedNotes = JSON.parse(localStorage.getItem('persistentImportedNotes') || '{}');
@@ -245,6 +198,33 @@ const TransferSystem = {
                 success: false,
                 error: 'Failed to complete import'
             };
+        }
+    },
+    
+    // Simple encryption using XOR with the encryption key
+    encryptData(data, key) {
+        let encrypted = '';
+        for (let i = 0; i < data.length; i++) {
+            const charCode = data.charCodeAt(i) ^ key.charCodeAt(i % key.length);
+            encrypted += String.fromCharCode(charCode);
+        }
+        // Base64 encode to handle special characters
+        return btoa(encrypted);
+    },
+    
+    // Simple decryption using XOR with the encryption key
+    decryptData(encryptedData, key) {
+        try {
+            // Base64 decode first
+            const encrypted = atob(encryptedData);
+            let decrypted = '';
+            for (let i = 0; i < encrypted.length; i++) {
+                const charCode = encrypted.charCodeAt(i) ^ key.charCodeAt(i % key.length);
+                decrypted += String.fromCharCode(charCode);
+            }
+            return decrypted;
+        } catch (error) {
+            throw new Error('Failed to decrypt data - invalid encryption key');
         }
     }
 };

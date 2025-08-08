@@ -77,13 +77,13 @@ exports.handler = async (event, context) => {
             };
         }
 
-        // Delete the key after successful retrieval (one-time use)
-        await fetch(`${redisUrl}/del/${key}`, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${redisToken}`
-            }
-        });
+        // DON'T delete the key - let it persist for 2 hours as set by TTL
+        // await fetch(`${redisUrl}/del/${key}`, {
+        //     method: 'POST', 
+        //     headers: {
+        //         'Authorization': `Bearer ${redisToken}`
+        //     }
+        // });
 
         return {
             statusCode: 200,
