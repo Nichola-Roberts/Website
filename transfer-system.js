@@ -1,236 +1,359 @@
-// Transfer System
-// Handles data export/import functionality for notes and reading progress
+// Transfer System - Refactored with Redis Support
+// Handles secure data export/import for notes and reading progress
 
 const TransferSystem = {
-    // Generate a random 8-character code (4 digits access + 4 digits encryption)
+    // Configuration
+    config: {
+        codeLength: 8,
+        codeChars: 'ABCDEFGHIJKLMNPQRSTUVWXYZ123456789', // No O/0 for clarity
+        expirationTime: 2 * 60 * 60 * 1000, // 2 hours
+        apiEndpoints: {
+            store: '/.netlify/functions/store-transfer-redis',
+            retrieve: '/.netlify/functions/retrieve-transfer-redis'
+        }
+    },
+
+    // Storage keys to export/import
+    storageKeys: {
+        notes: 'userNotes',
+        sectionTimes: 'sectionTimes',
+        totalTime: 'totalTime',
+        lastSection: 'lastSection',
+        fontSize: 'fontSize',
+        plainTextMode: 'plainTextMode',
+        notesMode: 'notesMode',
+        fontScale: 'fontScale',
+        viewMode: 'viewMode'
+    },
+
+    // Generate random transfer code
     generateCode() {
-        const chars = 'ABCDEFGHIJKLMNPQRSTUVWXYZ123456789'; // Removed O and 0
         let code = '';
-        for (let i = 0; i < 8; i++) {
-            code += chars.charAt(Math.floor(Math.random() * chars.length));
+        for (let i = 0; i < this.config.codeLength; i++) {
+            const randomIndex = Math.floor(Math.random() * this.config.codeChars.length);
+            code += this.config.codeChars.charAt(randomIndex);
         }
         return code;
     },
-    
-    // Split 8-digit code into access (first 4) and encryption (last 4)
+
+    // Split code into access key and encryption key
     splitCode(fullCode) {
+        const midpoint = Math.floor(fullCode.length / 2);
         return {
-            accessCode: fullCode.substring(0, 4),
-            encryptionKey: fullCode.substring(4, 8)
+            accessCode: fullCode.substring(0, midpoint),    // First half for Redis key
+            encryptionKey: fullCode.substring(midpoint)     // Second half for encryption
         };
     },
-    
-    // Export data (only right margin notes + reading progress)
+
+    // Gather all data for export
+    gatherExportData() {
+        const data = {
+            exportTimestamp: Date.now(),
+            version: '2.0'
+        };
+
+        // Collect data from localStorage
+        Object.entries(this.storageKeys).forEach(([key, storageKey]) => {
+            const value = localStorage.getItem(storageKey);
+            if (value !== null) {
+                // Parse JSON values where needed
+                if (key === 'notes' || key === 'sectionTimes') {
+                    data[key] = JSON.parse(value || '{}');
+                } else {
+                    data[key] = value;
+                }
+            }
+        });
+
+        return data;
+    },
+
+    // Export data to Redis
     async exportData() {
         try {
-            // Get right margin notes only (for privacy - don't export left/imported notes)
-            const allNotes = JSON.parse(localStorage.getItem('userNotes') || '{}');
-            const rightMarginNotes = {};
+            // Gather all data
+            const exportData = this.gatherExportData();
+            const noteCount = Object.keys(exportData.notes || {}).length;
             
-            // Filter for right margin notes only
-            Object.keys(allNotes).forEach(key => {
-                try {
-                    const noteData = JSON.parse(allNotes[key]);
-                    // Only include notes that are explicitly right side or have no side specified (default right)
-                    if (!noteData.side || noteData.side === 'right') {
-                        rightMarginNotes[key] = allNotes[key];
-                    }
-                } catch (e) {
-                    // If parsing fails, assume it's a right margin note (backwards compatibility)
-                    rightMarginNotes[key] = allNotes[key];
-                }
-            });
-            
-            // Get reading progress data
-            const exportData = {
-                notes: rightMarginNotes,
-                readingTimes: JSON.parse(localStorage.getItem('readingTimes') || '{}'),
-                totalTimeOnSite: localStorage.getItem('totalTimeOnSite') || '0',
-                lastSection: localStorage.getItem('lastSection') || '0',
-                fontSize: localStorage.getItem('fontSize') || 'normal',
-                plainTextMode: localStorage.getItem('plainTextMode') || 'false',
-                notesMode: localStorage.getItem('notesMode') || 'false',
-                exportTimestamp: Date.now()
-            };
-            
+
+            // Generate codes
             const fullCode = this.generateCode();
             const { accessCode, encryptionKey } = this.splitCode(fullCode);
-            const expiresAt = Date.now() + (2 * 60 * 60 * 1000); // 2 hours
-            
-            // Simple encryption using the encryption key (basic XOR for demo)
+
+            // Encrypt data
             const encryptedData = this.encryptData(JSON.stringify(exportData), encryptionKey);
-            
-            // Store in Redis via Netlify function using only the access code (first 4 digits)
-            const response = await fetch('/.netlify/functions/store-transfer-redis', {
+
+            // Send to Redis
+            const response = await fetch(this.config.apiEndpoints.store, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    code: accessCode, // Only first 4 digits go to Redis
-                    data: encryptedData, // Encrypted data
-                    expiresAt: expiresAt
+                    code: accessCode,
+                    data: encryptedData,
+                    expiresAt: Date.now() + this.config.expirationTime
                 })
             });
-            
+
             const result = await response.json();
-            
+
             if (!response.ok || !result.success) {
-                throw new Error(result.error || 'Failed to store transfer data');
+                throw new Error(result.error || 'Failed to store data');
             }
-            
-            console.log('Export data:', exportData);
-            console.log(`Data exported with code: ${fullCode} (${Object.keys(rightMarginNotes).length} notes)`);
+
             
             return {
                 success: true,
-                code: fullCode, // Return full 8-digit code
-                noteCount: Object.keys(rightMarginNotes).length
+                code: fullCode,
+                noteCount: noteCount,
+                expiresAt: new Date(Date.now() + this.config.expirationTime)
             };
-            
+
         } catch (error) {
             console.error('Export failed:', error);
             return {
                 success: false,
-                error: error.message || 'Failed to export data'
+                error: error.message || 'Export failed'
             };
         }
     },
-    
-    // Import data (places notes on left margin)
+
+    // Import data from Redis
     async importData(fullCode) {
         try {
-            if (!fullCode || fullCode.length !== 8) {
-                return {
-                    success: false,
-                    error: 'Invalid transfer code'
-                };
+            // Validate code
+            if (!fullCode || fullCode.length !== this.config.codeLength) {
+                throw new Error('Invalid transfer code');
             }
-            
+
             const { accessCode, encryptionKey } = this.splitCode(fullCode);
-            
-            // Get data from Redis via Netlify function using access code (first 4 digits)
-            const response = await fetch(`/.netlify/functions/retrieve-transfer-redis?code=${accessCode.toUpperCase()}`);
+
+            // Fetch from Redis
+            const response = await fetch(
+                `${this.config.apiEndpoints.retrieve}?code=${accessCode.toUpperCase()}`
+            );
             const result = await response.json();
-            
+
             if (!response.ok || !result.success) {
-                return {
-                    success: false,
-                    error: result.error || 'Transfer code not found or expired'
-                };
+                throw new Error(result.error || 'Code not found or expired');
             }
-            
-            // Decrypt the data using the encryption key (last 4 digits)
-            const decryptedDataStr = this.decryptData(result.data, encryptionKey);
-            const importedData = JSON.parse(decryptedDataStr);
-            
-            console.log('Import data:', importedData);
-            console.log(`Code ${fullCode} retrieved successfully`);
-            
-            // Check if there are existing left margin notes
-            const existingImportedNotes = JSON.parse(localStorage.getItem('persistentImportedNotes') || '{}');
-            const hasExistingImports = Object.keys(existingImportedNotes).length > 0;
-            
+
+            // Decrypt data
+            const decryptedData = this.decryptData(result.data, encryptionKey);
+            const importedData = JSON.parse(decryptedData);
+
+
+            // Check for conflicts
+            const conflicts = this.checkForConflicts(importedData);
+
             return {
                 success: true,
                 data: importedData,
-                hasExistingImports: hasExistingImports,
+                hasExistingLeftNotes: conflicts.hasLeftNotes,
+                existingLeftNotesCount: conflicts.leftNoteCount,
                 noteCount: Object.keys(importedData.notes || {}).length
             };
-            
+
         } catch (error) {
             console.error('Import failed:', error);
             return {
                 success: false,
-                error: 'Failed to import data'
+                error: error.message || 'Import failed'
             };
         }
     },
-    
-    // Complete the import process (after user confirmation)
+
+    // Check for existing data conflicts
+    checkForConflicts(importedData) {
+        const conflicts = {
+            hasLeftNotes: false,
+            leftNoteCount: 0,
+            hasRightNotes: false,
+            rightNoteCount: 0
+        };
+
+        const existingNotes = JSON.parse(localStorage.getItem(this.storageKeys.notes) || '{}');
+        
+        Object.entries(existingNotes).forEach(([key, value]) => {
+            try {
+                const note = JSON.parse(value);
+                if (note.side === 'left') {
+                    conflicts.hasLeftNotes = true;
+                    conflicts.leftNoteCount++;
+                } else {
+                    conflicts.hasRightNotes = true;
+                    conflicts.rightNoteCount++;
+                }
+            } catch (e) {
+                // Default to right for unparseable notes
+                conflicts.hasRightNotes = true;
+                conflicts.rightNoteCount++;
+            }
+        });
+
+        return conflicts;
+    },
+
+    // Complete the import process (maintains compatibility with transfer-modal.js)
     completeImport(importedData, replaceExisting = false) {
         try {
-            // Import non-notes data immediately
-            const { notes, ...otherData } = importedData;
-            
-            // Merge reading progress and settings
-            if (otherData.readingTimes) {
-                const existingTimes = JSON.parse(localStorage.getItem('readingTimes') || '{}');
-                const mergedTimes = replaceExisting ? otherData.readingTimes : { ...existingTimes, ...otherData.readingTimes };
-                localStorage.setItem('readingTimes', JSON.stringify(mergedTimes));
+            // Handle notes
+            if (importedData.notes) {
+                this.mergeNotes(importedData.notes, replaceExisting);
             }
-            
-            if (otherData.totalTimeOnSite) {
-                const existingTime = parseInt(localStorage.getItem('totalTimeOnSite') || '0');
-                const importedTime = parseInt(otherData.totalTimeOnSite);
-                const totalTime = replaceExisting ? importedTime : existingTime + importedTime;
-                localStorage.setItem('totalTimeOnSite', totalTime.toString());
+
+            // Handle reading times (additive)
+            if (importedData.sectionTimes) {
+                this.mergeReadingTimes(importedData.sectionTimes);
             }
-            
-            // Import other settings
-            ['lastSection', 'fontSize', 'plainTextMode', 'notesMode'].forEach(key => {
-                if (otherData[key] !== undefined) {
-                    localStorage.setItem(key, otherData[key]);
-                }
-            });
-            
-            // Handle imported notes - place them on left margin (always replace)
-            if (notes && Object.keys(notes).length > 0) {
-                // Always replace existing imported notes
-                localStorage.setItem('persistentImportedNotes', JSON.stringify(notes));
-                
-                // Set up for notes system to place them in left margins
-                window.importedNotesData = notes;
-                
-                // Refresh notes display if notes mode is active
-                if (window.NotesSystem && window.NotesSystem.placeImportedNotesInMargins) {
-                    window.NotesSystem.placeImportedNotesInMargins();
-                } else {
-                    console.log('NotesSystem or placeImportedNotesInMargins not available');
-                }
+
+            // Handle total time (always additive)
+            if (importedData.totalTime) {
+                this.mergeTotalTime(importedData.totalTime);
             }
-            
+
+            // Apply other settings
+            this.applySettings(importedData);
+
             return {
                 success: true,
-                importedNoteCount: Object.keys(notes || {}).length
+                importedNoteCount: Object.keys(importedData.notes || {}).length
             };
-            
+
         } catch (error) {
-            console.error('Complete import failed:', error);
+            console.error('Failed to apply imported data:', error);
             return {
                 success: false,
-                error: 'Failed to complete import'
+                error: error.message
             };
         }
     },
-    
-    // Simple encryption using XOR with the encryption key
+
+    // Merge notes intelligently
+    mergeNotes(importedNotes, replaceLeft) {
+        const existingNotes = JSON.parse(localStorage.getItem(this.storageKeys.notes) || '{}');
+        
+        // Remove left notes if replacing
+        if (replaceLeft) {
+            Object.keys(existingNotes).forEach(key => {
+                try {
+                    const note = JSON.parse(existingNotes[key]);
+                    if (note.side === 'left') {
+                        delete existingNotes[key];
+                    }
+                } catch (e) {
+                    // Keep unparseable notes
+                }
+            });
+        }
+
+        // Add imported notes to left margin
+        Object.entries(importedNotes).forEach(([key, value]) => {
+            try {
+                const noteStr = typeof value === 'string' ? value : JSON.stringify(value);
+                const note = JSON.parse(noteStr);
+                note.side = 'left'; // Force to left margin
+                
+                // Generate new key to avoid conflicts
+                const timestamp = Date.now().toString(36);
+                const random = Math.random().toString(36).substr(2, 5);
+                const paragraphIndex = key.split('-')[0];
+                const newKey = `${paragraphIndex}-${timestamp}${random}`;
+                
+                existingNotes[newKey] = JSON.stringify(note);
+            } catch (e) {
+                console.error('Failed to process note:', key, e);
+            }
+        });
+
+        localStorage.setItem(this.storageKeys.notes, JSON.stringify(existingNotes));
+    },
+
+    // Merge reading times (additive)
+    mergeReadingTimes(importedTimes) {
+        const existingTimes = JSON.parse(localStorage.getItem(this.storageKeys.sectionTimes) || '{}');
+        
+        Object.entries(importedTimes).forEach(([section, time]) => {
+            existingTimes[section] = (parseInt(existingTimes[section] || 0) + parseInt(time)).toString();
+        });
+
+        localStorage.setItem(this.storageKeys.sectionTimes, JSON.stringify(existingTimes));
+    },
+
+    // Merge total time (always additive)
+    mergeTotalTime(importedTime) {
+        const existingTime = parseInt(localStorage.getItem(this.storageKeys.totalTime) || '0');
+        const newTotalTime = existingTime + parseInt(importedTime);
+        localStorage.setItem(this.storageKeys.totalTime, newTotalTime.toString());
+    },
+
+    // Apply non-data settings
+    applySettings(importedData) {
+        const settingKeys = ['lastSection', 'fontSize', 'plainTextMode', 'notesMode', 'fontScale', 'viewMode'];
+        
+        settingKeys.forEach(key => {
+            if (importedData[key] !== undefined) {
+                localStorage.setItem(this.storageKeys[key], importedData[key]);
+            }
+        });
+    },
+
+    // Delete all local data
+    deleteAllData() {
+        try {
+            // Clear all storage keys
+            Object.values(this.storageKeys).forEach(key => {
+                localStorage.removeItem(key);
+            });
+
+            // Clear any other transfer-related data
+            localStorage.removeItem('transferStorage');
+            localStorage.removeItem('persistentImportedNotes');
+            
+            // Clear imported notes data
+            window.importedNotesData = null;
+
+            // Reset time tracker if available
+            if (window.timeTracker && typeof window.timeTracker.reset === 'function') {
+                window.timeTracker.reset();
+            }
+
+            return { success: true };
+
+        } catch (error) {
+            console.error('Delete failed:', error);
+            return { 
+                success: false, 
+                error: error.message 
+            };
+        }
+    },
+
+    // Encryption utilities
     encryptData(data, key) {
         let encrypted = '';
         for (let i = 0; i < data.length; i++) {
-            const charCode = data.charCodeAt(i) ^ key.charCodeAt(i % key.length);
-            encrypted += String.fromCharCode(charCode);
+            encrypted += String.fromCharCode(
+                data.charCodeAt(i) ^ key.charCodeAt(i % key.length)
+            );
         }
-        // Base64 encode to handle special characters
-        return btoa(encrypted);
+        return btoa(encrypted); // Base64 encode
     },
-    
-    // Simple decryption using XOR with the encryption key
+
     decryptData(encryptedData, key) {
         try {
-            // Base64 decode first
-            const encrypted = atob(encryptedData);
+            const decoded = atob(encryptedData); // Base64 decode
             let decrypted = '';
-            for (let i = 0; i < encrypted.length; i++) {
-                const charCode = encrypted.charCodeAt(i) ^ key.charCodeAt(i % key.length);
-                decrypted += String.fromCharCode(charCode);
+            for (let i = 0; i < decoded.length; i++) {
+                decrypted += String.fromCharCode(
+                    decoded.charCodeAt(i) ^ key.charCodeAt(i % key.length)
+                );
             }
             return decrypted;
         } catch (error) {
-            throw new Error('Failed to decrypt data - invalid encryption key');
+            throw new Error('Invalid encryption key');
         }
     }
 };
 
-// Export for use in other modules
+// Export for use
 window.TransferSystem = TransferSystem;

@@ -1,5 +1,6 @@
-// Simple Notes System - Symmetric Left/Right with Text Selection
+// Simple Notes System - Bilateral Left/Right with Text Selection
 // Clean implementation with view/edit modes and text highlighting
+// Simplified version without transfer functionality
 
 const NotesSystem = {
     isNotesMode: localStorage.getItem('notesMode') === 'true' || false,
@@ -21,6 +22,9 @@ const NotesSystem = {
     
     // Load saved notes mode state
     loadSavedState() {
+        // Reload notes from localStorage
+        this.notes = JSON.parse(localStorage.getItem('userNotes')) || {};
+        
         if (this.isNotesMode) {
             document.body.classList.add('notes-mode');
         }
@@ -36,18 +40,12 @@ const NotesSystem = {
         this.updateNotesButtonVisibility();
     },
     
-    // Update notes button visibility based on time threshold
+    // Update notes button visibility - set to 0 for testing
     updateNotesButtonVisibility() {
-        if (!window.state) return;
-        
-        const totalTime = window.state.totalTimeOnSite + (Date.now() - window.state.siteStartTime);
-        const twentyMinutes = 20 * 60 * 1000;
-        
         const notesButtons = document.querySelectorAll('.notes-toggle');
         notesButtons.forEach(button => {
-            // Temporarily always show for testing
+            // Always show for testing (set to 0 minutes)
             button.style.display = 'flex';
-            // button.style.display = totalTime >= twentyMinutes ? 'flex' : 'none';
         });
     },
     
@@ -65,7 +63,6 @@ const NotesSystem = {
     
     // Enable notes mode
     enableNotesMode() {
-        console.log('Enabling notes mode');
         document.body.classList.add('notes-mode');
         
         // Remember if plain text mode was already active
@@ -73,12 +70,11 @@ const NotesSystem = {
         
         // Force plain text mode when notes are active
         if (!this.wasPlainTextModeActive) {
-            // Trigger the plain text toggle functionality properly
-            const plainTextButton = document.querySelector('.plain-text-toggle');
-            if (plainTextButton) {
-                plainTextButton.click();
+            // Use the ViewModeManager to switch to plain text mode
+            if (window.viewModeManager) {
+                window.viewModeManager.setMode('plain-text');
             } else {
-                // Fallback if button not found
+                // Fallback if ViewModeManager not available
                 document.body.classList.add('plain-text-mode');
                 localStorage.setItem('plainTextMode', 'true');
             }
@@ -86,6 +82,9 @@ const NotesSystem = {
         
         this.addNotesToParagraphs();
         this.showAllTextRanges();
+        
+        // Update all button visibility based on current capacity
+        this.updateAllButtonVisibility();
     },
     
     // Disable notes mode
@@ -94,12 +93,11 @@ const NotesSystem = {
         
         // Restore previous plain text mode state
         if (!this.wasPlainTextModeActive) {
-            // Trigger the plain text toggle functionality properly to turn it off
-            const plainTextButton = document.querySelector('.plain-text-toggle');
-            if (plainTextButton && document.body.classList.contains('plain-text-mode')) {
-                plainTextButton.click();
+            // Use the ViewModeManager to switch back to fade mode
+            if (window.viewModeManager) {
+                window.viewModeManager.setMode('fade');
             } else {
-                // Fallback if button not found
+                // Fallback if ViewModeManager not available
                 document.body.classList.remove('plain-text-mode');
                 localStorage.setItem('plainTextMode', 'false');
             }
@@ -138,6 +136,10 @@ const NotesSystem = {
                 addButton.title = `Add note (${side} side)`;
                 addButton.addEventListener('click', (e) => {
                     e.stopPropagation();
+                    // Check if at capacity before allowing new note
+                    if (this.isContainerAtCapacity(container)) {
+                        return;
+                    }
                     this.captureSelectedText(paragraph);
                     this.showNoteDialog(paragraph, index, null, side);
                 });
@@ -151,10 +153,48 @@ const NotesSystem = {
         });
     },
     
+    // Check if container is at capacity based on paragraph height
+    isContainerAtCapacity(container) {
+        const paragraph = container.closest('p');
+        if (!paragraph) return false;
+        
+        const paragraphHeight = paragraph.offsetHeight;
+        const noteHeight = 1.25 * 16 + 4; // 1.25rem + gap in pixels (assuming 16px root font size)
+        const addButtonHeight = 1.25 * 16; // Add button height
+        
+        // Calculate how many notes can fit in the paragraph height
+        const maxNotes = Math.floor((paragraphHeight - addButtonHeight) / noteHeight);
+        
+        // Add 1 more to the calculation and ensure reasonable limits
+        const cappedMaxNotes = Math.max(2, Math.min(13, maxNotes + 1));
+        
+        const noteItems = container.querySelectorAll('.note-item');
+        return noteItems.length >= cappedMaxNotes;
+    },
+    
+    // Update add button visibility based on capacity
+    updateAddButtonVisibility(container) {
+        const addButton = container.querySelector('.note-add-button');
+        if (addButton) {
+            if (this.isContainerAtCapacity(container)) {
+                addButton.style.setProperty('display', 'none', 'important');
+            } else {
+                addButton.style.setProperty('display', 'flex', 'important');
+            }
+        }
+    },
+    
+    // Update all add button visibility across all paragraphs
+    updateAllButtonVisibility() {
+        const containers = document.querySelectorAll('.paragraph-notes-container');
+        containers.forEach(container => {
+            this.updateAddButtonVisibility(container);
+        });
+    },
+    
     // Capture selected text when creating a note
     captureSelectedText(paragraph) {
         const selection = window.getSelection();
-        console.log('Capturing selection:', selection.toString(), 'Range count:', selection.rangeCount);
         
         if (selection.rangeCount > 0 && !selection.isCollapsed) {
             const range = selection.getRangeAt(0);
@@ -167,14 +207,11 @@ const NotesSystem = {
                     startOffset: this.getTextOffset(paragraph, range.startContainer, range.startOffset),
                     endOffset: this.getTextOffset(paragraph, range.endContainer, range.endOffset)
                 };
-                console.log('Selected text captured:', JSON.stringify(this.selectedTextRange, null, 2));
             } else {
                 this.selectedTextRange = null;
-                console.log('Selection not within paragraph');
             }
         } else {
             this.selectedTextRange = null;
-            console.log('No selection or collapsed selection');
         }
         
         // Clear selection
@@ -220,6 +257,14 @@ const NotesSystem = {
             const noteData = JSON.parse(this.notes[noteKey]);
             const [, noteId] = noteKey.split('-');
             this.createNoteCircle(paragraph, paragraphIndex, noteId, noteData);
+        });
+        
+        // Update add button visibility for both sides after loading notes
+        ['left', 'right'].forEach(side => {
+            const container = paragraph.querySelector(`.paragraph-notes-container[data-side="${side}"]`);
+            if (container) {
+                this.updateAddButtonVisibility(container);
+            }
         });
     },
     
@@ -273,6 +318,9 @@ const NotesSystem = {
         noteItem.appendChild(noteCircle);
         noteItem.appendChild(deleteButton);
         container.appendChild(noteItem);
+        
+        // Update add button visibility after adding note
+        this.updateAddButtonVisibility(container);
     },
     
     // Show note dialog
@@ -294,14 +342,12 @@ const NotesSystem = {
         
         if (noteKey) {
             noteData = JSON.parse(this.notes[noteKey]);
-            console.log('Loading existing note data:', JSON.stringify(noteData, null, 2));
             noteId = noteKey.split('-')[1];
             this.activeNoteKey = noteKey;
         } else {
             // Generate new note ID
             noteId = Date.now().toString(36);
             noteKey = `p${paragraphIndex}-${noteId}`;
-            console.log('selectedTextRange when creating noteData:', this.selectedTextRange);
             noteData = {
                 text: '',
                 color: '#F0D9EF',
@@ -369,6 +415,8 @@ const NotesSystem = {
         dialog.style.setProperty('display', 'block', 'important');
         dialog.style.setProperty('vertical-align', 'top', 'important');
         dialog.style.setProperty('position', 'relative', 'important');
+        dialog.style.setProperty('width', 'auto', 'important');
+        dialog.style.setProperty('max-width', '100%', 'important');
         
         // Remove bottom margin from the paragraph when dialog is attached
         paragraph.style.setProperty('margin-bottom', '0', 'important');
@@ -380,11 +428,9 @@ const NotesSystem = {
         }
         
         // Highlight associated text immediately when dialog opens
-        console.log('Checking for text range to highlight:', noteData.textRange);
         if (noteData.textRange) {
             this.highlightText(paragraph, noteData.textRange, noteData.color);
         } else {
-            console.log('No text range found in noteData for highlighting');
         }
     },
     
@@ -430,14 +476,12 @@ const NotesSystem = {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
                 const text = textarea.value.trim();
-                console.log('Enter pressed - noteData before save:', JSON.stringify(noteData, null, 2));
                 if (text || noteData.textRange) {
                     const saveData = {
                         ...noteData,
                         text: text,
                         color: selectedColor
                     };
-                    console.log('Data being saved:', JSON.stringify(saveData, null, 2));
                     this.saveNote(paragraph, paragraphIndex, noteKey, saveData);
                 }
                 this.closeDialog();
@@ -447,7 +491,6 @@ const NotesSystem = {
     
     // Save note
     saveNote(paragraph, paragraphIndex, noteKey, noteData) {
-        console.log('Saving note with data:', JSON.stringify(noteData, null, 2));
         this.notes[noteKey] = JSON.stringify(noteData);
         localStorage.setItem('userNotes', JSON.stringify(this.notes));
         
@@ -476,17 +519,18 @@ const NotesSystem = {
         
         const noteId = noteKey.split('-')[1];
         paragraph.querySelectorAll(`.note-item[data-note-id="${noteId}"]`).forEach(item => {
+            const container = item.parentElement;
             item.remove();
+            // Update add button visibility after removing note
+            this.updateAddButtonVisibility(container);
         });
     },
     
     // Highlight text in paragraph
     highlightText(paragraph, textRange, color) {
-        console.log('Highlighting text:', textRange, 'with color:', color);
         this.clearHighlights();
         
         if (!textRange) {
-            console.log('No text range to highlight');
             return;
         }
         
@@ -495,7 +539,6 @@ const NotesSystem = {
         const highlighted = text.substring(textRange.startOffset, textRange.endOffset);
         const after = text.substring(textRange.endOffset);
         
-        console.log('Text breakdown - before:', before.length, 'highlighted:', highlighted, 'after:', after.length);
         
         if (highlighted) {
             // Create the highlight span without touching the note containers
@@ -542,9 +585,7 @@ const NotesSystem = {
                 
                 try {
                     range.surroundContents(highlightSpan);
-                    console.log('Highlight applied to paragraph');
                 } catch (e) {
-                    console.log('Could not apply highlight, falling back to innerHTML method');
                     // Fallback to original method if range spans multiple elements
                     paragraph.innerHTML = 
                         this.escapeHtml(before) + 
@@ -554,7 +595,6 @@ const NotesSystem = {
                 }
             }
         } else {
-            console.log('No highlighted text found');
         }
     },
     
@@ -599,9 +639,17 @@ const NotesSystem = {
             paragraph.appendChild(container);
         });
         
-        // Restore existing notes
+        // Restore existing notes and update button visibility
         existingNotes.forEach(({noteId, noteData}) => {
             this.createNoteCircle(paragraph, parseInt(paragraph.dataset.paragraphIndex), noteId, noteData);
+        });
+        
+        // Update add button visibility for both sides after restoring
+        ['left', 'right'].forEach(side => {
+            const sideContainer = paragraph.querySelector(`.paragraph-notes-container[data-side="${side}"]`);
+            if (sideContainer) {
+                this.updateAddButtonVisibility(sideContainer);
+            }
         });
     },
     
@@ -713,7 +761,6 @@ const NotesSystem = {
                     range.surroundContents(highlightSpan);
                 } catch (e) {
                     // Fallback for complex cases - skip this highlight
-                    console.log('Could not apply general highlight');
                 }
             }
         }
@@ -728,10 +775,8 @@ const NotesSystem = {
     
     // Attach global event handlers
     attachEventHandlers() {
-        // Update button visibility periodically
-        if (window.state) {
-            setInterval(() => this.updateNotesButtonVisibility(), 30000);
-        }
+        // Update button visibility periodically - removed time tracking dependency
+        setInterval(() => this.updateNotesButtonVisibility(), 30000);
         
         // Click outside to close dialog
         document.addEventListener('click', (e) => {
@@ -764,92 +809,21 @@ if (document.readyState === 'loading') {
     NotesSystem.init();
 }
 
-// Place imported notes in left margins (for transfer system)
-NotesSystem.placeImportedNotesInMargins = function() {
-    if (!window.importedNotesData || Object.keys(window.importedNotesData).length === 0) {
-        console.log('No imported notes data to place');
-        return;
-    }
-    
-    console.log('Placing imported notes in left margins:', window.importedNotesData);
-    
-    const allParagraphs = document.querySelectorAll('p');
-    const filteredParagraphs = Array.from(allParagraphs).filter(p => !p.closest('#notes'));
-    
-    // Clear existing left margin containers
-    document.querySelectorAll('.paragraph-notes-container[data-side="left"]').forEach(container => {
-        container.remove();
-    });
-    
-    // Create left margin containers and place imported notes
-    filteredParagraphs.forEach((paragraph, paragraphIndex) => {
-        // Set paragraph index if not set
-        if (!paragraph.dataset.paragraphIndex) {
-            paragraph.dataset.paragraphIndex = paragraphIndex;
-        }
-        
-        // Find imported notes for this paragraph
-        const importedNotesForParagraph = Object.keys(window.importedNotesData).filter(key => {
-            // Handle both old format (paragraph-X-Y) and new format (pX-Y)
-            return key.startsWith(`paragraph-${paragraphIndex}-`) || key.startsWith(`p${paragraphIndex}-`);
-        });
-        
-        if (importedNotesForParagraph.length > 0) {
-            // Create left margin container using the same structure as right margin
-            const leftContainer = document.createElement('div');
-            leftContainer.className = 'paragraph-notes-container';
-            leftContainer.dataset.side = 'left';
-            
-            // Add button for left side (like the existing system)
-            const addButton = document.createElement('button');
-            addButton.className = 'note-add-button';
-            addButton.innerHTML = '+';
-            addButton.title = 'Add note (left side)';
-            addButton.addEventListener('click', (e) => {
-                e.stopPropagation();
-                // This would add a new note on the left side - for now just log
-                console.log('Add note on left side clicked');
-            });
-            
-            leftContainer.appendChild(addButton);
-            paragraph.appendChild(leftContainer);
-            
-            // Now create imported notes using the existing createNoteCircle function
-            importedNotesForParagraph.forEach(noteKey => {
-                const noteDataStr = window.importedNotesData[noteKey];
-                const noteId = noteKey.split('-')[2];
-                
-                // Parse note data and ensure it has the right format
-                let noteData;
-                try {
-                    noteData = JSON.parse(noteDataStr);
-                } catch (e) {
-                    // Handle plain string notes
-                    noteData = { text: noteDataStr, color: '#f0d9ef' };
-                }
-                
-                // Ensure color exists and set side to left
-                if (!noteData.color) {
-                    noteData.color = '#f0d9ef';
-                }
-                noteData.side = 'left'; // Force to left side
-                
-                // Use the existing createNoteCircle function
-                NotesSystem.createNoteCircle(paragraph, paragraphIndex, noteId, noteData);
-            });
-        }
-    });
-    
-    console.log('Imported notes placed in left margins using existing note system');
-};
-
 // Export for external access
 window.NotesSystem = NotesSystem;
 
 // Hook for content loading - call this when new content is loaded
 window.NotesSystem.refreshParagraphs = function() {
     if (NotesSystem.isNotesMode) {
-        console.log('Refreshing paragraphs after content load');
+        NotesSystem.addNotesToParagraphs();
+    }
+};
+
+// Hook for import - reload notes from localStorage and refresh display
+window.NotesSystem.reloadNotes = function() {
+    NotesSystem.notes = JSON.parse(localStorage.getItem('userNotes')) || {};
+    if (NotesSystem.isNotesMode) {
+        NotesSystem.removeNotesFromParagraphs();
         NotesSystem.addNotesToParagraphs();
     }
 };

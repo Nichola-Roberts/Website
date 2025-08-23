@@ -1,13 +1,13 @@
 ## Introduction
 * Many actions in life can be explained by not having the energy
 * When our energy runs out, even simple things can become impossible
+* What often looks like laziness or meanness is simply a state of having no energy
 
 ## Energy Landscape
 * Landscape with mountains and valleys
 * Mountains represent difficult tasks, but also simple tasks when we're exhausted
-* Valleys are good experainces 
-* The slope guides our decisions like gravity
-* We can only take routes that have paths we know
+* Valleys are good experiences
+* The slope guides our decisions like gravity; we are always pulled downward
 
 ## Fluctuations
 * Our landscapes change constantly and unpredictably
@@ -21,8 +21,8 @@
 * What looks like laziness or meanness is often just running out of energy
 
 ## Planning
-* Stress blocks our ability to see available paths
-* When we're on a mountain, exits become invisible even when others point them out
+*Stress blocks our ability to see available paths
+*When we're on a mountain, paths become invisible even when others point them out
 
 ## Relationships
 * New relationships can reshape our entire landscape
@@ -31,6 +31,7 @@
 
 ## Emotions
 * Emotions are signals showing us the slope
+* Positive emotions signal a downward path; negative emotions signal an uphill path
 * Each emotional experience updates our landscape
 * Emotional processing only happens if we have the energy
 
@@ -46,7 +47,7 @@
 
 ## Triggers
 * Multiple mountains create elevated baseline stress
-* Core belief mountains often block our steepest downward paths
+* The steepest downward paths are often hidden behind our core belief mountains
 * Different attachment styles reflect different mountain patterns
 
 ## Emergency Escape Routes
@@ -76,4 +77,4 @@
 * Apparent healing can mask sophisticated avoidance
 * Therapy language becomes a tool for control rather than erosion
 * Being accommodating or independent can both prevent real erosion
-* Understanding our mountains intellectually isn't the same as eroding them
+* Understanding mountains intellectually isn't the same as eroding them

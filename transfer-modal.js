@@ -1,5 +1,5 @@
-// Transfer Modal System
-// Basic dialog functionality for data transfer between devices
+// Transfer Modal System - Conditional UI Version
+// Shows different content based on whether notes are available
 
 const TransferModal = {
     modal: null,
@@ -7,6 +7,7 @@ const TransferModal = {
     closeButton: null,
     toggleButtons: null,
     isOpen: false,
+    hasNotes: false,
     
     // Initialize the transfer modal system
     init() {
@@ -16,12 +17,51 @@ const TransferModal = {
         this.toggleButtons = document.querySelectorAll('.transfer-toggle');
         
         if (!this.modal || !this.toggleButtons.length) {
-            console.log('Transfer modal elements not found');
             return;
         }
         
         this.attachEventHandlers();
-        console.log('Transfer modal initialized');
+        this.checkForImportParameter();
+    },
+    
+    // Check URL for import parameter and auto-open modal if present
+    checkForImportParameter() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const importCode = urlParams.get('import');
+        
+        if (importCode && importCode.length === 8) {
+            // Auto-open the transfer modal
+            setTimeout(() => {
+                this.show();
+                
+                // Wait for modal to be set up, then fill in the import code
+                setTimeout(() => {
+                    const importInput = document.getElementById('importCode');
+                    const importBtn = document.getElementById('importDataBtn');
+                    
+                    if (importInput) {
+                        importInput.value = importCode.toUpperCase();
+                        // Focus the import button for easy confirmation
+                        if (importBtn) {
+                            importBtn.focus();
+                            // Add visual highlight
+                            importBtn.style.animation = 'pulse 1s ease-in-out';
+                        }
+                    }
+                }, 200);
+            }, 500); // Small delay to ensure page is fully loaded
+            
+            // Clean up URL without reload
+            const cleanUrl = window.location.origin + window.location.pathname;
+            window.history.replaceState({}, document.title, cleanUrl);
+        }
+    },
+    
+    // Check if user has notes (determines modal content)
+    checkForNotes() {
+        const userNotes = JSON.parse(localStorage.getItem('userNotes') || '{}');
+        this.hasNotes = Object.keys(userNotes).length > 0;
+        return this.hasNotes;
     },
     
     // Attach all event handlers
@@ -34,13 +74,6 @@ const TransferModal = {
             });
         });
         
-        // Close button
-        if (this.closeButton) {
-            this.closeButton.addEventListener('click', (e) => {
-                e.preventDefault();
-                this.hide();
-            });
-        }
         
         // Click outside to close
         this.modal.addEventListener('click', (e) => {
@@ -62,8 +95,205 @@ const TransferModal = {
                 this.hide();
             }
         });
+    },
+    
+    // Show modal with appropriate content
+    show() {
+        if (!this.modal) return;
         
-        // Generate Code button
+        // Check for notes to determine content
+        this.checkForNotes();
+        
+        // Set up modal content based on notes availability
+        this.setupModalContent();
+        
+        // Show modal
+        this.modal.classList.add('active');
+        this.isOpen = true;
+        
+        // Focus first input if available
+        const firstInput = this.modal.querySelector('input');
+        if (firstInput) {
+            setTimeout(() => firstInput.focus(), 100);
+        }
+    },
+    
+    // Hide modal
+    hide() {
+        if (!this.modal) return;
+        
+        this.modal.classList.remove('active');
+        this.isOpen = false;
+        
+    },
+    
+    // Setup modal content based on whether user has notes
+    setupModalContent() {
+        if (!this.modalInner) return;
+        
+        if (this.hasNotes) {
+            // Full transfer modal with both import and export
+            this.setupFullTransferModal();
+        } else {
+            // Minimal import-only modal
+            this.setupImportOnlyModal();
+        }
+    },
+    
+    // Setup full transfer modal (when user has notes)
+    setupFullTransferModal() {
+        this.modalInner.innerHTML = `
+            <button class="transfer-close" aria-label="Close transfer">&times;</button>
+            
+            <div class="transfer-content">
+                <div class="transfer-header">
+                    <h3 class="transfer-title">Transfer data between devices</h3>
+                    <button class="info-icon" id="infoIconBtn">?</button>
+                </div>
+                
+                <!-- Tooltip Overlay - Outside button for proper positioning -->
+                <div class="custom-tooltip" id="customTooltip">
+                    <div class="tooltip-content">
+                        <button class="tooltip-close" id="tooltipClose">&times;</button>
+                        <ul>
+                            <li>Data is stored locally on your device</li>
+                            <li>To transfer between devices click generate</li>
+                            <li>This will save a temporarily copy of your files on our servers</li>
+                            <li>This will last for 2 hours</li>
+                            <li>Data is encrypted on servers</li>
+                            <li>Notes on the right hand column only will be transferred</li>
+                            <li>Move any notes you don't want to transfer to the left column</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Generate Code Button -->
+                <button class="transfer-button" id="generateCodeBtn">
+                    Generate Code
+                </button>
+                
+                <!-- Generated Code Result -->
+                <div class="transfer-result" id="exportResult" style="display: none;">
+                    <div class="transfer-methods">
+                        <div class="transfer-code-display">
+                            <div class="code-display" id="transferCode"></div>
+                            <button class="copy-code-btn" id="copyCodeBtn">Copy Code</button>
+                        </div>
+                        <div class="transfer-qr-section">
+                            <div class="qr-code-container" id="qrCodeContainer">QR placeholder</div>
+                            <p class="qr-label">Or scan QR code</p>
+                        </div>
+                    </div>
+                    <p class="transfer-expiry">Active for 2 hours</p>
+                </div>
+
+                <!-- Input Code Section -->
+                <div class="transfer-input-section" id="inputSection">
+                    <input type="text" id="importCode" class="transfer-code-input" 
+                           placeholder="enter transfer code" maxlength="8" 
+                           style="text-transform: uppercase">
+                    <button class="transfer-button" id="importDataBtn">
+                        Import Data
+                    </button>
+                </div>
+                
+                <!-- Custom Message Display -->
+                <div class="transfer-message" id="transferMessage" style="display: none;"></div>
+                
+                <!-- Import Results -->
+                <div class="transfer-result" id="importResult" style="display: none;">
+                </div>
+
+                <!-- Delete Local Data Section -->
+                <div class="delete-section">
+                    <button class="delete-button" id="deleteLocalDataBtn">
+                        Delete Local Data
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        this.attachModalEventHandlers();
+    },
+    
+    // Setup minimal import-only modal (when user has no notes)
+    setupImportOnlyModal() {
+        this.modalInner.innerHTML = `
+            <button class="transfer-close" aria-label="Close">&times;</button>
+            
+            <div class="transfer-content">
+                <h3 class="transfer-title">Import Data</h3>
+                
+                <!-- Input Code Section -->
+                <div class="transfer-input-section" id="inputSection">
+                    <input type="text" id="importCode" class="transfer-code-input" 
+                           placeholder="enter transfer code" maxlength="8" 
+                           style="text-transform: uppercase">
+                    <button class="transfer-button" id="importDataBtn">
+                        Import Data
+                    </button>
+                </div>
+                
+                <!-- Custom Message Display -->
+                <div class="transfer-message" id="transferMessage" style="display: none;"></div>
+                
+                <!-- Import Results -->
+                <div class="transfer-result" id="importResult" style="display: none;">
+                </div>
+
+                <!-- Delete Local Data Section -->
+                <div class="delete-section">
+                    <button class="delete-button" id="deleteLocalDataBtn">
+                        Delete Local Data
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        this.attachModalEventHandlers();
+    },
+    
+    // Attach event handlers after content is set up
+    attachModalEventHandlers() {
+        // Close button
+        const closeBtn = this.modal.querySelector('.transfer-close');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.hide();
+            });
+        }
+        
+        // Info icon and tooltip handlers
+        const infoBtn = document.getElementById('infoIconBtn');
+        const tooltip = document.getElementById('customTooltip');
+        const tooltipClose = document.getElementById('tooltipClose');
+        
+        if (infoBtn && tooltip) {
+            // Show tooltip on click
+            infoBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                tooltip.classList.add('active');
+            });
+            
+            // Close tooltip on close button click
+            if (tooltipClose) {
+                tooltipClose.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    tooltip.classList.remove('active');
+                });
+            }
+            
+            // Close tooltip on clicking outside
+            tooltip.addEventListener('click', (e) => {
+                if (e.target === tooltip) {
+                    tooltip.classList.remove('active');
+                }
+            });
+        }
+        
+        // Generate Code button (only in full modal)
         const generateBtn = document.getElementById('generateCodeBtn');
         if (generateBtn) {
             generateBtn.addEventListener('click', (e) => {
@@ -100,124 +330,6 @@ const TransferModal = {
         }
     },
     
-    // Show the modal
-    show() {
-        if (!this.modal) return;
-        
-        this.isOpen = true;
-        this.modal.classList.add('active');
-        document.body.style.overflow = 'hidden';
-        
-        // Reset modal to initial state
-        this.resetModalState();
-        
-        console.log('Transfer modal opened');
-    },
-    
-    // Hide the modal
-    hide() {
-        if (!this.modal) return;
-        
-        this.isOpen = false;
-        this.modal.classList.remove('active');
-        document.body.style.overflow = '';
-        
-        console.log('Transfer modal closed');
-    },
-    
-    // Reset modal to initial state
-    resetModalState() {
-        const transferContent = document.querySelector('.transfer-content');
-        
-        if (transferContent) {
-            // Restore original modal content
-            transferContent.innerHTML = `
-                <h3 class="transfer-title">Transfer data between devices</h3>
-                <p class="privacy-note" style="margin-top: 0; margin-bottom: 0;">Only right margin notes are transferred.</p>
-                
-                <!-- Generate Code Button -->
-                <button class="transfer-button" id="generateCodeBtn" style="margin-top: 0;">
-                    Generate Code
-                </button>
-                
-                <!-- Generated Code Result -->
-                <div class="transfer-result" id="exportResult" style="display: none;">
-                    <div class="transfer-methods">
-                        <div class="transfer-code-display">
-                            <div class="code-display" id="transferCode"></div>
-                            <button class="copy-code-btn" id="copyCodeBtn">Copy Code</button>
-                        </div>
-                        <div class="transfer-qr-section">
-                            <div class="qr-code-container" id="qrCodeContainer"></div>
-                            <p class="qr-label">Or scan QR code</p>
-                        </div>
-                    </div>
-                    <p class="transfer-expiry">Active for 2 hours</p>
-                </div>
-
-                <!-- Input Code Section -->
-                <div class="transfer-input-section" id="inputSection">
-                    <input type="text" id="importCode" class="transfer-code-input" 
-                           placeholder="enter transfer code" maxlength="8" 
-                           style="text-transform: uppercase">
-                    <button class="transfer-button" id="importDataBtn">
-                        Import
-                    </button>
-                </div>
-                
-                <!-- Custom Message Display -->
-                <div class="transfer-message" id="transferMessage" style="display: none;"></div>
-                
-                <!-- Import Results -->
-                <div class="transfer-result" id="importResult" style="display: none;">
-                    <div class="import-success" id="importSuccess" style="display: none;">
-                        <h4>✅ Import Successful!</h4>
-                        <p>Your data has been transferred successfully.</p>
-                        <p class="refresh-note">Refresh the page to see your imported notes and progress.</p>
-                    </div>
-                    
-                    <div class="notes-management" id="notesManagement" style="display: none;">
-                        <h4>📝 Import Notes</h4>
-                        <p>Imported notes will be added to the left side. Move them right to keep them in your main collection, or delete to remove them.</p>
-                        <div class="notes-sides">
-                            <div class="notes-left">
-                                <h5>Imported Notes (Left)</h5>
-                                <div id="importedNotesList"></div>
-                            </div>
-                            <div class="notes-right">
-                                <h5>Keep These (Right)</h5>
-                                <div id="keepNotesList"></div>
-                            </div>
-                        </div>
-                        <div class="notes-actions">
-                            <button class="transfer-button" id="finishNotesBtn">Finish</button>
-                        </div>
-                    </div>
-                    
-                    <div class="import-error" id="importError" style="display: none;">
-                        <h4>❌ Import Failed</h4>
-                        <p id="importErrorMessage"></p>
-                    </div>
-                </div>
-
-                <!-- Privacy Note -->
-                <p class="privacy-note">Data is encrypted and cannot be accessed by anyone without the code.</p>
-
-                <!-- Delete Local Data Section -->
-                <div class="delete-section">
-                    <button class="delete-button" id="deleteLocalDataBtn">
-                        Delete Local Data
-                    </button>
-                </div>
-            `;
-            
-            // Reattach event handlers after content restoration
-            this.attachEventHandlers();
-        }
-        
-        console.log('Modal state reset');
-    },
-    
     // Handle generate code button
     async handleGenerateCode() {
         const generateBtn = document.getElementById('generateCodeBtn');
@@ -238,19 +350,44 @@ const TransferModal = {
                     transferCodeEl.textContent = result.code;
                 }
                 
+                // Generate QR code with URL containing the import code
+                const qrContainer = document.getElementById('qrCodeContainer');
+                
+                if (qrContainer) {
+                    if (typeof window.qrcode !== 'undefined') {
+                        qrContainer.innerHTML = ''; // Clear placeholder text
+                        
+                        // Create URL with import parameter
+                        const baseUrl = window.location.origin + window.location.pathname;
+                        const importUrl = `${baseUrl}?import=${result.code}`;
+                        
+                        // Generate QR code using qrcode-generator
+                        const typeNumber = 0; // 0 = auto detect
+                        const errorCorrectionLevel = 'M';
+                        const qr = qrcode(typeNumber, errorCorrectionLevel);
+                        qr.addData(importUrl);
+                        qr.make();
+                        
+                        // Create the QR code as an image
+                        const size = 4; // module size in pixels
+                        qrContainer.innerHTML = qr.createImgTag(size, 0);
+                        
+                    } else {
+                        console.error('qrcode library not loaded');
+                        qrContainer.innerHTML = '<div style="padding: 20px; text-align: center; color: #666;">QR library not loaded</div>';
+                    }
+                }
+                
                 // Hide input section and show export result
                 const inputSection = document.getElementById('inputSection');
                 const exportResult = document.getElementById('exportResult');
                 
                 if (inputSection) inputSection.style.display = 'none';
                 if (exportResult) exportResult.style.display = 'block';
-                
-                console.log(`Generated transfer code: ${result.code} (${result.noteCount} notes)`);
             } else {
                 this.showMessage('Failed to generate transfer code: ' + result.error, 'error');
             }
         } catch (error) {
-            console.error('Generate code error:', error);
             this.showMessage('Failed to generate transfer code. Please try again.', 'error');
         } finally {
             generateBtn.disabled = false;
@@ -280,8 +417,8 @@ const TransferModal = {
             const result = await window.TransferSystem.importData(code);
             
             if (result.success) {
-                // Check if there are existing imported notes
-                if (result.hasExistingImports) {
+                // Check if there are existing left margin notes
+                if (result.hasExistingLeftNotes) {
                     this.showImportWarning(result);
                 } else {
                     this.completeImport(result, false);
@@ -290,7 +427,6 @@ const TransferModal = {
                 this.showMessage(result.error, 'error');
             }
         } catch (error) {
-            console.error('Import error:', error);
             this.showMessage('Import failed. Please check the code and try again.', 'error');
         } finally {
             importBtn.disabled = false;
@@ -308,9 +444,11 @@ const TransferModal = {
             importResultSection.style.display = 'block';
             importResultSection.innerHTML = `
                 <div class="import-warning">
-                    <h4>⚠️ Existing Imported Notes Found</h4>
-                    <p>Notes will import on the left margin, replacing current notes on the left.</p>
-                    <p><strong>Found:</strong> ${importResult.noteCount} notes to import</p>
+                    <h4>Warning: Existing Left Margin Notes Found</h4>
+                    <p>You have ${importResult.existingLeftNotesCount} notes on the left margin.</p>
+                    <p>Importing will place ${importResult.noteCount} notes on the left margin.</p>
+                    <p><strong>All imported notes will go to the LEFT side.</strong></p>
+                    <p class="import-note">Reading times will be added together (merged).</p>
                     <div class="import-choices">
                         <button class="transfer-button" id="replaceNotesBtn">Continue (Replace Left Notes)</button>
                         <button class="transfer-button cancel" id="cancelImportBtn">Cancel</button>
@@ -320,235 +458,164 @@ const TransferModal = {
             
             // Add event handlers for choice buttons
             document.getElementById('replaceNotesBtn')?.addEventListener('click', () => {
-                this.completeImport(importResult, true); // Always replace
+                this.completeImport(importResult, true); // Replace left notes
             });
             
             document.getElementById('cancelImportBtn')?.addEventListener('click', () => {
-                this.resetModalState();
+                this.hide();
             });
         }
     },
     
     // Complete the import process
-    completeImport(importResult, replace) {
-        const result = window.TransferSystem.completeImport(importResult.data, replace);
+    completeImport(importResult, replaceExisting) {
+        if (!window.TransferSystem) return;
+        
+        // Call the TransferSystem's completeImport method
+        const result = window.TransferSystem.completeImport(importResult.data, replaceExisting);
         
         if (result.success) {
-            const importResultSection = document.getElementById('importResult');
-            if (importResultSection) {
-                importResultSection.innerHTML = `
-                    <div class="import-success">
-                        <h4>✅ Import Successful!</h4>
-                        <p>${result.importedNoteCount} notes imported to left margins.</p>
-                        <p class="refresh-note">The page will refresh to show your imported data.</p>
-                    </div>
-                `;
-            }
-            
-            // Refresh after a delay
-            setTimeout(() => {
-                window.location.reload();
-            }, 2000);
+            this.showImportSuccess(result.importedNoteCount);
         } else {
-            this.showMessage('Import failed: ' + result.error, 'error');
+            this.showMessage('Failed to complete import: ' + result.error, 'error');
         }
     },
     
-    // Copy transfer code to clipboard
-    copyTransferCode() {
-        const transferCodeEl = document.getElementById('transferCode');
-        const copyBtn = document.getElementById('copyCodeBtn');
+    // Show import success
+    showImportSuccess(noteCount) {
+        const importResultSection = document.getElementById('importResult');
+        if (importResultSection) {
+            importResultSection.style.display = 'block';
+            importResultSection.innerHTML = `
+                <div class="import-success">
+                    <h4>Import Successful!</h4>
+                    <p>Imported ${noteCount} notes and reading progress.</p>
+                    <p class="refresh-note">Refreshing page...</p>
+                </div>
+            `;
+        }
         
-        if (!transferCodeEl || !copyBtn) return;
-        
-        const code = transferCodeEl.textContent;
-        if (!code) return;
-        
-        navigator.clipboard.writeText(code).then(() => {
-            const originalText = copyBtn.textContent;
-            copyBtn.textContent = 'Copied!';
-            setTimeout(() => {
-                copyBtn.textContent = originalText;
-            }, 2000);
-        }).catch(err => {
-            console.error('Failed to copy:', err);
-            this.showMessage('Failed to copy code to clipboard', 'error');
-        });
+        // Auto-refresh after 2 seconds
+        setTimeout(() => {
+            location.reload();
+        }, 2000);
     },
     
-    // Show message in the modal
-    showMessage(message, type = 'info') {
-        const messageEl = document.getElementById('transferMessage');
-        if (messageEl) {
-            messageEl.textContent = message;
-            messageEl.className = `transfer-message ${type}`;
-            messageEl.style.display = 'block';
+    // Copy transfer code to clipboard
+    async copyTransferCode() {
+        const codeElement = document.getElementById('transferCode');
+        if (!codeElement) return;
+        
+        const code = codeElement.textContent;
+        const copyBtn = document.getElementById('copyCodeBtn');
+        
+        try {
+            await navigator.clipboard.writeText(code);
+            if (copyBtn) {
+                const originalText = copyBtn.textContent;
+                copyBtn.textContent = 'Copied!';
+                setTimeout(() => {
+                    copyBtn.textContent = originalText;
+                }, 1500);
+            }
+        } catch (error) {
+            this.showMessage('Failed to copy code', 'error');
         }
     },
     
     // Handle delete all data
     handleDeleteAllData() {
-        this.showDeleteWarning();
-    },
-    
-    // Show delete warning in modal
-    showDeleteWarning() {
-        const transferContent = document.querySelector('.transfer-content');
+        // Show confirmation in modal instead of using confirm()
+        const deleteSection = document.querySelector('.delete-section');
+        if (!deleteSection) return;
         
-        if (transferContent) {
-            transferContent.innerHTML = `
-                <div class="delete-warning">
-                    <h4>⚠️ Delete All Data</h4>
-                    <p>This will permanently delete ALL your data including:</p>
-                    <ul class="delete-list">
-                        <li>All your notes and annotations (both right and left margins)</li>
-                        <li>Reading progress and time tracking</li>
-                        <li>All preferences and settings</li>
-                        <li>All transfer codes</li>
-                    </ul>
-                    <p><strong>This action cannot be undone. Are you sure?</strong></p>
-                    <div class="delete-choices">
-                        <button class="transfer-button danger" id="confirmDeleteBtn">Yes, Delete Everything</button>
-                        <button class="transfer-button cancel" id="cancelDeleteBtn">Cancel</button>
-                    </div>
+        deleteSection.innerHTML = `
+            <div class="delete-confirmation">
+                <h4>Delete All Local Data?</h4>
+                <p>This will permanently delete all your notes and reading progress.</p>
+                <p><strong>This action cannot be undone.</strong></p>
+                <div class="delete-choices">
+                    <button class="transfer-button danger" id="confirmDeleteBtn">Yes, Delete Everything</button>
+                    <button class="transfer-button" id="cancelDeleteBtn">Cancel</button>
                 </div>
-            `;
-            
-            // Add event handlers
-            document.getElementById('confirmDeleteBtn')?.addEventListener('click', () => {
-                this.showFinalDeleteConfirmation();
-            });
-            
-            document.getElementById('cancelDeleteBtn')?.addEventListener('click', () => {
-                this.resetModalState();
-            });
-        }
-    },
-    
-    // Show final delete confirmation
-    showFinalDeleteConfirmation() {
-        const transferContent = document.querySelector('.transfer-content');
+            </div>
+        `;
         
-        if (transferContent) {
-            transferContent.innerHTML = `
-                <div class="delete-warning final">
-                    <h4>🚨 Final Confirmation</h4>
-                    <p><strong>Are you absolutely sure?</strong></p>
-                    <p>This will permanently delete everything and cannot be undone.</p>
-                    <div class="delete-choices">
-                        <button class="transfer-button danger" id="finalDeleteBtn">Delete Everything Now</button>
-                        <button class="transfer-button" id="backToFirstWarning">Back</button>
-                        <button class="transfer-button cancel" id="cancelFinalDeleteBtn">Cancel</button>
-                    </div>
-                </div>
-            `;
-            
-            // Add event handlers
-            document.getElementById('finalDeleteBtn')?.addEventListener('click', () => {
-                this.executeDelete();
-            });
-            
-            document.getElementById('backToFirstWarning')?.addEventListener('click', () => {
-                this.showDeleteWarning();
-            });
-            
-            document.getElementById('cancelFinalDeleteBtn')?.addEventListener('click', () => {
-                this.resetModalState();
-            });
-        }
+        // Add event handlers for confirmation buttons
+        document.getElementById('confirmDeleteBtn')?.addEventListener('click', () => {
+            this.performDelete();
+        });
+        
+        document.getElementById('cancelDeleteBtn')?.addEventListener('click', () => {
+            // Restore the original delete button
+            this.restoreDeleteButton();
+        });
     },
     
-    // Execute the actual deletion
-    executeDelete() {
-        try {
-            // Define all keys to remove
-            const keysToRemove = [
-                'userNotes',           // Right margin notes
-                'persistentImportedNotes', // Left margin (imported) notes
-                'readingTimes',        // Reading progress
-                'totalTimeOnSite',     // Time tracking
-                'lastSection',         // Last read section
-                'fontSize',            // Font preferences
-                'plainTextMode',       // Display preferences
-                'notesMode'           // Notes mode state
-            ];
-            
-            // Remove all user data
-            keysToRemove.forEach(key => {
-                localStorage.removeItem(key);
-            });
-            
-            // Remove all transfer codes
-            const transferKeys = [];
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                if (key && key.startsWith('transfer_')) {
-                    transferKeys.push(key);
-                }
-            }
-            transferKeys.forEach(key => localStorage.removeItem(key));
-            
-            // Reset window state if it exists
-            if (window.state) {
-                window.state.notes = {};
-                window.state.readingTimes = {};
-                window.state.totalTimeOnSite = 0;
-                window.state.currentSection = 0;
+    // Actually perform the delete
+    performDelete() {
+        if (!window.TransferSystem) return;
+        
+        const result = window.TransferSystem.deleteAllData();
+        
+        if (result.success) {
+            // Also reset the TimeTracker if it exists
+            if (window.timeTracker && typeof window.timeTracker.reset === 'function') {
+                window.timeTracker.reset();
             }
             
-            // Clear imported notes data
-            if (window.importedNotesData) {
-                window.importedNotesData = {};
-            }
-            
-            console.log('All data deleted successfully');
-            
-            // Show success message in modal
-            const transferContent = document.querySelector('.transfer-content');
-            if (transferContent) {
-                transferContent.innerHTML = `
+            const deleteSection = document.querySelector('.delete-section');
+            if (deleteSection) {
+                deleteSection.innerHTML = `
                     <div class="delete-success">
-                        <h4>✅ Data Deleted Successfully</h4>
-                        <p>All your data has been permanently deleted.</p>
-                        <p class="refresh-note">The page will reload in a moment...</p>
+                        <p>All local data has been deleted.</p>
+                        <p>Refreshing page...</p>
                     </div>
                 `;
             }
-            
-            // Close modal and reload after delay
             setTimeout(() => {
-                this.hide();
-                window.location.reload();
-            }, 2500);
-            
-        } catch (error) {
-            console.error('Error deleting data:', error);
-            
-            // Show error in modal
-            const transferContent = document.querySelector('.transfer-content');
-            if (transferContent) {
-                transferContent.innerHTML = `
-                    <div class="delete-error">
-                        <h4>❌ Delete Failed</h4>
-                        <p>Failed to delete all data. Please try again.</p>
-                        <div class="delete-choices">
-                            <button class="transfer-button" id="retryDeleteBtn">Try Again</button>
-                            <button class="transfer-button cancel" id="cancelAfterErrorBtn">Cancel</button>
-                        </div>
-                    </div>
-                `;
-                
-                // Add event handlers for error state
-                document.getElementById('retryDeleteBtn')?.addEventListener('click', () => {
-                    this.showDeleteWarning();
-                });
-                
-                document.getElementById('cancelAfterErrorBtn')?.addEventListener('click', () => {
-                    this.resetModalState();
-                });
-            }
+                location.reload();
+            }, 2000);
+        } else {
+            this.showMessage('Failed to delete data: ' + result.error, 'error');
+            this.restoreDeleteButton();
         }
-    }
+    },
+    
+    // Restore the original delete button
+    restoreDeleteButton() {
+        const deleteSection = document.querySelector('.delete-section');
+        if (deleteSection) {
+            deleteSection.innerHTML = `
+                <button class="delete-button" id="deleteLocalDataBtn">
+                    Delete Local Data
+                </button>
+            `;
+            // Re-attach event handler
+            document.getElementById('deleteLocalDataBtn')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.handleDeleteAllData();
+            });
+        }
+    },
+    
+    // Show message to user
+    showMessage(message, type = 'info') {
+        const messageEl = document.getElementById('transferMessage');
+        if (!messageEl) return;
+        
+        messageEl.textContent = message;
+        messageEl.className = `transfer-message ${type}`;
+        messageEl.style.display = 'block';
+        
+        // Hide after 5 seconds unless it's an error
+        if (type !== 'error') {
+            setTimeout(() => {
+                messageEl.style.display = 'none';
+            }, 5000);
+        }
+    },
+    
 };
 
 // Initialize when DOM is ready
