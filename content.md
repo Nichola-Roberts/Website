@@ -690,3 +690,19 @@ And every time someone doesn’t listen. It triggers your mountain. Confirms you
 So you’ve built a protective structure for it. Boundaries about being heard. But whenever someone questions your structure. You feel your true mountain. 
 
 And the hard truth is. You do exhaust people with your protective structure. You do always steer conversations back to you. But now people’s natural reactions hit you exactly where it hurts. 
+
+# Conclusion 
+I would love to carry on writing and tell you all the answers on how to heal. But that would be disingenuous. 
+
+All I can hope is that but gaining some intellectual understand people can watch and understand themselves and others in real time. 
+
+And I hope that over time this understanding leads to small amounts of extra energy. And this allows people to start making slightly better decisions.
+
+## Scientific Underpinning
+This is a scientific theory.
+
+It leads to a better understanding of many concepts in psychology. 
+For instance, try mapping out borderline personality disorder or narcissism with this framework.
+
+## Mailing List
+I am also writing a book based on my theory. If you would like to be emailed about its release you can <a href="#" class="mailing-list-link">join my mailing list</a>.a

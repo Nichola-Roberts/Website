@@ -76,7 +76,7 @@ const NotesSystem = {
             } else {
                 // Fallback if ViewModeManager not available
                 document.body.classList.add('plain-text-mode');
-                localStorage.setItem('plainTextMode', 'true');
+                localStorage.setItem('viewMode', 'plain-text');
             }
         }
         
@@ -99,7 +99,7 @@ const NotesSystem = {
             } else {
                 // Fallback if ViewModeManager not available
                 document.body.classList.remove('plain-text-mode');
-                localStorage.setItem('plainTextMode', 'false');
+                localStorage.setItem('viewMode', 'fade');
             }
         }
         

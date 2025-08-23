@@ -60,14 +60,23 @@
     --duration-slow: 400ms;
 }
 
-/* Hide scrollbar */
+/* Hide default browser scrollbar but keep custom indicator */
 html {
+    scroll-behavior: smooth;
     scrollbar-width: none;
     -ms-overflow-style: none;
-    scroll-behavior: smooth;
 }
 
 html::-webkit-scrollbar {
+    display: none;
+}
+
+body {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+body::-webkit-scrollbar {
     display: none;
 }
 
@@ -195,6 +204,19 @@ body {
     line-height: 1.5; /* Word 1.5 spacing */
 }
 
+/* h3 - Same style as h2 but not in navigation */
+.content h3 {
+    font-family: var(--font-body);
+    font-size: 0.75rem; /* Word size 9 = 12px = 0.75rem */
+    font-weight: 700; /* Bold like Word */
+    color: var(--color-sage-dark); /* #0F4C3A */
+    margin-bottom: 0;
+    margin-top: 1rem; /* Just a new line space before */
+    letter-spacing: var(--tracking-normal);
+    text-transform: none; /* No capitals */
+    line-height: 1.5; /* Word 1.5 spacing */
+}
+
 /* Paragraphs */
 .content p {
     margin-bottom: 2rem; /* 2rem space after each paragraph */
@@ -208,6 +230,40 @@ body {
 /* Lead paragraph - same as regular now */
 .content p:first-of-type {
     font-size: 0.92rem;
+}
+
+/* Lists */
+.content ul,
+.content ol {
+    margin-bottom: 2rem; /* Same spacing as paragraphs */
+    margin-top: 0;
+    padding-left: 2rem; /* Indent for bullets/numbers */
+    font-size: 0.92rem; /* Same as paragraph text */
+    line-height: 2; /* Same line height as paragraphs */
+    letter-spacing: var(--tracking-normal);
+    font-weight: 400;
+}
+
+.content li {
+    margin-bottom: 0.5rem; /* Space between list items */
+    padding-left: 0.25rem; /* Small padding after bullet */
+}
+
+.content ul {
+    list-style-type: disc;
+}
+
+.content ol {
+    list-style-type: decimal;
+}
+
+/* Nested lists */
+.content ul ul,
+.content ol ol,
+.content ul ol,
+.content ol ul {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
 }
 
 /* Navigation Icons */
@@ -584,7 +640,7 @@ body.plain-text-mode .bottom-reading-time {
     background-color: var(--color-sage-highlight);
 }
 
-/* Custom Scroll Indicator */
+/* Custom Scroll Indicator - Hidden in fade mode */
 .scroll-indicator {
     position: fixed;
     right: var(--space-5);
@@ -600,6 +656,12 @@ body.plain-text-mode .bottom-reading-time {
     z-index: 1001;
     pointer-events: none;
     cursor: pointer;
+    display: none; /* Hidden by default in fade mode */
+}
+
+/* Show scroll indicator only in plain text mode */
+body.plain-text-mode .scroll-indicator {
+    display: block;
 }
 
 .scroll-indicator.visible {
@@ -1738,5 +1800,237 @@ body:not(.notes-mode) .note-input-container {
     
     .import-choices {
         flex-direction: column;
+    }
+}
+
+/* =====================================================
+   Mailing List Styles
+   ===================================================== */
+
+/* Mailing List Link */
+.mailing-list-link {
+    display: inline-block;
+    color: var(--color-sage);
+    text-decoration: none;
+    padding: var(--space-2) var(--space-5);
+    border: 1.5px solid var(--color-sage);
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    background: var(--color-fog);
+}
+
+.mailing-list-link:hover {
+    background: var(--color-sage);
+    color: var(--color-fog);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(59, 125, 105, 0.2);
+}
+
+.mailing-list-link:active {
+    transform: translateY(0);
+}
+
+/* Mailing List Modal */
+.mailing-list-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-21);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.mailing-list-modal.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.mailing-list-modal-inner {
+    background: var(--color-fog);
+    border-radius: 12px;
+    padding: var(--space-34);
+    max-width: 500px;
+    width: 100%;
+    box-shadow: 0 20px 60px rgba(10, 15, 13, 0.2);
+    border: 1px solid rgba(59, 125, 105, 0.1);
+    position: relative;
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+}
+
+.mailing-list-modal.active .mailing-list-modal-inner {
+    transform: scale(1);
+}
+
+.mailing-list-modal-inner h2 {
+    font-family: var(--font-display);
+    font-size: var(--text-2xl);
+    color: var(--color-ink);
+    margin-bottom: var(--space-8);
+    line-height: var(--leading-tight);
+}
+
+.mailing-list-modal-inner p {
+    color: var(--color-ink-light);
+    margin-bottom: var(--space-21);
+    line-height: var(--leading-normal);
+}
+
+.mailing-list-form {
+    margin-bottom: var(--space-21);
+}
+
+.mailing-list-form input[type="email"] {
+    width: 100%;
+    padding: var(--space-8);
+    border: 2px solid rgba(59, 125, 105, 0.2);
+    border-radius: 8px;
+    font-size: var(--text-base);
+    font-family: var(--font-body);
+    background: var(--color-mist);
+    color: var(--color-ink);
+    margin-bottom: var(--space-13);
+    transition: border-color 0.2s ease;
+}
+
+.mailing-list-form input[type="email"]:focus {
+    outline: none;
+    border-color: var(--color-sage);
+    background: var(--color-fog);
+}
+
+.mailing-list-form input[type="email"]:invalid {
+    border-color: #e74c3c;
+}
+
+.mailing-list-buttons {
+    display: flex;
+    gap: var(--space-8);
+    flex-wrap: wrap;
+}
+
+.subscribe-btn,
+.unsubscribe-btn {
+    padding: var(--space-8) var(--space-21);
+    border: none;
+    border-radius: 8px;
+    font-size: var(--text-base);
+    font-family: var(--font-body);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.subscribe-btn {
+    background: var(--color-sage);
+    color: var(--color-fog);
+    flex: 1;
+}
+
+.subscribe-btn:hover:not(:disabled) {
+    background: var(--color-sage-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(59, 125, 105, 0.3);
+}
+
+.unsubscribe-btn {
+    background: var(--color-mist);
+    color: var(--color-ink-light);
+    border: 1px solid rgba(59, 125, 105, 0.2);
+    flex: 1;
+}
+
+.unsubscribe-btn:hover:not(:disabled) {
+    background: rgba(59, 125, 105, 0.05);
+    border-color: var(--color-sage);
+}
+
+.subscribe-btn:disabled,
+.unsubscribe-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-loading {
+    font-size: var(--text-lg);
+}
+
+.mailing-list-message {
+    padding: var(--space-8);
+    border-radius: 6px;
+    margin-bottom: var(--space-13);
+    display: none;
+    font-size: var(--text-sm);
+    line-height: var(--leading-normal);
+}
+
+.mailing-list-message.success {
+    background: rgba(46, 204, 113, 0.1);
+    color: #27ae60;
+    border: 1px solid rgba(46, 204, 113, 0.3);
+}
+
+.mailing-list-message.error {
+    background: rgba(231, 76, 60, 0.1);
+    color: #c0392b;
+    border: 1px solid rgba(231, 76, 60, 0.3);
+}
+
+.mailing-list-message.info {
+    background: rgba(52, 152, 219, 0.1);
+    color: #2980b9;
+    border: 1px solid rgba(52, 152, 219, 0.3);
+}
+
+.privacy-note {
+    font-size: var(--text-xs);
+    color: rgba(26, 31, 29, 0.6);
+    text-align: center;
+    margin: 0;
+}
+
+.gdpr-notice {
+    font-size: var(--text-sm);
+    color: rgba(26, 31, 29, 0.7);
+    background: rgba(59, 125, 105, 0.05);
+    border: 1px solid rgba(59, 125, 105, 0.15);
+    border-radius: 6px;
+    padding: var(--space-8);
+    margin-bottom: var(--space-13);
+    line-height: var(--leading-normal);
+}
+
+/* Mobile Responsive */
+@media (max-width: 640px) {
+    .mailing-list-modal {
+        padding: var(--space-13);
+    }
+    
+    .mailing-list-modal-inner {
+        padding: var(--space-21);
+    }
+    
+    .mailing-list-buttons {
+        flex-direction: column;
+    }
+    
+    .subscribe-btn,
+    .unsubscribe-btn {
+        flex: none;
+        width: 100%;
     }
 }

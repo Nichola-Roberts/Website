@@ -19,8 +19,6 @@ const TransferSystem = {
         sectionTimes: 'sectionTimes',
         totalTime: 'totalTime',
         lastSection: 'lastSection',
-        fontSize: 'fontSize',
-        plainTextMode: 'plainTextMode',
         notesMode: 'notesMode',
         fontScale: 'fontScale',
         viewMode: 'viewMode'
@@ -57,7 +55,27 @@ const TransferSystem = {
             const value = localStorage.getItem(storageKey);
             if (value !== null) {
                 // Parse JSON values where needed
-                if (key === 'notes' || key === 'sectionTimes') {
+                if (key === 'notes') {
+                    // Only export right-side notes (personal notes)
+                    const allNotes = JSON.parse(value || '{}');
+                    const rightNotes = {};
+                    
+                    Object.entries(allNotes).forEach(([noteKey, noteValue]) => {
+                        try {
+                            const note = JSON.parse(noteValue);
+                            // Only include notes on the right side (personal notes)
+                            // Left-side notes are imported from others and shouldn't be re-exported
+                            if (note.side === 'right' || !note.side) { // Default to right if side not specified
+                                rightNotes[noteKey] = noteValue;
+                            }
+                        } catch (e) {
+                            // If note can't be parsed, include it (assume it's a personal note)
+                            rightNotes[noteKey] = noteValue;
+                        }
+                    });
+                    
+                    data[key] = rightNotes;
+                } else if (key === 'sectionTimes') {
                     data[key] = JSON.parse(value || '{}');
                 } else {
                     data[key] = value;
@@ -71,7 +89,7 @@ const TransferSystem = {
     // Export data to Redis
     async exportData() {
         try {
-            // Gather all data
+            // Gather all data (only right-side notes are included)
             const exportData = this.gatherExportData();
             const noteCount = Object.keys(exportData.notes || {}).length;
             
@@ -228,7 +246,7 @@ const TransferSystem = {
         }
     },
 
-    // Merge notes intelligently
+    // Import notes to left margin (always replaces existing left notes when replaceLeft=true)
     mergeNotes(importedNotes, replaceLeft) {
         const existingNotes = JSON.parse(localStorage.getItem(this.storageKeys.notes) || '{}');
         
@@ -288,7 +306,7 @@ const TransferSystem = {
 
     // Apply non-data settings
     applySettings(importedData) {
-        const settingKeys = ['lastSection', 'fontSize', 'plainTextMode', 'notesMode', 'fontScale', 'viewMode'];
+        const settingKeys = ['lastSection', 'notesMode', 'fontScale', 'viewMode'];
         
         settingKeys.forEach(key => {
             if (importedData[key] !== undefined) {
@@ -305,9 +323,6 @@ const TransferSystem = {
                 localStorage.removeItem(key);
             });
 
-            // Clear any other transfer-related data
-            localStorage.removeItem('transferStorage');
-            localStorage.removeItem('persistentImportedNotes');
             
             // Clear imported notes data
             window.importedNotesData = null;

@@ -188,6 +188,32 @@
         </div>
     </div>
 
+    <!-- Mailing List Modal -->
+    <div class="mailing-list-modal" id="mailingListModal">
+        <div class="mailing-list-modal-inner">
+            <h2>Join Our Mailing List</h2>
+            <p>Be the first to know when the book based on Energy Landscape Theory is released.</p>
+            <p class="gdpr-notice">By subscribing, you consent to receive email updates. You'll receive a confirmation email to verify your subscription (required by UK GDPR).</p>
+            <form class="mailing-list-form" id="mailingListForm">
+                <input 
+                    type="email" 
+                    id="emailInput" 
+                    placeholder="Enter your email address"
+                    required
+                >
+                <div class="mailing-list-buttons">
+                    <button type="submit" id="subscribeBtn" class="subscribe-btn">
+                        <span class="btn-text">Subscribe</span>
+                        <span class="btn-loading" style="display: none;">⏳</span>
+                    </button>
+                    <button type="button" id="unsubscribeBtn" class="unsubscribe-btn">Unsubscribe</button>
+                </div>
+            </form>
+            <div class="mailing-list-message" id="mailingListMessage"></div>
+            <p class="privacy-note">We respect your privacy. Unsubscribe at any time.</p>
+        </div>
+    </div>
+
     <!-- QR Code Library (qrcode-generator) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
     
@@ -201,5 +227,6 @@
     <script src="notes.js"></script>
     <script src="transfer-system.js"></script>
     <script src="transfer-modal.js"></script>
+    <script src="mailing-list.js"></script>
 </body>
 </html>

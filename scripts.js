@@ -76,16 +76,24 @@ function parseMarkdownSections(markdown) {
 function renderSections(sections) {
     const contentElement = document.getElementById('content');
     
+    // Store conclusion section separately for later
+    let conclusionSection = null;
+    
     sections.forEach((section, index) => {
-        const sectionElement = document.createElement('section');
-        sectionElement.className = 'content-section';
-        
         // Create section ID from title
         const sectionId = section.title.toLowerCase()
             .replace(/\s+/g, '-')
             .replace(/[^\w-]/g, '') || 'introduction';
-        sectionElement.id = sectionId;
         
+        // Skip conclusion section initially
+        if (sectionId === 'conclusion') {
+            conclusionSection = section;
+            return;
+        }
+        
+        const sectionElement = document.createElement('section');
+        sectionElement.className = 'content-section';
+        sectionElement.id = sectionId;
         
         // Add heading if not introduction
         if (section.title !== 'introduction') {
@@ -102,6 +110,14 @@ function renderSections(sections) {
         
         contentElement.appendChild(sectionElement);
     });
+    
+    // Store conclusion section for timer
+    if (conclusionSection) {
+        window.conclusionSection = conclusionSection;
+    }
+    
+    // Initialize conclusion timer after content is rendered
+    initConclusionTimer();
     
     // Initialize reading position tracking after content is rendered
     initReadingPosition();
@@ -153,6 +169,59 @@ function restoreReadingPosition() {
             }, 100);
         }
     }
+}
+
+// Conclusion timer functionality
+function initConclusionTimer() {
+    // Check every second if 20 minutes have passed
+    const checkTimer = setInterval(() => {
+        if (window.timeTracker && window.conclusionSection) {
+            const totalTime = window.timeTracker.getTotalTime();
+            const twentyMinutes = 20 * 60 * 1000; // 20 minutes in milliseconds
+            
+            if (totalTime >= twentyMinutes) {
+                // Add conclusion section to the page
+                addConclusionSection();
+                clearInterval(checkTimer);
+            }
+        }
+    }, 1000);
+}
+
+function addConclusionSection() {
+    if (!window.conclusionSection) return;
+    
+    const contentElement = document.getElementById('content');
+    const section = window.conclusionSection;
+    
+    const sectionElement = document.createElement('section');
+    sectionElement.className = 'content-section';
+    sectionElement.id = 'conclusion';
+    
+    // Add heading
+    const heading = document.createElement('h1');
+    heading.textContent = section.title;
+    sectionElement.appendChild(heading);
+    
+    // Render markdown content
+    const contentDiv = document.createElement('div');
+    contentDiv.className = 'section-content';
+    contentDiv.innerHTML = marked.parse(section.content);
+    sectionElement.appendChild(contentDiv);
+    
+    contentElement.appendChild(sectionElement);
+    
+    // Trigger notes system to add note buttons to new paragraphs
+    if (document.body.classList.contains('notes-mode')) {
+        // Re-initialize notes for new content
+        setTimeout(() => {
+            const event = new CustomEvent('contentAdded');
+            document.dispatchEvent(event);
+        }, 100);
+    }
+    
+    // Clean up
+    window.conclusionSection = null;
 }
 
 // Initialize when DOM is ready

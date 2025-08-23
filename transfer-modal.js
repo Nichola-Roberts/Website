@@ -156,13 +156,14 @@ const TransferModal = {
                     <div class="tooltip-content">
                         <button class="tooltip-close" id="tooltipClose">&times;</button>
                         <ul>
-                            <li>Data is stored locally on your device</li>
+                            <li>Data is stored on your device</li>
                             <li>To transfer between devices click generate</li>
-                            <li>This will save a temporarily copy of your files on our servers</li>
-                            <li>This will last for 2 hours</li>
-                            <li>Data is encrypted on servers</li>
-                            <li>Notes on the right hand column only will be transferred</li>
-                            <li>Move any notes you don't want to transfer to the left column</li>
+                            <li>This will save a copy of your notes on our servers</li>
+                            <li>For 2 hours only</li>
+                            <li>Data on our servers is encrypted</li>
+                            <li>Only notes on the right margin are exported</li>
+                            <li>Imported notes always go to the left margin</li>
+                            <li>Importing will override existing left notes</li>
                         </ul>
                     </div>
                 </div>
@@ -444,13 +445,13 @@ const TransferModal = {
             importResultSection.style.display = 'block';
             importResultSection.innerHTML = `
                 <div class="import-warning">
-                    <h4>Warning: Existing Left Margin Notes Found</h4>
-                    <p>You have ${importResult.existingLeftNotesCount} notes on the left margin.</p>
-                    <p>Importing will place ${importResult.noteCount} notes on the left margin.</p>
-                    <p><strong>All imported notes will go to the LEFT side.</strong></p>
-                    <p class="import-note">Reading times will be added together (merged).</p>
+                    <h4>Existing Notes in Left Margin</h4>
+                    <p>You have ${importResult.existingLeftNotesCount} notes in the left margin.</p>
+                    <p>This import contains ${importResult.noteCount} notes.</p>
+                    <p class="import-note"><strong>Move any personal notes to the RIGHT margin before importing.</strong></p>
+                    <p>Importing will override all left margin notes.</p>
                     <div class="import-choices">
-                        <button class="transfer-button" id="replaceNotesBtn">Continue (Replace Left Notes)</button>
+                        <button class="transfer-button" id="replaceNotesBtn">Override Left Notes</button>
                         <button class="transfer-button cancel" id="cancelImportBtn">Cancel</button>
                     </div>
                 </div>
@@ -458,7 +459,7 @@ const TransferModal = {
             
             // Add event handlers for choice buttons
             document.getElementById('replaceNotesBtn')?.addEventListener('click', () => {
-                this.completeImport(importResult, true); // Replace left notes
+                this.completeImport(importResult, true); // Always replace left notes
             });
             
             document.getElementById('cancelImportBtn')?.addEventListener('click', () => {
