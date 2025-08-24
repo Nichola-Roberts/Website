@@ -7,9 +7,9 @@ const AWS = require('aws-sdk');
 
 // Configure AWS SES
 AWS.config.update({
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-    region: process.env.AWS_REGION || 'us-east-1'
+    accessKeyId: process.env.MY_AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.MY_AWS_SECRET_ACCESS_KEY,
+    region: process.env.MY_AWS_REGION || 'us-east-1'
 });
 
 const ses = new AWS.SES();
@@ -172,7 +172,7 @@ function hashEmail(email) {
 async function sendConfirmationEmail(email, confirmationToken) {
     try {
         const fromEmail = process.env.FROM_EMAIL || 'noreply@yoursite.com';
-        const confirmationUrl = `${process.env.URL || 'https://yoursite.netlify.app'}/.netlify/functions/confirm?token=${confirmationToken}`;
+        const confirmationUrl = `${process.env.MY_URL || 'https://yoursite.netlify.app'}/.netlify/functions/confirm?token=${confirmationToken}`;
         
         const subject = 'Please confirm your subscription - Energy Landscape Theory';
         
@@ -180,9 +180,9 @@ async function sendConfirmationEmail(email, confirmationToken) {
             <div style="max-width: 600px; margin: 0 auto; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333;">
                 <h2 style="color: #3B7D69;">Confirm Your Subscription</h2>
                 
-                <p>Thank you for subscribing to updates about the Energy Landscape Theory book!</p>
+                <p>Thank you for subscribing to updates about the Energy Landscape Theory</p>
                 
-                <p>To complete your subscription and comply with UK GDPR regulations, please confirm your email address by clicking the button below:</p>
+                <p>To complete your subscription please confirm your email address by clicking the button below:</p>
                 
                 <div style="text-align: center; margin: 30px 0;">
                     <a href="${confirmationUrl}" 
@@ -203,9 +203,9 @@ async function sendConfirmationEmail(email, confirmationToken) {
         const textBody = `
 Confirm Your Subscription - Energy Landscape Theory
 
-Thank you for subscribing to updates about the Energy Landscape Theory book!
+Thank you for subscribing to updates about the Energy Landscape Theory
 
-To complete your subscription and comply with UK GDPR regulations, please confirm your email address by visiting this link:
+To complete your subscription please confirm your email address by visiting this link:
 
 ${confirmationUrl}
 
