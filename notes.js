@@ -56,8 +56,17 @@ const NotesSystem = {
         
         if (this.isNotesMode) {
             this.enableNotesMode();
+            // Show notes info modal on first use
+            this.showNotesInfoModalOnFirstUse();
         } else {
             this.disableNotesMode();
+        }
+    },
+
+    // Show notes info modal on first use
+    showNotesInfoModalOnFirstUse() {
+        if (window.notesInfoModal) {
+            window.notesInfoModal.showFirstTimeModal();
         }
     },
     
@@ -691,7 +700,7 @@ const NotesSystem = {
             paragraphNotes.forEach(noteKey => {
                 const noteData = JSON.parse(this.notes[noteKey]);
                 if (noteData.textRange) {
-                    this.highlightTextRange(paragraph, noteData.textRange, '#CDE9DC40', 'general-highlight');
+                    this.highlightTextRange(paragraph, noteData.textRange, '#a4cbb840', 'general-highlight');
                 }
             });
         });

@@ -17,6 +17,7 @@ class NavigationMenu {
         document.addEventListener('contentReady', () => {
             this.populateMenu();
             this.initTimeTracker();
+            this.initScrollTracking();
         });
     }
     
@@ -180,29 +181,40 @@ class NavigationMenu {
     }
     
     highlightCurrentSection() {
+        if (!this.navLinks) return;
+        
         // Remove any existing current section highlights
         this.navLinks.querySelectorAll('.nav-link').forEach(link => {
             link.classList.remove('current-section');
         });
         
-        // Find the current section based on scroll position
-        const sections = document.querySelectorAll('h1[id], h2[id]');
-        let currentSection = null;
-        const scrollPosition = window.pageYOffset + window.innerHeight / 3;
+        // Use the existing time tracker's current section (same as help modal)
+        const timeTracker = window.timeTracker;
+        const currentSectionId = timeTracker ? timeTracker.currentSection : null;
         
-        sections.forEach(section => {
-            const sectionTop = section.offsetTop;
-            if (sectionTop <= scrollPosition) {
-                currentSection = section;
-            }
-        });
-        
-        if (currentSection) {
-            const currentLink = this.navLinks.querySelector(`[data-section="${currentSection.id}"]`);
+        if (currentSectionId) {
+            // Find the H1 nav link for this section (not H2 subsections)
+            const currentLink = this.navLinks.querySelector(`[data-section="${currentSectionId}"].nav-h1`);
             if (currentLink) {
                 currentLink.classList.add('current-section');
             }
         }
+    }
+    
+    initScrollTracking() {
+        // Track scroll to update current section highlighting
+        let scrollTimeout;
+        
+        window.addEventListener('scroll', () => {
+            // Debounce scroll events for better performance
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+                this.highlightCurrentSection();
+            }, 50);
+        });
+        
+        // Initial highlight
+        this.highlightCurrentSection();
     }
     
     scrollToCurrentSection() {
