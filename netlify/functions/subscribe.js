@@ -78,7 +78,6 @@ exports.handler = async (event, context) => {
         };
 
         // Use hash of email as key for lookups
-        const emailKey = hashEmail(email.toLowerCase());
         await store.set(emailKey, JSON.stringify(subscriberData));
 
         // Send confirmation email
