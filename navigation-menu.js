@@ -48,6 +48,10 @@ class NavigationMenu {
         this.menu?.classList.add('open');
         this.backdrop?.classList.add('active');
         document.body.style.overflow = 'hidden';
+        
+        // Highlight and scroll to current section
+        this.highlightCurrentSection();
+        this.scrollToCurrentSection();
     }
     
     closeMenu() {
@@ -120,8 +124,8 @@ class NavigationMenu {
             const viewportHeight = window.innerHeight;
             const targetPosition = elementTop - (viewportHeight / 3);
             
-            // Add fade overlay for content in top 1/3 (only in plain text mode)
-            if (document.body.classList.contains('plain-text-mode')) {
+            // Add fade overlay for content in top 1/3 (only in focus mode)
+            if (document.body.classList.contains('focus-mode')) {
                 this.showNavigationFadeOverlay();
             }
             
@@ -173,6 +177,44 @@ class NavigationMenu {
                 }
             }, 2000);
         }, 800); // Delay to let scroll animation finish
+    }
+    
+    highlightCurrentSection() {
+        // Remove any existing current section highlights
+        this.navLinks.querySelectorAll('.nav-link').forEach(link => {
+            link.classList.remove('current-section');
+        });
+        
+        // Find the current section based on scroll position
+        const sections = document.querySelectorAll('h1[id], h2[id]');
+        let currentSection = null;
+        const scrollPosition = window.pageYOffset + window.innerHeight / 3;
+        
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            if (sectionTop <= scrollPosition) {
+                currentSection = section;
+            }
+        });
+        
+        if (currentSection) {
+            const currentLink = this.navLinks.querySelector(`[data-section="${currentSection.id}"]`);
+            if (currentLink) {
+                currentLink.classList.add('current-section');
+            }
+        }
+    }
+    
+    scrollToCurrentSection() {
+        // Find the highlighted current section
+        const currentLink = this.navLinks.querySelector('.current-section');
+        if (currentLink) {
+            // Scroll the navigation menu to show the current section
+            currentLink.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            });
+        }
     }
     
     initTimeTracker() {

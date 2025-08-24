@@ -7,7 +7,7 @@ const NotesSystem = {
     notes: JSON.parse(localStorage.getItem('userNotes')) || {},
     activeNoteKey: null,
     selectedTextRange: null,
-    wasPlainTextModeActive: false, // Track previous plain text state
+    wasFocusModeActive: false, // Track previous focus state
     
     // Initialize notes system
     init() {
@@ -65,18 +65,18 @@ const NotesSystem = {
     enableNotesMode() {
         document.body.classList.add('notes-mode');
         
-        // Remember if plain text mode was already active
-        this.wasPlainTextModeActive = document.body.classList.contains('plain-text-mode');
+        // Remember if focus mode was already active
+        this.wasFocusModeActive = document.body.classList.contains('focus-mode');
         
-        // Force plain text mode when notes are active
-        if (!this.wasPlainTextModeActive) {
-            // Use the ViewModeManager to switch to plain text mode
+        // Force focus mode when notes are active
+        if (!this.wasFocusModeActive) {
+            // Use the ViewModeManager to switch to focus mode
             if (window.viewModeManager) {
-                window.viewModeManager.setMode('plain-text');
+                window.viewModeManager.setMode('focus');
             } else {
                 // Fallback if ViewModeManager not available
-                document.body.classList.add('plain-text-mode');
-                localStorage.setItem('viewMode', 'plain-text');
+                document.body.classList.add('focus-mode');
+                localStorage.setItem('viewMode', 'focus');
             }
         }
         
@@ -91,14 +91,14 @@ const NotesSystem = {
     disableNotesMode() {
         document.body.classList.remove('notes-mode');
         
-        // Restore previous plain text mode state
-        if (!this.wasPlainTextModeActive) {
+        // Restore previous focus mode state
+        if (!this.wasFocusModeActive) {
             // Use the ViewModeManager to switch back to fade mode
             if (window.viewModeManager) {
                 window.viewModeManager.setMode('fade');
             } else {
                 // Fallback if ViewModeManager not available
-                document.body.classList.remove('plain-text-mode');
+                document.body.classList.remove('focus-mode');
                 localStorage.setItem('viewMode', 'fade');
             }
         }

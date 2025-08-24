@@ -704,5 +704,20 @@ This is a scientific theory.
 It leads to a better understanding of many concepts in psychology. 
 For instance, try mapping out borderline personality disorder or narcissism with this framework.
 
+
+### Postulates
+* The brain just wants to build the most accurate energy landscape possible about the things it cares about
+* Paths map to neural circuits.
+* The energy limit is a protective metabolic threshold.
+* Even thinking uses ATP to power neural pathways.
+* Emotions became a proxy for energy over time from evolution. To move the signal further away from the outcome. 
+* An emotion is our fuzzy label for a neurochemical state.
+* Learning is a form of gradient descent.
+* Neural pathways can be gated by specific chemicals.
+* Stress chemicals block other pathways.
+* A social reward function maps onto this landscape (to be explored in a subsequent theory).
+* Evolution also developed an intrinsic reward for intellectual "aha" moments.
+
+
 ## Mailing List
-I am also writing a book based on my theory. If you would like to be emailed about its release you can <a href="#" class="mailing-list-link">join my mailing list</a>.a
+I am also writing a book based on my theory. If you would like to be emailed about its release you can <a href="#" class="mailing-list-link">join my mailing list</a>

@@ -121,6 +121,7 @@
     <div class="accessibility-panel" id="accessibilityPanel">
         <div class="accessibility-panel-inner">
             <div class="accessibility-panel-content">
+                <button class="accessibility-info-toggle font-button" aria-label="Accessibility information">i</button>
                 <button class="font-button font-decrease" aria-label="Decrease font size">-</button>
                 <button class="font-button font-increase" aria-label="Increase font size">+</button>
                 <button class="transfer-toggle font-button" aria-label="Transfer data">
@@ -188,12 +189,100 @@
         </div>
     </div>
 
+    <!-- Accessibility Info Modal -->
+    <div class="accessibility-info-modal" id="accessibilityInfoModal">
+        <div class="transfer-modal-inner">
+            <button class="transfer-close" id="accessibilityInfoClose">&times;</button>
+            <div class="transfer-content">
+                <div class="transfer-header">
+                    <h2 class="transfer-title">Accessibility Controls</h2>
+                </div>
+                <div class="accessibility-info-content">
+                    <div class="accessibility-info-section">
+                        <div class="accessibility-button-demo">
+                            <button class="font-button demo-button">
+                                <svg viewBox="0 0 24 24" fill="none">
+                                    <ellipse cx="12" cy="12" rx="9" ry="6" stroke="currentColor" stroke-width="1"/>
+                                    <line x1="12" y1="2" x2="12" y2="8" stroke="currentColor" stroke-width="1.5"/>
+                                    <line x1="12" y1="16" x2="12" y2="22" stroke="currentColor" stroke-width="1.5"/>
+                                    <line x1="2" y1="12" x2="8" y2="12" stroke="currentColor" stroke-width="1.5"/>
+                                    <line x1="16" y1="12" x2="22" y2="12" stroke="currentColor" stroke-width="1.5"/>
+                                    <circle cx="12" cy="12" r="1" fill="currentColor"/>
+                                </svg>
+                            </button>
+                            <div class="button-explanation">
+                                <h3>Toggle Focus Mode</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accessibility-info-section">
+                        <div class="accessibility-button-demo">
+                            <button class="font-button demo-button">-</button>
+                            <div class="button-explanation">
+                                <h3>Decrease Font Size</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accessibility-info-section">
+                        <div class="accessibility-button-demo">
+                            <button class="font-button demo-button">+</button>
+                            <div class="button-explanation">
+                                <h3>Increase Font Size</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accessibility-info-section">
+                        <div class="accessibility-button-demo">
+                            <button class="font-button demo-button">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <polyline points="12,6 12,12 16,14"/>
+                                </svg>
+                            </button>
+                            <div class="button-explanation">
+                                <h3>Toggle Reading Time</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accessibility-info-section">
+                        <div class="accessibility-button-demo">
+                            <button class="font-button demo-button">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path d="M17 1l4 4-4 4"/>
+                                    <path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+                                    <path d="M7 23l-4-4 4-4"/>
+                                    <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+                                </svg>
+                            </button>
+                            <div class="button-explanation">
+                                <h3>Transfer Data</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accessibility-info-section notes-section" style="display: none;">
+                        <div class="accessibility-button-demo">
+                            <button class="font-button demo-button">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
+                                    <path d="m15 5 4 4"/>
+                                </svg>
+                            </button>
+                            <div class="button-explanation">
+                                <h3>Toggle Notes</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Mailing List Modal -->
     <div class="mailing-list-modal" id="mailingListModal">
         <div class="mailing-list-modal-inner">
-            <h2>Join Our Mailing List</h2>
-            <p>Be the first to know when the book based on Energy Landscape Theory is released.</p>
-            <p class="gdpr-notice">By subscribing, you consent to receive email updates. You'll receive a confirmation email to verify your subscription (required by UK GDPR).</p>
+            <button class="transfer-close" id="mailingListClose">&times;</button>
+            <h2>Join the mailing list to be notified about the book release.</h2>
+            <p>You will receive a confirmation email.</p>
             <form class="mailing-list-form" id="mailingListForm">
                 <input 
                     type="email" 
@@ -210,7 +299,6 @@
                 </div>
             </form>
             <div class="mailing-list-message" id="mailingListMessage"></div>
-            <p class="privacy-note">We respect your privacy. Unsubscribe at any time.</p>
         </div>
     </div>
 
@@ -227,6 +315,7 @@
     <script src="notes.js"></script>
     <script src="transfer-system.js"></script>
     <script src="transfer-modal.js"></script>
+    <script src="accessibility-info-modal.js"></script>
     <script src="mailing-list.js"></script>
 </body>
 </html>

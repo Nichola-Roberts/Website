@@ -1,5 +1,5 @@
 // Reading Time Estimator - Shows estimated reading time for current section
-// Only displays in fade mode, hidden in plain text mode
+// Only displays in fade mode, hidden in focus mode
 
 class ReadingTimeManager {
     constructor() {
@@ -46,7 +46,7 @@ class ReadingTimeManager {
         closeButton.className = 'reading-time-close';
         closeButton.innerHTML = '×';
         closeButton.setAttribute('aria-label', 'Hide reading time');
-        closeButton.setAttribute('title', 'Refresh to restore');
+        closeButton.setAttribute('title', 'Hide reading time');
         closeButton.addEventListener('click', () => this.disable());
         
         this.elements.bottomTimeDisplay.appendChild(this.elements.timeSpan);
@@ -213,12 +213,8 @@ class ReadingTimeManager {
     }
     
     handleViewModeChange() {
-        // Check if we're in plain text mode
-        const isPlainTextMode = document.body.classList.contains('plain-text-mode');
-        
-        if (this.elements.bottomTimeDisplay) {
-            this.elements.bottomTimeDisplay.style.display = isPlainTextMode ? 'none' : 'block';
-        }
+        // Reading time display is now independent of view mode
+        // Users can toggle reading time on/off regardless of focus/fade mode
     }
     
     // Public API
@@ -245,40 +241,16 @@ class ReadingTimeManager {
             this.elements.bottomTimeDisplay.style.display = 'none';
         }
         
-        // Show brief message on mobile/touch devices
-        this.showBriefMessage();
+        // No message needed - users can re-enable via toggle button
         
         // Dispatch event in case other components need to know
         document.dispatchEvent(new CustomEvent('readingTimeDisabled'));
     }
     
-    showBriefMessage() {
-        // Create subtle message
-        const message = document.createElement('div');
-        message.className = 'reading-time-message';
-        message.textContent = 'Refresh to restore';
-        document.body.appendChild(message);
-        
-        // Show with fade in
-        setTimeout(() => {
-            message.classList.add('visible');
-        }, 10);
-        
-        // Hide and remove after 2 seconds
-        setTimeout(() => {
-            message.classList.remove('visible');
-            setTimeout(() => {
-                if (message.parentNode) {
-                    message.parentNode.removeChild(message);
-                }
-            }, 300); // Wait for fade out
-        }, 2000);
-    }
     
     enable() {
-        // Show the display (if not in plain text mode)
-        const isPlainTextMode = document.body.classList.contains('plain-text-mode');
-        if (this.elements.bottomTimeDisplay && !isPlainTextMode) {
+        // Show the display
+        if (this.elements.bottomTimeDisplay) {
             this.elements.bottomTimeDisplay.style.display = 'block';
         }
         

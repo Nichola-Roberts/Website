@@ -11,7 +11,7 @@ class Navigation {
         
         this.currentFontScale = 1;
         this.fontScaleStep = 0.1;
-        this.minFontScale = 0.7;
+        this.minFontScale = 0.5;
         this.maxFontScale = 1.5;
         
         this.isDragging = false;
@@ -65,6 +65,19 @@ class Navigation {
             this.hideAccessibilityPanel();
         } else {
             this.showAccessibilityPanel();
+            
+            // Show info modal on first visit
+            const hasSeenAccessibilityInfo = localStorage.getItem('hasSeenAccessibilityInfo');
+            if (!hasSeenAccessibilityInfo) {
+                // Wait a moment for panel to show, then show info modal
+                setTimeout(() => {
+                    const infoButton = document.querySelector('.accessibility-info-toggle');
+                    if (infoButton) {
+                        infoButton.click();
+                        localStorage.setItem('hasSeenAccessibilityInfo', 'true');
+                    }
+                }, 300);
+            }
         }
     }
     

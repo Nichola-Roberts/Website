@@ -1,5 +1,5 @@
-// View Mode Management - Plain Text & Fade Effects
-// Handles switching between default fade view and plain text mode
+// View Mode Management - Focus & Fade Effects
+// Handles switching between default focus view and fade mode
 
 class ViewModeManager {
     constructor() {
@@ -8,7 +8,8 @@ class ViewModeManager {
             body: document.body,
             fadeTop: null,
             fadeBottom: null,
-            plainTextToggle: null,
+            focusToggle: null,
+            readingTimeToggle: null,
             accessibilityPanel: null
         };
         
@@ -26,9 +27,11 @@ class ViewModeManager {
     
     setup() {
         this.createFadeElements();
-        this.createPlainTextButton();
+        this.createFocusButton();
+        this.createReadingTimeButton();
         this.bindEvents();
         this.applyMode(this.currentMode);
+        this.initializeReadingTime();
         
         // Check for reduced motion preference
         this.handleReducedMotion();
@@ -49,7 +52,7 @@ class ViewModeManager {
         this.initializeFadeUpdates();
     }
     
-    createPlainTextButton() {
+    createFocusButton() {
         // Find accessibility panel
         this.elements.accessibilityPanel = document.getElementById('accessibilityPanel');
         if (!this.elements.accessibilityPanel) return;
@@ -58,24 +61,69 @@ class ViewModeManager {
         const panelContent = this.elements.accessibilityPanel.querySelector('.accessibility-panel-content');
         if (!panelContent) return;
         
-        // Create plain text toggle button
-        this.elements.plainTextToggle = document.createElement('button');
-        this.elements.plainTextToggle.className = 'plain-text-toggle font-button';
-        this.elements.plainTextToggle.setAttribute('aria-label', 'Plain text mode');
-        this.elements.plainTextToggle.innerHTML = `
+        // Create focus toggle button
+        this.elements.focusToggle = document.createElement('button');
+        this.elements.focusToggle.className = 'focus-toggle font-button';
+        this.elements.focusToggle.setAttribute('aria-label', 'Focus mode');
+        this.elements.focusToggle.innerHTML = `
             <svg viewBox="0 0 24 24" fill="none">
-                <path d="M6 6h12M6 10h12M6 14h12M6 18h8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <ellipse cx="12" cy="12" rx="9" ry="6" stroke="currentColor" stroke-width="1"/>
+                <line x1="12" y1="2" x2="12" y2="8" stroke="currentColor" stroke-width="1.5"/>
+                <line x1="12" y1="16" x2="12" y2="22" stroke="currentColor" stroke-width="1.5"/>
+                <line x1="2" y1="12" x2="8" y2="12" stroke="currentColor" stroke-width="1.5"/>
+                <line x1="16" y1="12" x2="22" y2="12" stroke="currentColor" stroke-width="1.5"/>
+                <circle cx="12" cy="12" r="1" fill="currentColor"/>
             </svg>
         `;
         
-        // Insert as first button in the panel
-        panelContent.insertBefore(this.elements.plainTextToggle, panelContent.firstChild);
+        // Insert as second button (after the info button)
+        const infoButton = panelContent.querySelector('.accessibility-info-toggle');
+        if (infoButton) {
+            panelContent.insertBefore(this.elements.focusToggle, infoButton.nextSibling);
+        } else {
+            panelContent.insertBefore(this.elements.focusToggle, panelContent.firstChild);
+        }
+    }
+    
+    createReadingTimeButton() {
+        // Find accessibility panel
+        this.elements.accessibilityPanel = document.getElementById('accessibilityPanel');
+        if (!this.elements.accessibilityPanel) return;
+        
+        // Find the accessibility panel content
+        const panelContent = this.elements.accessibilityPanel.querySelector('.accessibility-panel-content');
+        if (!panelContent) return;
+        
+        // Create reading time toggle button
+        this.elements.readingTimeToggle = document.createElement('button');
+        this.elements.readingTimeToggle.className = 'reading-time-toggle font-button';
+        this.elements.readingTimeToggle.setAttribute('aria-label', 'Toggle reading time display');
+        this.elements.readingTimeToggle.innerHTML = `
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <circle cx="12" cy="12" r="10" stroke-width="2"/>
+                <polyline points="12,6 12,12 16,14" stroke-width="2"/>
+            </svg>
+        `;
+        
+        // Insert after the font size buttons
+        const fontIncreaseButton = panelContent.querySelector('.font-increase');
+        if (fontIncreaseButton) {
+            panelContent.insertBefore(this.elements.readingTimeToggle, fontIncreaseButton.nextSibling);
+        } else {
+            panelContent.appendChild(this.elements.readingTimeToggle);
+        }
     }
     
     bindEvents() {
-        if (this.elements.plainTextToggle) {
-            this.elements.plainTextToggle.addEventListener('click', () => {
+        if (this.elements.focusToggle) {
+            this.elements.focusToggle.addEventListener('click', () => {
                 this.toggleMode();
+            });
+        }
+        
+        if (this.elements.readingTimeToggle) {
+            this.elements.readingTimeToggle.addEventListener('click', () => {
+                this.toggleReadingTime();
             });
         }
         
@@ -103,8 +151,8 @@ class ViewModeManager {
     }
     
     updateFadeOverlays() {
-        // Don't show fades in plain text mode
-        if (this.currentMode === 'plain-text' || !this.elements.fadeTop || !this.elements.fadeBottom) {
+        // Don't show fades in focus mode
+        if (this.currentMode === 'focus' || !this.elements.fadeTop || !this.elements.fadeBottom) {
             return;
         }
         
@@ -134,7 +182,7 @@ class ViewModeManager {
     }
     
     toggleMode() {
-        const newMode = this.currentMode === 'fade' ? 'plain-text' : 'fade';
+        const newMode = this.currentMode === 'focus' ? 'fade' : 'focus';
         this.setMode(newMode);
     }
     
@@ -145,16 +193,15 @@ class ViewModeManager {
     }
     
     applyMode(mode) {
-        if (mode === 'plain-text') {
-            // Enable plain text mode
-            this.elements.body.classList.add('plain-text-mode');
+        if (mode === 'focus') {
+            // Enable focus mode (default) - no fades, all content visible
+            this.elements.body.classList.add('focus-mode');
             
             // Hide fade overlays immediately
             if (this.elements.fadeTop && this.elements.fadeBottom) {
                 this.elements.fadeTop.style.opacity = '0';
                 this.elements.fadeBottom.style.opacity = '0';
             }
-            
             
             // Ensure all content is visible
             setTimeout(() => {
@@ -165,14 +212,14 @@ class ViewModeManager {
                 });
             }, 100);
             
-            // Update button state
-            if (this.elements.plainTextToggle) {
-                this.elements.plainTextToggle.classList.add('active');
+            // Update button state - button should NOT be active in default focus mode
+            if (this.elements.focusToggle) {
+                this.elements.focusToggle.classList.remove('active');
             }
             
         } else {
-            // Enable fade mode (default)
-            this.elements.body.classList.remove('plain-text-mode');
+            // Enable fade mode (toggled state)
+            this.elements.body.classList.remove('focus-mode');
             
             // Restore fade overlays
             if (this.elements.fadeTop && this.elements.fadeBottom) {
@@ -182,9 +229,9 @@ class ViewModeManager {
                 this.updateFadeOverlays();
             }
             
-            // Update button state
-            if (this.elements.plainTextToggle) {
-                this.elements.plainTextToggle.classList.remove('active');
+            // Update button state - button IS active when fade mode is on
+            if (this.elements.focusToggle) {
+                this.elements.focusToggle.classList.add('active');
             }
         }
         
@@ -199,8 +246,8 @@ class ViewModeManager {
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         
         if (prefersReducedMotion && this.currentMode === 'fade') {
-            // Auto-switch to plain text mode for accessibility
-            this.setMode('plain-text');
+            // Auto-switch to focus mode for accessibility
+            this.setMode('focus');
         }
     }
     
@@ -217,12 +264,56 @@ class ViewModeManager {
         return this.currentMode;
     }
     
-    isPlainTextMode() {
-        return this.currentMode === 'plain-text';
+    isFocusMode() {
+        return this.currentMode === 'focus';
     }
     
     isFadeMode() {
         return this.currentMode === 'fade';
+    }
+    
+    initializeReadingTime() {
+        // Wait for reading time manager to be ready
+        setTimeout(() => {
+            // Check if reading time was previously enabled (default to false)
+            const isEnabled = localStorage.getItem('readingTimeEnabled') === 'true';
+            
+            if (window.readingTimeManager) {
+                if (isEnabled) {
+                    window.readingTimeManager.enable();
+                    if (this.elements.readingTimeToggle) {
+                        this.elements.readingTimeToggle.classList.add('active');
+                    }
+                } else {
+                    // Default to disabled
+                    window.readingTimeManager.disable();
+                    if (this.elements.readingTimeToggle) {
+                        this.elements.readingTimeToggle.classList.remove('active');
+                    }
+                    localStorage.setItem('readingTimeEnabled', 'false');
+                }
+            }
+        }, 100);
+    }
+    
+    toggleReadingTime() {
+        // Check if reading time is currently enabled
+        const readingTimeDisplay = document.querySelector('.bottom-reading-time');
+        const isEnabled = readingTimeDisplay && readingTimeDisplay.style.display !== 'none';
+        
+        if (window.readingTimeManager) {
+            if (isEnabled) {
+                // Disable reading time
+                window.readingTimeManager.disable();
+                this.elements.readingTimeToggle.classList.remove('active');
+                localStorage.setItem('readingTimeEnabled', 'false');
+            } else {
+                // Enable reading time
+                window.readingTimeManager.enable();
+                this.elements.readingTimeToggle.classList.add('active');
+                localStorage.setItem('readingTimeEnabled', 'true');
+            }
+        }
     }
 }
 

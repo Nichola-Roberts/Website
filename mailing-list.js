@@ -7,7 +7,7 @@ class MailingList {
         this.subscribeBtn = document.getElementById('subscribeBtn');
         this.unsubscribeBtn = document.getElementById('unsubscribeBtn');
         this.message = document.getElementById('mailingListMessage');
-        this.backdrop = document.getElementById('modalBackdrop');
+        this.closeBtn = document.getElementById('mailingListClose');
         
         this.init();
     }
@@ -32,9 +32,18 @@ class MailingList {
             this.unsubscribe();
         });
         
-        // Close modal on backdrop click
-        this.backdrop.addEventListener('click', () => {
-            this.closeModal();
+        // Handle close button
+        if (this.closeBtn) {
+            this.closeBtn.addEventListener('click', () => {
+                this.closeModal();
+            });
+        }
+        
+        // Close modal on clicking outside the modal content
+        this.modal.addEventListener('click', (e) => {
+            if (e.target === this.modal) {
+                this.closeModal();
+            }
         });
         
         // Close modal on ESC key
@@ -47,14 +56,12 @@ class MailingList {
     
     openModal() {
         this.modal.classList.add('active');
-        this.backdrop.classList.add('active');
         document.body.classList.add('modal-open');
         this.emailInput.focus();
     }
     
     closeModal() {
         this.modal.classList.remove('active');
-        this.backdrop.classList.remove('active');
         document.body.classList.remove('modal-open');
         this.clearMessage();
         this.form.reset();

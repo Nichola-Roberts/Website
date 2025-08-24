@@ -347,15 +347,15 @@ body {
         transparent 100%);
 }
 
-/* Plain Text Mode */
-body.plain-text-mode .fade-top,
-body.plain-text-mode .fade-bottom {
+/* Focus Mode */
+body.focus-mode .fade-top,
+body.focus-mode .fade-bottom {
     display: none !important;
 }
 
-body.plain-text-mode p,
-body.plain-text-mode h1,
-body.plain-text-mode h2 {
+body.focus-mode p,
+body.focus-mode h1,
+body.focus-mode h2 {
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
@@ -429,8 +429,8 @@ body.plain-text-mode h2 {
 }
 
 
-/* Highlight plain text button when active */
-body.plain-text-mode .plain-text-toggle {
+/* Highlight focus button when active (when in fade mode) */
+body:not(.focus-mode) .focus-toggle {
     background-color: var(--color-sage-dark) !important;
     color: white !important;
 }
@@ -493,10 +493,7 @@ body.plain-text-mode .plain-text-toggle {
     color: var(--color-sage-dark);
 }
 
-/* Hide in plain text mode */
-body.plain-text-mode .bottom-reading-time {
-    display: none;
-}
+/* Reading time is now independent of view mode - users can toggle it on/off regardless */
 
 /* Brief message when reading time is dismissed */
 .reading-time-message {
@@ -640,6 +637,12 @@ body.plain-text-mode .bottom-reading-time {
     background-color: var(--color-sage-highlight);
 }
 
+/* Current section highlighting */
+.nav-link.current-section {
+    border: 1px solid rgba(59, 125, 105, 0.2);
+    border-radius: var(--space-2);
+}
+
 /* Custom Scroll Indicator - Hidden in fade mode */
 .scroll-indicator {
     position: fixed;
@@ -659,8 +662,8 @@ body.plain-text-mode .bottom-reading-time {
     display: none; /* Hidden by default in fade mode */
 }
 
-/* Show scroll indicator only in plain text mode */
-body.plain-text-mode .scroll-indicator {
+/* Show scroll indicator only in focus mode */
+body.focus-mode .scroll-indicator {
     display: block;
 }
 
@@ -1300,7 +1303,7 @@ body.notes-mode .notes-toggle {
     }
 }
 
-/* Notes are always visible when notes mode is active, regardless of plain text mode */
+/* Notes are always visible when notes mode is active, regardless of focus mode */
 body.notes-mode p {
     position: relative;
 }
@@ -1804,25 +1807,124 @@ body:not(.notes-mode) .note-input-container {
 }
 
 /* =====================================================
+   Accessibility Info Modal Styles
+   ===================================================== */
+
+.accessibility-info-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+.accessibility-info-modal.active {
+    display: flex;
+}
+
+.accessibility-info-content {
+    margin-top: var(--space-5);
+}
+
+.accessibility-info-section {
+    margin-bottom: var(--space-8);
+}
+
+.accessibility-info-section h3 {
+    font-family: var(--font-body);
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--color-sage-dark);
+    margin: 0 0 var(--space-3) 0;
+    line-height: var(--leading-tight);
+}
+
+.accessibility-info-section p {
+    font-size: var(--text-base);
+    line-height: var(--leading-normal);
+    color: var(--color-ink);
+    margin: 0;
+}
+
+.accessibility-info-section p strong {
+    color: var(--color-sage-dark);
+    font-weight: 600;
+}
+
+/* Info button styling */
+.accessibility-info-toggle {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+    font-weight: 300 !important;
+    font-style: italic;
+}
+
+/* Button demonstration styling */
+.accessibility-button-demo {
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
+    margin-bottom: var(--space-3);
+}
+
+.demo-button {
+    pointer-events: none; /* Disable interaction for demo buttons */
+    opacity: 0.9;
+}
+
+.demo-button svg {
+    width: 12px;
+    height: 12px;
+    pointer-events: none;
+}
+
+.button-explanation {
+    flex: 1;
+}
+
+.button-explanation h3 {
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    font-weight: 600;
+    color: var(--color-sage-dark);
+    margin: 0 0 var(--space-1) 0;
+    line-height: var(--leading-tight);
+}
+
+.button-explanation p {
+    font-size: var(--text-sm);
+    line-height: var(--leading-normal);
+    color: var(--color-ink);
+    margin: 0;
+}
+
+/* =====================================================
    Mailing List Styles
    ===================================================== */
 
 /* Mailing List Link */
 .mailing-list-link {
     display: inline-block;
-    color: var(--color-sage);
+    color: #1a1a1a;
     text-decoration: none;
-    padding: var(--space-2) var(--space-5);
-    border: 1.5px solid var(--color-sage);
+    padding: 0.1rem;
+    border: 1px solid transparent;
     border-radius: 6px;
     font-weight: 500;
     transition: all 0.2s ease;
-    background: var(--color-fog);
+    background: #a4cbb8;
 }
 
 .mailing-list-link:hover {
-    background: var(--color-sage);
-    color: var(--color-fog);
+    background: #f5f5f5;
+    color: #1a1a1a;
+    border: 1px solid #a4cbb8;
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(59, 125, 105, 0.2);
 }
@@ -1838,7 +1940,7 @@ body:not(.notes-mode) .note-input-container {
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 1000;
+    z-index: 1500;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1846,6 +1948,9 @@ body:not(.notes-mode) .note-input-container {
     opacity: 0;
     visibility: hidden;
     transition: all 0.3s ease;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
 }
 
 .mailing-list-modal.active {
@@ -1854,14 +1959,16 @@ body:not(.notes-mode) .note-input-container {
 }
 
 .mailing-list-modal-inner {
-    background: var(--color-fog);
-    border-radius: 12px;
-    padding: var(--space-34);
+    background: white;
+    border-radius: 16px;
+    padding: var(--space-21);
     max-width: 500px;
-    width: 100%;
-    box-shadow: 0 20px 60px rgba(10, 15, 13, 0.2);
-    border: 1px solid rgba(59, 125, 105, 0.1);
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
     position: relative;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    border: 2px solid var(--color-sage);
     transform: scale(0.9);
     transition: transform 0.3s ease;
 }
@@ -1871,33 +1978,35 @@ body:not(.notes-mode) .note-input-container {
 }
 
 .mailing-list-modal-inner h2 {
-    font-family: var(--font-display);
-    font-size: var(--text-2xl);
+    font-family: var(--font-body);
+    font-size: var(--text-xl);
+    font-weight: 500;
     color: var(--color-ink);
-    margin-bottom: var(--space-8);
+    margin: 0 0 var(--space-13) 0;
     line-height: var(--leading-tight);
 }
 
 .mailing-list-modal-inner p {
-    color: var(--color-ink-light);
-    margin-bottom: var(--space-21);
+    color: var(--color-ink);
+    font-size: var(--text-base);
+    margin-bottom: var(--space-8);
     line-height: var(--leading-normal);
 }
 
 .mailing-list-form {
-    margin-bottom: var(--space-21);
+    margin-bottom: var(--space-8);
 }
 
 .mailing-list-form input[type="email"] {
     width: 100%;
-    padding: var(--space-8);
-    border: 2px solid rgba(59, 125, 105, 0.2);
-    border-radius: 8px;
+    padding: var(--space-5);
+    border: 1px solid var(--color-sage);
+    border-radius: 4px;
     font-size: var(--text-base);
     font-family: var(--font-body);
-    background: var(--color-mist);
+    background: white;
     color: var(--color-ink);
-    margin-bottom: var(--space-13);
+    margin-bottom: var(--space-8);
     transition: border-color 0.2s ease;
 }
 
@@ -1908,7 +2017,7 @@ body:not(.notes-mode) .note-input-container {
 }
 
 .mailing-list-form input[type="email"]:invalid {
-    border-color: #e74c3c;
+    border-color: var(--color-sage);
 }
 
 .mailing-list-buttons {
@@ -1919,16 +2028,16 @@ body:not(.notes-mode) .note-input-container {
 
 .subscribe-btn,
 .unsubscribe-btn {
-    padding: var(--space-8) var(--space-21);
+    padding: var(--space-3) var(--space-8);
     border: none;
-    border-radius: 8px;
-    font-size: var(--text-base);
+    border-radius: 4px;
+    font-size: var(--text-sm);
     font-family: var(--font-body);
-    font-weight: 500;
+    font-weight: 400;
     cursor: pointer;
     transition: all 0.2s ease;
     position: relative;
-    min-height: 44px;
+    min-height: 36px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1970,12 +2079,14 @@ body:not(.notes-mode) .note-input-container {
 }
 
 .mailing-list-message {
-    padding: var(--space-8);
-    border-radius: 6px;
-    margin-bottom: var(--space-13);
+    padding: var(--space-5);
+    border-radius: 4px;
+    margin-bottom: var(--space-8);
     display: none;
     font-size: var(--text-sm);
     line-height: var(--leading-normal);
+    border: 1px solid rgba(59, 125, 105, 0.2);
+    background: rgba(59, 125, 105, 0.05);
 }
 
 .mailing-list-message.success {
