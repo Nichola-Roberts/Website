@@ -9,6 +9,9 @@ old/
 # Build output
 dist/
 
+# Downloaded libraries
+marked.min.js
+
 # Dependencies
 node_modules/
 

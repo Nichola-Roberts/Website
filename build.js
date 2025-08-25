@@ -3,6 +3,7 @@ const path = require('path');
 
 // Client-side JS files to concatenate (in order of dependency)
 const jsFiles = [
+    'marked.min.js',        // External library - must come first
     'scripts.js',
     'view-mode.js',
     'reading-time.js',

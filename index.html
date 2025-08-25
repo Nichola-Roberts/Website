@@ -8,14 +8,36 @@
     <meta name="author" content="Nichola Roberts">
     <title>Energy Landscape Theory — Understanding Human Psychology | Nichola Roberts</title>
     
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CW6DM3LHDD"></script>
+    <!-- Google Analytics - Delayed Load -->
     <script>
+      // Initialize gtag function for delayed loading
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-CW6DM3LHDD');
+      
+      // Load GA on first user interaction
+      function loadGoogleAnalytics() {
+        if (window.gaLoaded) return; // Prevent double loading
+        window.gaLoaded = true;
+        
+        const script = document.createElement('script');
+        script.async = true;
+        script.src = 'https://www.googletagmanager.com/gtag/js?id=G-CW6DM3LHDD';
+        document.head.appendChild(script);
+        
+        script.onload = function() {
+          gtag('js', new Date());
+          gtag('config', 'G-CW6DM3LHDD');
+        };
+      }
+      
+      // Trigger GA load on first interaction
+      const events = ['scroll', 'click', 'keydown', 'touchstart'];
+      events.forEach(event => {
+        document.addEventListener(event, loadGoogleAnalytics, { once: true, passive: true });
+      });
+      
+      // Fallback: load after 5 seconds if no interaction
+      setTimeout(loadGoogleAnalytics, 5000);
     </script>
     
     <!-- Open Graph / Facebook -->
@@ -36,16 +58,15 @@
     <!-- Canonical URL -->
     <link rel="canonical" href="https://www.energylandscapetheory.com/">
     
-    <!-- Fonts -->
+    <!-- Fonts - Optimized Loading -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Instrument+Serif&display=swap" rel="stylesheet">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Instrument+Serif&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Instrument+Serif&display=swap"></noscript>
     
     <!-- Styles -->
     <link rel="stylesheet" href="styles.css">
     
-    <!-- Marked.js for Markdown -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     
     <!-- Structured Data -->
     <script type="application/ld+json">
@@ -331,8 +352,20 @@
         </div>
     </div>
 
-    <!-- QR Code Library (qrcode-generator) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+    <!-- QR Code Library - Deferred Load -->
+    <script>
+      // Load QR code library when needed (for transfer functionality)
+      window.loadQRCode = function() {
+        if (window.qrcode) return Promise.resolve(); // Already loaded
+        
+        return new Promise((resolve) => {
+          const script = document.createElement('script');
+          script.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js';
+          script.onload = resolve;
+          document.head.appendChild(script);
+        });
+      };
+    </script>
     
     <!-- Individual JS files for development -->
     <script src="scripts.js"></script>
