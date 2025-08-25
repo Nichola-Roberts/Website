@@ -5,8 +5,9 @@
   "main": "index.html",
   "scripts": {
     "dev": "netlify dev",
-    "build": "echo 'Static site - no build step required'",
-    "deploy": "netlify deploy --prod"
+    "build": "node build.js",
+    "build:prod": "node build.js --prod",
+    "deploy": "npm run build:prod && netlify deploy --prod"
   },
   "dependencies": {
     "aws-sdk": "^2.1691.0",

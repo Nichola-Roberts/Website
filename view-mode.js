@@ -127,8 +127,6 @@ class ViewModeManager {
             });
         }
         
-        // Listen for scroll events to update fade overlays
-        window.addEventListener('scroll', () => this.updateFadeOverlays());
         
         // Listen for window resize to recalculate fade positions
         window.addEventListener('resize', () => this.updateFadeOverlays());

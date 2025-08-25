@@ -5,11 +5,17 @@ let allHelpSections = null;
 function initializeHelp() {
     const helpTrigger = document.querySelector('.help-trigger');
     const helpModal = document.getElementById('helpModal');
+    const helpClose = document.getElementById('helpClose');
     const modalBackdrop = document.getElementById('modalBackdrop');
     
     if (!helpTrigger || !helpModal || !modalBackdrop) return;
     
     helpTrigger.addEventListener('click', toggleHelp);
+    
+    // Close button
+    if (helpClose) {
+        helpClose.addEventListener('click', closeHelp);
+    }
     
     // Close when clicking backdrop
     modalBackdrop.addEventListener('click', closeHelp);

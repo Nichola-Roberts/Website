@@ -1379,6 +1379,26 @@ body:not(.notes-mode) .note-input-container {
     background: #f0f0f0;
 }
 
+.help-close {
+    position: absolute;
+    top: var(--space-3);
+    right: var(--space-5);
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--color-ink-light);
+    line-height: 1;
+    padding: var(--space-2);
+    border-radius: var(--border-radius);
+    transition: background-color 0.2s ease;
+    z-index: 10;
+}
+
+.help-close:hover {
+    background: #f0f0f0;
+}
+
 .transfer-content {
     text-align: center;
     padding: var(--space-4) 0;
@@ -1931,6 +1951,36 @@ body:not(.notes-mode) .note-input-container {
 
 .notes-info-content p:last-child {
     margin-bottom: 0;
+}
+
+/* Mobile styles for info modals */
+@media (max-width: 768px) {
+    .accessibility-info-content,
+    .notes-info-content {
+        padding: var(--space-5) var(--space-8);
+    }
+    
+    .accessibility-info-content p,
+    .notes-info-content p {
+        font-size: var(--text-xs);
+        line-height: var(--leading-normal);
+    }
+    
+    .accessibility-info-content h3,
+    .notes-info-content h3 {
+        font-size: var(--text-sm);
+    }
+    
+    .accessibility-info-modal .transfer-modal-inner,
+    .notes-info-modal .transfer-modal-inner {
+        margin: var(--space-5);
+        padding: var(--space-8);
+    }
+    
+    .accessibility-info-modal .transfer-content,
+    .notes-info-modal .transfer-content {
+        padding: var(--space-5);
+    }
 }
 
 /* =====================================================

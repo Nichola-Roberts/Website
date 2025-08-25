@@ -188,9 +188,8 @@ class NavigationMenu {
             link.classList.remove('current-section');
         });
         
-        // Use the existing time tracker's current section (same as help modal)
-        const timeTracker = window.timeTracker;
-        const currentSectionId = timeTracker ? timeTracker.currentSection : null;
+        // Find the current section based on scroll position (more accurate than time tracker)
+        const currentSectionId = this.findCurrentSectionByPosition();
         
         if (currentSectionId) {
             // Find the H1 nav link for this section (not H2 subsections)
@@ -201,17 +200,60 @@ class NavigationMenu {
         }
     }
     
+    findCurrentSectionByPosition() {
+        const sections = document.querySelectorAll('.content-section');
+        if (sections.length === 0) return null;
+        
+        const scrollTop = window.pageYOffset;
+        const viewportHeight = window.innerHeight;
+        const triggerPoint = scrollTop + viewportHeight * 0.3; // 30% down from top of viewport
+        
+        let currentSection = null;
+        
+        // Find the section that the trigger point is currently in
+        sections.forEach(section => {
+            const rect = section.getBoundingClientRect();
+            const sectionTop = rect.top + scrollTop;
+            const sectionBottom = sectionTop + rect.height;
+            
+            // If trigger point is within this section
+            if (triggerPoint >= sectionTop && triggerPoint < sectionBottom) {
+                currentSection = section.id;
+            }
+        });
+        
+        // If no section contains the trigger point, use the last section that's above it
+        if (!currentSection) {
+            let lastSectionAbove = null;
+            sections.forEach(section => {
+                const rect = section.getBoundingClientRect();
+                const sectionTop = rect.top + scrollTop;
+                
+                if (sectionTop <= triggerPoint) {
+                    lastSectionAbove = section.id;
+                }
+            });
+            currentSection = lastSectionAbove;
+        }
+        
+        return currentSection;
+    }
+    
     initScrollTracking() {
-        // Track scroll to update current section highlighting
-        let scrollTimeout;
+        // Track scroll to update current section highlighting with requestAnimationFrame
+        let ticking = false;
+        
+        const highlightSection = () => {
+            this.highlightCurrentSection();
+            ticking = false;
+        };
         
         window.addEventListener('scroll', () => {
-            // Debounce scroll events for better performance
-            clearTimeout(scrollTimeout);
-            scrollTimeout = setTimeout(() => {
-                this.highlightCurrentSection();
-            }, 50);
-        });
+            if (!ticking) {
+                requestAnimationFrame(highlightSection);
+                ticking = true;
+            }
+        }, { passive: true });
         
         // Initial highlight
         this.highlightCurrentSection();

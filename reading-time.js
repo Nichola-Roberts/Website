@@ -56,19 +56,27 @@ class ReadingTimeManager {
     
     
     bindEvents() {
-        // Update on scroll with throttling
-        let scrollTimeout;
-        const scrollUpdateDelay = 100;
+        // Update on scroll with requestAnimationFrame throttling for better performance
+        let ticking = false;
+        
+        const updateReadingTime = () => {
+            this.updateReadingTime();
+            ticking = false;
+        };
         
         window.addEventListener('scroll', () => {
-            clearTimeout(scrollTimeout);
-            scrollTimeout = setTimeout(() => this.updateReadingTime(), scrollUpdateDelay);
-        });
+            if (!ticking) {
+                requestAnimationFrame(updateReadingTime);
+                ticking = true;
+            }
+        }, { passive: true });
         
         // Also update on touch events for mobile
         window.addEventListener('touchmove', () => {
-            clearTimeout(scrollTimeout);
-            scrollTimeout = setTimeout(() => this.updateReadingTime(), scrollUpdateDelay);
+            if (!ticking) {
+                requestAnimationFrame(updateReadingTime);
+                ticking = true;
+            }
         }, { passive: true });
         
         // Update when view mode changes

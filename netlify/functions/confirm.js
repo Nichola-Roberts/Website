@@ -159,7 +159,7 @@ function generateSuccessPage(title, message) {
             </style>
         </head>
         <body>
-            <h1 class="success">✅ ${title}</h1>
+            <h1 class="success">${title}</h1>
             <p>${message}</p>
             <a href="/" class="button">Return to Energy Landscape Theory</a>
         </body>
@@ -197,7 +197,7 @@ function generateErrorPage(title, message) {
             </style>
         </head>
         <body>
-            <h1 class="error">❌ ${title}</h1>
+            <h1 class="error">${title}</h1>
             <p>${message}</p>
             <a href="/" class="button">Return to Energy Landscape Theory</a>
         </body>
