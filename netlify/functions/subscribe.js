@@ -1,7 +1,7 @@
 // Netlify Function to handle mailing list subscriptions
 // Uses Netlify Blobs for subscriber storage with email encryption
 
-// const { getStore } = require('@netlify/blobs');
+const { getStore } = require('@netlify/blobs');
 const crypto = require('crypto');
 const AWS = require('aws-sdk');
 
@@ -42,17 +42,49 @@ exports.handler = async (event, context) => {
             };
         }
 
-        // TODO: Implement proper storage later
-        console.log('Email subscription request for:', email.toLowerCase());
+        // Get the Netlify Blobs store
+        const store = getStore('subscribers');
+        
+        // Check if email already exists using hash
+        const emailKey = hashEmail(email.toLowerCase());
+        try {
+            await store.get(emailKey);
+            return {
+                statusCode: 409,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*'
+                },
+                body: JSON.stringify({ error: 'Email already subscribed' })
+            };
+        } catch (err) {
+            // Email doesn't exist, which is what we want
+        }
+
+        // Encrypt email for storage
+        const encryptedEmail = encryptEmail(email.toLowerCase());
         
         // Generate confirmation token
         const confirmationToken = crypto.randomBytes(32).toString('hex');
+        
+        // Store subscriber data with encrypted email and pending status
+        const subscriberData = {
+            email: encryptedEmail,
+            subscribedAt: new Date().toISOString(),
+            status: 'pending',
+            source: 'website',
+            confirmationToken: confirmationToken,
+            confirmationExpires: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() // 24 hours
+        };
+
+        // Use hash of email as key for lookups
+        await store.set(emailKey, JSON.stringify(subscriberData));
 
         // Send confirmation email
         await sendConfirmationEmail(email.toLowerCase(), confirmationToken);
 
-        // TODO: Update analytics later
-        console.log('Subscription attempt logged');
+        // Update analytics for subscription attempt (actual subscription counted on confirm)
+        await updateAnalytics(store, 'subscription_attempt');
 
         return {
             statusCode: 200,
@@ -139,6 +171,47 @@ function decryptEmail(encryptedData) {
 function hashEmail(email) {
     // Create a consistent hash of the email for use as storage key
     return crypto.createHash('sha256').update(email).digest('hex');
+}
+
+async function updateAnalytics(store, action) {
+    try {
+        let analytics;
+        try {
+            const analyticsData = await store.get('_analytics');
+            analytics = JSON.parse(analyticsData);
+        } catch (err) {
+            // Analytics blob doesn't exist, create new one
+            analytics = {
+                totalSubscriptions: 0,
+                totalUnsubscriptions: 0,
+                subscriptionAttempts: 0,
+                subscriptionsByMonth: {},
+                unsubscriptionsByMonth: {},
+                subscriptionAttemptsByMonth: {}
+            };
+        }
+
+        const currentMonth = new Date().toISOString().slice(0, 7); // YYYY-MM format
+
+        if (action === 'subscribe') {
+            analytics.totalSubscriptions++;
+            analytics.subscriptionsByMonth[currentMonth] = 
+                (analytics.subscriptionsByMonth[currentMonth] || 0) + 1;
+        } else if (action === 'unsubscribe') {
+            analytics.totalUnsubscriptions++;
+            analytics.unsubscriptionsByMonth[currentMonth] = 
+                (analytics.unsubscriptionsByMonth[currentMonth] || 0) + 1;
+        } else if (action === 'subscription_attempt') {
+            analytics.subscriptionAttempts++;
+            analytics.subscriptionAttemptsByMonth[currentMonth] = 
+                (analytics.subscriptionAttemptsByMonth[currentMonth] || 0) + 1;
+        }
+
+        await store.set('_analytics', JSON.stringify(analytics));
+    } catch (error) {
+        console.error('Error updating analytics:', error);
+        // Don't throw - analytics failure shouldn't break subscription
+    }
 }
 
 async function sendConfirmationEmail(email, confirmationToken) {
