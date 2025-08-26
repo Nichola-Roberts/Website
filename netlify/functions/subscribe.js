@@ -118,10 +118,10 @@ function isValidEmail(email) {
 
 function encryptEmail(email) {
     try {
-        const key = Buffer.from(process.env.ENCRYPTION_KEY || 'default-key-please-change-in-production!', 'utf8');
+        const keyString = process.env.ENCRYPTION_KEY || 'default-key-please-change-in-production!';
+        const key = crypto.createHash('sha256').update(keyString).digest(); // Ensure 32 bytes
         const iv = crypto.randomBytes(16); // Random initialization vector
-        const cipher = crypto.createCipher('aes-256-gcm', key);
-        cipher.setAutoPadding(true);
+        const cipher = crypto.createCipherGCM('aes-256-gcm', key, iv);
         
         let encrypted = cipher.update(email, 'utf8', 'hex');
         encrypted += cipher.final('hex');
@@ -138,7 +138,8 @@ function encryptEmail(email) {
 
 function decryptEmail(encryptedData) {
     try {
-        const key = Buffer.from(process.env.ENCRYPTION_KEY || 'default-key-please-change-in-production!', 'utf8');
+        const keyString = process.env.ENCRYPTION_KEY || 'default-key-please-change-in-production!';
+        const key = crypto.createHash('sha256').update(keyString).digest(); // Ensure 32 bytes
         const parts = encryptedData.split(':');
         
         if (parts.length !== 3) {
@@ -149,9 +150,8 @@ function decryptEmail(encryptedData) {
         const authTag = Buffer.from(parts[1], 'hex');
         const encrypted = parts[2];
         
-        const decipher = crypto.createDecipher('aes-256-gcm', key);
+        const decipher = crypto.createDecipherGCM('aes-256-gcm', key, iv);
         decipher.setAuthTag(authTag);
-        decipher.setAutoPadding(true);
         
         let decrypted = decipher.update(encrypted, 'hex', 'utf8');
         decrypted += decipher.final('utf8');
