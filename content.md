@@ -4,9 +4,7 @@ You’re sitting there, trying to block out your thoughts, trying to focus on th
 
 A lot of actions in life can be explained by not having enough energy.
 
-
 # Energy Landscape
-
 Imagine you’re a ball, standing on a path in front of a vast landscape. There are hills, mountains and valleys. There are paths running everywhere. You see them tracing down the valleys. Winding round the mountains. Branching out. Joining back together. 
 
 These paths represent all the actions you could take. From changing the show on netflix to hanging up the washing. Some paths stretch out far into the distance. For instance, you can just about make out that old pathway. The one you used to dream of. Quitting your job and retraining to follow your passion. But it seems so far away these days.
@@ -19,9 +17,7 @@ Mountains can also represent things that should be easy. Things you’re meant t
 
 You can feel the pull of gravity drawing you down the valleys. And the effort of climbing the mountains. You know which paths you want to take. Which ones slope down. You don’t have to map them out. 
 
-
 # Fluctuations
-
 Our landscapes fluctuate constantly. The ground is always shifting around us and below us. Sometimes small shifts, sometimes monumental. 
 
 Little events can have dramatic consequences. For instance, an unexpected bill arrives in the post. And suddenly, you're halfway up a mountain that wasn’t there before.
@@ -30,17 +26,13 @@ Or one dodgy look from a colleague. And instantly your anxiety rises. Your work 
 
 Luckily a work friend walks past. She notices you’re stressed. And she’s kind enough to listen intently as you talk it through. Now you’re feeling calmer. So you can think more clearly. You realise it was probably just your paranoia anyway. The mountain subsides. And you can concentrate on work again. Phew. 
 
- 
-
 Now imagine you’re a teenager instead. Full of life and feeling excited. You're about to go play football with your friends. However. Just as you’re walking out the door. Your mum shouts your name. She thinks you wound up your brother on purpose. And suddenly you start feeling stressed. It’s awful. But now you can’t go out. You can’t muster up any energy anymore. You just want to go to your bedroom. To be alone. A mountain has formed. 
 
 Maybe you could flatten this mountain. Maybe you could defend yourself. Maybe your mum might be reasonable. Then you can calm down. And go out. Or maybe. Maybe arguing back might trigger one of her mountains. Lead to an escalation. Even more stress. And probably extra punishment. It’s not worth the risk. It’s better to hide your bedroom. 
 
 So you can see our landscapes are inherently chaotic. It's like the butterfly effect. They change in unpredictable ways. Often based on circumstances we don’t know, and can’t control. 
 
-
 # Energy Limit
-
 These moments, when life has pushed us too far. When everything feels impossibly hard. Because all our mental energy is taken up just trying to keep going. This is our energy limit. We hit it. Then we lose our ability to think. And to do pretty much anything. Except feel stressed.
 
 Take this example. Your child goes missing at the park. You shift to survival mode. And the only thing that matters is finding them. Suddenly, even your partner's affair slips your mind. All you care about is this one task. Finding your child. You’re hypervigilant. Focusing on any clues you can spot... Oh, wait. There they are. Everything is fine again. That’s a relief. 
@@ -61,9 +53,7 @@ Sometimes, however, it can last weeks. Like when we were worried about being a f
 
 Understanding this helps explain why we're not lazy or mean. We're just working within our limited energy budget.
 
-
 # Planning 
-
 It's hard to plan our way out of a situation when we’re stressed. It’s like a mountain fog blocks the paths we could take. We can’t see them any more.
 
 Take this example. 
@@ -86,9 +76,7 @@ The days creep by. And lo and behold. Suddenly the day before it’s due you fee
 
 The mountain you felt about starting is now eclipsed by a bigger, much more imposing mountain. This one represents failing your course. It’s taking you up high, right up to your energy limit. But it doesn’t feel like panic. It feels like focus. It’s shutting down your other thoughts. You’re entering fight or flight. All just to create a presentation. 
 
-
 # Relationships
-
 But life isn't only full of climbing mountains. There are also the valleys. The moments that make it all worthwhile. Like falling in love.
 
 Everyone knows the new relationship feeling. You feel happy, blissful even. The world feels new, and full of fresh opportunities. Maybe last week it was hard to get out of bed. But now everything has a purpose. Your whole landscape has shifted. You’ve rolled into a new valley you’ve never been to before. And suddenly everything looks different, much brighter. You feel like a whole new person. 
@@ -105,19 +93,14 @@ But unfortunately life also has heartbreaks. Your partner could call things off.
 
 To make matters worse. Your dad calls when you're feeling particularly sad. He knew you would never be able to hold on to someone so great. What a mess. He was rude to you. And you just took it. Like the old days. Why did you let him say that to you?  Why did you not stand up for yourself?
 
-
 # Emotions
 
-
 ## Navigating 
-
 Our emotions are the signals that tell us about the landscape. They're the clues to the gradient of the slope. Whether we’re heading up a mountain or down into a valley. Each emotion is a cocktail of brain chemicals with a crucial message. Take this path and avoid that one.
 
 We feel happy when we are travelling down. And when we're going up, our body screams to us that we’re going the wrong way.
 
-
 ## Learning
-
 Emotions don't just guide us. They update the landscape itself. Every outcome is fed back into the system. Which is constantly being re-mapped to become a more accurate model of reality. This is how we learn. The emotional data tells us which paths to reinforce, and which ones lead to catastrophic mistakes.
 
 It could be as simple as getting a free cake with your coffee order. It’s amazing. You update your landscape. And just like that. There’s a new downward path leading right back to their doorway. 
@@ -125,8 +108,6 @@ It could be as simple as getting a free cake with your coffee order. It’s amaz
 Or the update could be something big and awful. Like you saw your ex with their new partner at the park. A huge mountain forms. Right over the top of that park. You’re never ever gonna go there again.
 
 Sometimes we’re too stressed, or too busy to process the emotions in the moment. So we mark off a huge area with warning barriers. This is a temporary fix. But we can come back to it later. When it’s safer. Then we can start to sift through what happened, to process the emotions and properly map the terrain.
-
- 
 
 So that evening, after seeing your ex, your mind drifts. You can feel the emotions all over again. You really just hate them. They broke your heart. 
 
@@ -138,23 +119,17 @@ You find an incredible Thai restaurant. That first curry feels so amazing. You s
 
 Then three months later. You order the same curry. It still tastes exactly the same. It’s still amazing. But it's become normal. The emotions have been processed. The paths mapped. So there’s no need for the intensity anymore.
 
-
 # Emotional Overload
-
 Updating the landscape requires processing our emotions. But this means feeling it all. All over again. And that takes energy. A lot of energy if the experience was stressful. And when you're at your limit, that’s energy you just don't have.
 
-
 ## Everyday Overload
-
 Imagine, you're having a fight with your partner. They keep going on. Point after point. Each one is an accusation you have to process. A defense you have to form. You can't think. Your brain is overloaded. You just need it to stop.
 
 You say you need space. They don't listen. They keep going on. You shut down. You can't even hear them anymore. They are just noise. Deafening noise. Internally you are begging for them to stop. You just can't bear it.
 
 The next day they say sorry. They want to talk it over. But you can't. You’ve blocked it out. Marked it off with warning barriers. You want to move on and forget about the whole thing. Pretend it never happened. 
 
-
 ## Trauma
-
 You’re a child. You just fell over, and you’ve really hurt your leg. You start crying. And your mum shouts at you for exaggerating. But you’re not. You can barely walk. Your mum's stressed. She has an important meeting at work and she’s running late taking you to school. It’s her fault though. She lost the house keys. But anyway. She does try. She’s just very stressed. 
 
 You try to walk. But oh my god does it hurt. You keep going. But you're limping along very slowly. You can tell your mum is annoyed. She stares you straight in the eyes, and tells you “*We don’t have time for this. Get yourself together. Why can’t you just be normal for once. Sometimes I wish I’d never had children*” Now that one really, really does hurt. Ouch. 
@@ -167,9 +142,7 @@ You finally get to school. You still can’t concentrate. People try to talk to 
 
 There’s no one to make you feel safe. No one to tell you it wasn’t your fault. So you cry alone in bed that night. Blaming yourself, if only you could be a better child, then maybe your mum would love you better, take care of you better. Maybe you wouldn’t be a burden to her life and she wouldn’t regret your existence.
 
-
 # Core Beliefs
-
 And this is how core beliefs are formed. Often in childhood. Extreme moments that shape our landscape profoundly. These mountains will remain for much of our lives. 
 
 That child had no other options. Their survival depended on their mum. And they learned their landscape. Telling their mum how they felt was a path that only made things worse.
@@ -184,32 +157,24 @@ No. Actually. We do notice them. They’re there in our every action. In our eve
 
 Because they’re our mountains. Our biggest insecurities. Our deepest fears. They are stressful and painful to think about. So we just don’t. But they are still there. Lurking. They’re the “truths” that we map our daily lives around. 
 
-
 ## “I’m worthless”
-
 “I’m worthless” Believes the adult who was told they were a waste of space. 
 
 They don’t dare hope someone might do them a kind deed. Or forgive them for a mistake. They’re always careful. Making sure they never put upon others. Why ask for anything when you know you’re worth nothing. They don’t want to put others in an awkward situation. Don’t want to force them to have to say the truth out loud. They don’t want the hurt of having that pointed out. Yet again. 
 
-
 ## “I’m a failure”
-
 Another child might have been taught “You’re a failure” at school. 
 
 They noticed they were always the last to finish their work. Or the teacher came to check on them more than the others. As they got older they struggled with tests and exams. I mean it’s obvious isn’t it, they just aren’t that clever. When they grew up, they also failed job interviews. They finally got a job at a supermarket. But then it closed down.
 
 Now they go to the job centre. And oh my god is it stressful. It’s so hard for them to think about getting another job. They go to so many interviews. And in every one, they have to face the interviewer. Look them in the eye. And all they can think is, they see it too. They see the failure. They wonder why this person even bothered showing up. Why would anyone hire them?
 
-
 ## "I'm Too Much"
-
 Another child was taught their feelings were too much. When they cried they were told to grow up. When they were excited, they were told to calm down. They learned that their emotions were a dangerous force that pushed people away. 
 
 As an adult, their relationships are filled with anxiety. They’re terrified that if their partner sees their true feelings they will leave. So they try to hold them in. But they can’t. The feelings are too big. And when they finally burst out, they can feel themselves being "too much." And they hate themselves for it.
 
-
 ## “Other People Are More Important"
-
 Sometimes a child will learn they need to prioritise others over themself.
 
 When their parent is always overwhelmed no one takes care of them. No one cooks dinner. No one washes their clothes. They always get shouted at. 
@@ -218,23 +183,25 @@ So they learn to calm their parent. Remove their stresses. Do the washing themse
 
 So the child learns to watch the emotions of others. And it carries on into adulthood. They see it as their job to make sure everyone else is ok. When a friend is sad, they feel sad. And it feels worse than if it was their own emotion. When their partner is stressed, they need to fix it. They don’t feel any peace until everyone else is ok first. 
 
-
 ## “I’m on My Own”
-
 Someone else had a single parent who never had the time to help. They were working two jobs, and were always stressed. When they needed help tying their shoelaces, their mum was too busy. When they needed help with their maths homework, their mum was too busy. When they were being bullied and needed support, their mum was too busy. 
 
 They learnt “I Am on My Own”. So as an adult at work they can’t ask for help. They get in trouble for failing to do tasks. But they still can’t bring themselves to ask for help. When they’re at home their partner asks them how they are. They say I’m fine. What else are they meant to do. They don’t want to burden their partner with the reality of who they are.
 
-
 ## "I Can't Trust Anyone"
+This child was hurt time after time. Their dad was violent. Their mum a drug addict who barely came home. Their grandma punished them for every little thing. Their teacher thought they cried too much. And punishing them for not concentrating was the solution. 
 
-This child was hurt time after time. They kept thinking maybe, if I try this tactic. Or maybe this next person will be different. But it never was. And every false hope made the reveal hurt even more.
+They kept trying new tactics. If I'm nicer to my grandma, maybe she will be kinder. But nothing ever worked.
 
-They learnt vulnerability was a weakness. That would always get them hurt. As an adult they never trust anyone. They never truly let anyone in. Even when they want to. Because that’s the trick. That’s when they get the most hurt. In a world where you can’t trust anyone. You have to learn to be smart. You have to play the system. Learn how to get as much as you can dare, without having to risk yourself. 
+They kept hoping the next person would be different. But their new friend just told everyone their secrets. And then stopped talking to them.
 
+Every false hope caused the final betrayal to hurt even more.
+
+So they learnt vulnerability was a weakness. It would always get them hurt. 
+
+As an adult they never trust anyone. They never truly let anyone in. Even when they want to. Because that’s the trick. That’s when they get hurt the most. In a world where you can’t trust anyone. You have to be smart. You have to play the system. Learn to get what you need. Without risking a thing.
 
 ## “Don’t Trust Reality”
-
 Another child has their reality diminished. 
 
 Maybe their mum forgot their birthday. They casually mentioned it on the day. And their mum even said sorry.
@@ -243,14 +210,10 @@ But then a week later. She said she didn’t forget. That she got them a present
 
 Their mum makes them perform the lie. Makes them say thank you.  It’s getting more confusing. What’s the truth? But the child knows it deep down. They just aren’t allowed to think it anymore. It gets buried down deep inside. And a false narrative lives over the surface.
 
-
 # Triggers
-
 The more mountains someone has the higher their baseline stress. When your landscape’s full of mountains you’re always on high alert. You’re extra vigilant. Those natural fluctuations feel dangerous. Any one of them could trigger you. And you’ll be right up that mountain. So you have to be careful all the time. Particularly around your core beliefs. And the sad thing is. Your optimum path. The steepest downward path is often hidden behind the mountains. So you keep bumping into them. 
 
-
 ## “They’ll see who I really Am”
-
 You just met someone perfect. But that’s what’s scary. No way would someone perfect waste their time with you. They just don’t know you yet. They can’t see who you really are. They can’t see that you’re damaged. That you're emotionally inadequate. The dark truth you carry around with you. 
 
 Of course they aren’t going to stick around for that.
@@ -261,9 +224,7 @@ Now you think about it. You’re actually barely coping. Why are you not feeling
 
 The next date they seem way too into you. They got you a gift. They’re moving too fast. They’ve obviously got issues. This is awkward. The pressure is rising in you. You’ll just hurt them more the longer you leave it. It’s better if you just break up with them now. No. It’s too hard right now. You’ll send them a text later. You didn’t like their hairstyle anyway. It’s not a great loss. You’ve found your path down. It’s just down the mountain. Not down the valley.
 
-
 ## “I’m about to be abandoned"
-
 Your partner hasn’t replied to your text for two hours. It feels like the end of the world. You are about to be abandoned. You can just sense it. 
 
 You’re painfully aware of your mountain. You feel like you are too much. You know you keep pushing people away at times like this. This is why people abandon you. This is why this person is abandoning you.
@@ -278,18 +239,14 @@ Phew. It was just a random fluctuation in the landscape after all.
 
 These linked experiences reinforce our mountains. Turning them into mountain ranges of connecting peaks, all circling around the same dark “truth”.
 
-
 # Emergency Escape Routes 
-
 When you’re up a mountain. Stressed out of your mind. It feels unbearable. You can’t sit with it. You can’t wait until you calm down. It’s killing you. You need to get down. Right now. This very second. 
 
 Your brain’s in crisis. You have no ability to plan ahead. To consider the longer term consequences. To think through the best path. You just need to take the fastest path down. Right now.
 
 This is when we use our emergency exit strategies. The moments in our lives we are probably the least proud of. The ones that fill us with a sense of shame when we look back at them. Everyone has their own set. Heavily dependent on what worked in childhood. 
 
-
 ## Control 
-
 As a child you were neglected. Your parents never had time for you. The only time you got any attention was when you were causing trouble. 
 
 And yes, your parents were angry. But at least in that moment they remembered you existed. You impacted the world. Your brother got told not to wind you up. To let you play on the console. Even though it wasn’t your turn. It was your little glimpse of what love feels like. What it means to feel important.
@@ -314,31 +271,29 @@ Over time your landscape has become manageable. She knows you just can’t cope 
 
 Control is just one kind of exit strategy. There are many others. Some are quiet and turned inwards. Some are loud and aimed at others.
 
-
 ## Distraction
-
 You might have learnt to ignore your emotions. You block them out through compartmentalisation. You distance yourself with logical dissection. You learn to distract yourself with exercise, shopping, food, or self-harm. You scroll endlessly on TikTok. Or you learn to suppress the feeling directly, with drugs or alcohol.
 
-
 ## Desperation
-
 Instead. You might have learnt to make your emotions so loud they are impossible for others to ignore. You might beg and plead when you fear abandonment. “Please, I can’t cope without you”. “I don’t know what I would do if you left”. You feel so desperate. If they could see how deeply you were hurting. Maybe then they would help you down your mountain. 
 
-
 ## Manipulative
-
 You might have learnt the world doesn’t listen to your truth. Your partner wants to go away for the weekend with their family. You can already feel your abandonment mountain creeping in. You know what would happen if you asked them not to go. There would just be an argument. And they would probably still go anyway. So. So you tell them you have a sudden medical appointment. You tell them you need their support. That you're worried.. It's slightly true. It's 3 weeks away. You do feel bad. But the guilt is manageable. At least you can sit with the guilt. You can't sit with abandonment.
 
-
 ## Devaluation 
+Imagine your partner is having a go at you. Going on and on. You didn’t want to go to their work event. Now they are listing every little thing they have done recently. Honestly it’s getting boring. They chose to do these things. You didn’t ask them to. And they shouldn’t have done them if they were going to hold them against you.
 
-You might have learnt you can't stop people hurting you. But that doesn’t help you feel better when they trigger your worst beliefs. You still need to get down your mountains. 
+But then all of a sudden. They got a hit on target. Hit a nerve. And suddenly the boredom has gone. And now you need to stop them. You lose your temper. Say something you know will hurt them. Something that will take them down from their high horse. That you were only with them for their money anyway. You feel proud you know this one will hurt.
 
-Take this scene. Your partner criticised you after dinner with their parents. They said you embarrassed everyone with some of your comments. Your mountain "I ruin everything" is triggered. You feel so anxious and insecure. But there is no way your partner is helping with this. They are just angry with you. And they have so many mummy issues it's unbelievable. They are the one causing all of this. They really need to go to therapy. To start looking at their own flaws. You try to point this out nicely. But they are so un-self aware. They’re a lost cause really. Before you know it you are down your own mountain. It was never about you. But you’ve become enraged at your partner.
+And it does. Now they are saying they want to break up with you. 
 
+Panic hits. It’s just got serious. It feels unbearable. How could they do this?
+
+It's all because they are selfish and self obsessed. They aren't capable of caring about others. A really bad person. And do you know what? You are better off without them. They were never good enough for you anyway. Really you should have left a long time ago.
+
+Suddenly you don’t feel hurt anymore. How could someone as small as them hurt you? It’s not you that’s flawed. It’s them. 
 
 ## Self Sacrifice 
-
 Let’s imagine you were the child who learnt “I am a burden”. You just got bullied at school. You’re relieved to be home. But you're still feeling really upset. It’s hard to get it all off your mind. Your mum gets home from work. She does a double take. She can see you were crying. Oh no. 
 
 Your mum has just worked two shifts. And had an argument with her ex. She looks at you. It sends her even further up her own mountains. This one, in particular, represents her insecurity about being a bad parent. She knows she is failing you. But the thought is too much for her to bear. She snaps. She needs you to be ok. She needs to end the guilt you are creating in her. “Grow up. It’s not the end of the world. I have enough going on already. You'll push me over the edge if you keep this up”
@@ -353,18 +308,17 @@ Everyone has their own strategies. But one thing is always true. When people fee
 
 Now you’re trapped between two mountains. The one you were running from. And the one you built to get away.
 
+## Pushing People Away
+When someone else is infringing on your mountains. You might feel an urge to push them away. Snap. Go cold. Stonewall. Distract them by poking at their own mountains. At least this way they will stop. 
 
 # Protective Structures
-
 These emergency exits get us down the mountain. But we still feel the pain. The core belief has still been triggered.
 
-So over time, we learn a new strategy. We learn to stop the triggers before they even hit us. We build rules and systems to keep people away from our mountains. These are our protective structures.
+So over time, we learn a new strategy. We learn to stop the triggers before they even hit us. We build rules and systems to keep people away from our mountains. Like bypasses, defensive castle walls and watchtowers. These are our protective structures.
 
 And these structures don't feel like a choice. They feel like a right. And it makes sense. We feel entitled not to be hurt.
 
-
 ## Monitoring 
-
 Imagine you grew up believing “I have no autonomy”. As a child, every decision was made for you.
 
 You were told when to wake up. When to go to school. At school, you were told what to do all day. You got home and had to start your homework. Then you had to start your chores. You weren’t allowed to see your friends. Weren’t allowed on your phone. Weren’t allowed to watch TV. Or listen to music. You weren’t even allowed to choose your own clothes. Or the words that were acceptable to say to your father. It was like your whole life happened to you.
@@ -377,9 +331,7 @@ Now you check your partner’s phone constantly. You need to know where they are
 
 Last month they were an hour late. You remember sitting at home. Waiting. Feeling like your life was out of control all over again. You don’t want to control them. You just want control over your own life. 
 
-
 ## Manipulation 
-
 And maybe over time. You learn even that doesn’t work. Maybe you’ve been kind one too many times. But you can see it clearly now. Everyone is playing their own game. Everyone is looking out for themselves. You’ve learnt the world is cruel. And if you don't play the game you lose automatically. 
 
 Your partner wants to go out with their friends. And it would be ok. But not these friends. These friends think you’re bad. But you know what’s really going on. You see through it all. The friends are planting seeds. Suggesting they stand up for themselves more. That they aren’t being treated well. But it’s not fair. Your partner only tells them one side. Not the full story.
@@ -390,11 +342,7 @@ It slips out before you really think about it. You see your partner’s face dro
 
 Maybe you did lie a little. But everyone does. At least you are protecting yourself. You're not naive. You've been stomped on too many times to play fair.
 
- 
-
-
 ## Keeping Score
-
 Maybe you have a mountain representing “I have no value”. 
 
 You feel an unbearable emptiness every time someone doesn’t give back equally. It’s the pain of not being appreciated. Not being valuable enough to be treated well. Every time they forget to reciprocate it hurts. 
@@ -405,9 +353,7 @@ They've also not done the washing up. When it was their turn. And you paid for t
 
 So you start keeping a mental scorecard. Maybe a real spreadsheet. Every interaction is weighed up and measured. You can't help it. It's automatic. You start making rules. Bills have to be split exactly. Chores assigned rigidly. Then at least your value feels provable. You are just making absolutely sure you get your worth back.
 
-
 ## Competence
-
 Maybe your worth is tied to your competence.
 
 Maybe as a child your parents didn’t know how to meet you where you were. Didn’t know how to be there when you fell out with your friends. When you failed your spelling test. When you fell over. 
@@ -430,9 +376,7 @@ And as if this wasn’t bad enough. Later that year someone new joins the team. 
 
 How do you prove your worth now. Being good at your job was the only thing you had. It was the one thing that kept you afloat. The one thing that gave you purpose. And now it’s gone. It’s unbearable. You have to bring them down. You have no alternative.
 
-
 ## Hiding Yourself
-
 Maybe your core belief is “I am different”. 
 
 You feel like people can spot it a mile off. It’s in everything you do. You believe no one would take you seriously if they knew the real you. So you try to hide. To exist in the shadows. You watch everyone else, trying to learn the rules. Trying to work out the correct way. But you always mess it up. Your protective mask always slips. And you can feel them sensing it.
@@ -445,9 +389,7 @@ Maybe it’s a deep secret you hold. Something from childhood that got locked aw
 
 So you are never fully present. You are always calculating how much can you show them. How close can you be without risking it all being taken away.
 
-
 ## Self Sacrifice 
-
 Maybe you protect yourself by always giving. 
 
 You’re the one in the friendship group that’s always there. You lend money. Buy gifts. Listen to everyone’s problems. Maybe even organise the events. You’re indispensable. You know it. They know it. But you have to be. Because you don’t believe you are worth much. 
@@ -462,19 +404,13 @@ So now. When someone thinks a bad thought about you, or says a bad comment, it s
 
 This is the only way you can feel safe. Being able to defend character, your actions. Because if the criticism were true. If, after all that effort, you were still bad. What could you do? What would that say about you?
 
-
 ## Beat Them To It
-
 Maybe you believe everyone has the truth about you ready to go. On the tip of their tongue. Ready to hurt you. So you learn to make that self deprecating joke first. Learn to say “It doesn’t matter anyway”. Learn never to chase that dream job. Or to ask out the person who obviously likes you. You can't stop the pain of the impact. But you can dampen it.
 
-
 # Erosion
-
 Our mountains feel permanent. Insurmountable. But they’re not. They can erode. 
 
-
 ## Time
-
 Think about your worst break up. How it felt like the end of the world. Life didn’t feel like living anymore. You thought you would never recover. Never find a love like that again. 
 
 But looking back 10 years later, the memory feels distant. A bit absurd. It might as well be someone else's life. You can see they were never right for you. 
@@ -489,9 +425,7 @@ And then you remember the day you bumped into them in the street, a few years la
 
 Healing from our core wounds is harder. A core wound is often a mountain range. One we spent our entire lives navigating around. We built paths and protective structures to keep it safe. The paths we use to avoid it are deep and well worn. We rarely feel brave enough to start a different path and look at it head on. 
 
-
 ## Processing
-
 Processing the pain of our past also helps us heal. Often this happens with a safe person. Like in therapy.
 
 A therapist can give you the validation you never got as a child. They might say things like *“Yes, what happened to you was bad.” *or *“You did well to survive that.”* And for the first time. It becomes safe to think maybe it wasn’t your fault. Maybe these aren't failings with you. Maybe what happened to you was enough to break anyone. Maybe you're not actually broken. Maybe you can heal.
@@ -510,9 +444,7 @@ You knew it on some level. But you never truly knew it. You feel relieved. You c
 
 You're not cured. The mountain of unworthiness is still there. But for the first time, you can see it. You can look at it. And it’s ludicrous. Everyone deserves love. You can’t make someone love you by doing tasks.
 
-
 ## Counter Evidence
-
 Nothing has the power to both hurt and heal like romantic relationships. 
 
 Imagine you have a core belief that you are too much. It’s date seven now. And they seem to like you. You’re in the honeymoon period. Free falling down the landscape. Ecstatically happy. All your paths are aligning towards them. It’s starting to feel like meeting them was inevitable. It was fate.
@@ -535,9 +467,7 @@ They really want to know though. So you take the risk. And they listen. Suddenly
 
 And maybe, just maybe your emotions are valid. Maybe you aren't too much. Maybe people don’t leave when they know you better. Maybe sometimes you are emotional. Sometimes you do cry. But that’s ok. They will love you anyway.
 
-
 ## Resolving Friction
-
 But inevitably one day. When you are both stressed. And you both have other things on your mind. You have an argument. And it’s a big one. Your partner was supposed to meet your parents, but they cancelled at the last minute. Said they had to work. It feels suspicious. You're not sure you believe them.
 
 That evening you try to talk to them. But they aren’t listening. You’re feeling unheard and dismissed. You don’t know what to do. They don’t seem to be able to hear you. In your frustration you tell them they’re a rubbish partner. They storm off and won’t answer your calls. It all feels so sudden. So out of character.
@@ -546,21 +476,15 @@ But it turns out your mountains directly oppose each other. Your “I’m too mu
 
 Solving these patterns is where the hard work begins. Years of trial and error. Cycles of hurt and healing. Hoping that somehow you are circling towards each other rather than away. This is where the real erosion happens. And there are no easy answers.
 
-
 ## Opposing Mountains
-
 Our biggest healing often happens through meeting our opposite. The person who naturally finds it hard to give what we need to heal. Anxious attachment meets avoidant. Unworthy meets incapable. True, deep healing comes from being loved by someone who has to overcome their own mountains to love you. 
 
 It can be a gift or a curse, or both depending on the relationship.
 
-
 # Holding Patterns
-
 Eroding isn’t a given in a relationship. Our protective structures can make relationships stable. Often at the expense of erosion. 
 
-
 ## Careful Distance
-
 Your partner forgot to take the bin out. Yet again. It riles you up a little bit. Not enough to start a real fight. But you can’t help but make a sarcastic comment. “I’ll take the bins out myself then shall I?”. They look at you. They know exactly what you meant. They answer you back. “Well, I did walk the dog twice today.”
 
 You want to say more. But you know to just leave it. You said your piece. Made your point the only way you know how. Neither of you have ever worked out how to feel heard in this situation. Nothing you’ve tried has ever worked. 
@@ -571,9 +495,7 @@ You both know the games and the moves by now.
 
 Over time you’re drifting further apart. You still love them. But they feel so far away sometimes. 
 
-
 ## Oscillating Closeness 
-
 Some couples find stability through intense cycles.
 
 You’re very, very deeply in love. So is your partner. But you can’t seem to make it work. You seem to constantly trigger each other. Your relationship has become a battle ground. You can’t help but think. Maybe it’s just a trauma bond now. 
@@ -590,134 +512,116 @@ Over time you build more and more paths through the multiple breakups. Maybe you
 
 Maybe this is true love trying to find a way. Maybe it’s just dysfunction. You just don’t know. It would be easier if someone just told you. 
 
-
 # False Erosion 
-
 Sometimes we believe we are becoming a better person. That we are healing ourselves. But it’s just another form of avoidance. 
 
-
 ## Reassurance Seeking
-
 You’ve read the books. Been to therapy. Done the work. Learnt to be brave and communicate your needs. Even if they aren’t always well received. You are doing what is right for you.
 
 So it’s friday night. Your partner wants to go out with their friends. You can feel your abandonment fear creeping in. But that’s ok. You understand what to do. You just need to name it. You say to your partner. “I’m feeling really anxious about you going out. Can we just talk through my feelings first? Then you can go out.” 
 
-You feel so mature. You’ve done something to be proud of. You finally feel like you are growing. Learning to take up some space. You’ve learnt to explain your anxiety. And how it connects to your childhood wounds. 
+You feel mature. You finally feel like you are growing. Learning to take up some space. You’ve learnt to explain your anxiety. And how it connects to your childhood wounds. 
 
-You just need some reassurance. It’s asking for what you need. Exactly what you are meant to do. But by the time you feel calm it's too late for them to go out. 
+You just need some reassurance to help with your anxiety. It’s asking for what you need. Exactly what you’re meant to do. But by the time you feel calm. They say they can’t be bothered to go out now.
 
-They do seem a bit frustrated. You can understand that. But you’re their partner. They should want to care for you when they are struggling. You are just sharing your needs. You don’t realise it’s just become a new, enlightened form of control. 
-
+They do seem a bit frustrated. You can understand that. But you’re their partner. They should want to care for you when you’re struggling. You’re just sharing your needs. What you don’t realise. Is that expressing your needs has just become a new, more enlightened form of control. 
 
 ## Being Upfront 
+Maybe you have completely mapped out your own patterns. You’ve learnt to accept you are flawed, and that’s ok. It’s taken a lot of work.
 
-Maybe you have completely mapped out your own patterns. You’ve learnt to accept you are flawed, and that’s ok. 
+You meet someone new. It’s only fair you tell them about yourself up front. “I have anxiety issues. Sometimes I need extra support. If this is too much for you, I understand”.* *You’re being clear aren’t you. You need someone who can handle you. This way you know the relationship works for both of you. Before you get too invested.
 
-You meet someone new. It’s only fair you tell them about yourself up front. *“I have anxiety issues. Sometimes I need extra support. If this is too much for you I understand”. *You’re being clear aren’t you. You need someone who can handle you. This way you know the relationship works for both of you. 
+On your 5th date. Their mum calls. They look stressed. They say “I’m sorry this is really important. I need to go. I’m so sorry.” You don’t like it. If it’s not their mum it's their best friend. Or their niece. There’s always someone more important than you. You just want to feel important to your partner. It’s a familiar hurt. Because it reminds you of your emotionally distant mother always prioritising your sister. 
 
-On your 5th date. Their mum calls. “*I’m sorry this is really important. I need to go. I’m sorry.”*. You don’t like it. It’s always someone. If it’s not their mum it's their best friend. You want to feel important to your partner. Especially as you had an emotionally distant mother who prioritised your sister. 
+It’s time to stand your ground isn’t it. If they can’t prioritise you now when will they ever be able to. You are clear. You are being boundaried. “I told you this up front. You knew what you were getting into. But if I am too much for you. We’d just better end it now”. 
 
-It’s time to stand your ground isn’t it. If they can’t prioritise you now when will they ever be able to. You are clear and boundaried. *“I told you this up front. You knew what you were getting into. But if I am too much for you. We’d just better end it now”*. 
-
-Now they are trapped between a rock and a hard place.
-
+Now they are trapped between a rock and a hard place. Your upfront declaration has worked. You have silenced them. The relationship now runs on your terms.
 
 ## Codependence Boundary
+You know all about codependence. You’ve been there. Bought the t-shirt. And you know it’s not healthy.
 
-Maybe you know all about codependence. You’ve been there. Bought the t-shirt. You know it’s not a healthy way to have relationships.
+Partners in the past always expected too much. For you to take care of their emotions.
 
-Partners in the past have expected you to take care of their emotions. Come running whenever they call. You know that they have issues. They need to learn independence. They always want to change you. Never again. 
+To come running whenever they called. They had issues. They needed to learn independence. They always wanted to change you. Never again. 
 
-You’ve told your partner sometimes you need space. Sometimes you get overwhelmed and just need some time to yourself. They seemed to accept it at the time. They said they understand. They seemed reasonable. 
+You’ve told your new partner that sometimes you need space. Sometimes you get overwhelmed and just need some time to yourself. They seemed to accept it. They said they understood. They came across reasonable at the time.
 
-But then in an argument. They bring it up. Hold it against you. And it triggers something in you. 
+But then, in an argument. They bring it up. Hold it against you. And it triggers something in you. 
 
-You are really trying to be a good partner in this relationship. Sometimes you push way beyond your comfort level. And they don’t seem to get it. They don’t appreciate your efforts. 
+You are really trying to be a good partner in this relationship. But sometimes you push way beyond your comfort level. And they just don’t seem to get it. They don’t appreciate your efforts. 
 
-Sometimes they message you too much. You sometimes have to force yourself to reply. So you don’t hurt their feelings. Sometimes they want to cuddle too much. You do understand. But you’ve been cuddling beyond your comfort level so you don’t hurt their feelings. 
+Sometimes they message you too much. You force yourself to reply, just so you don’t hurt their feelings. Sometimes they want to cuddle too much. You do it. Even though it’s way beyond your comfort level. You don’t want to hurt their feelings. But it’s smoothening.
 
-Can they not see how hard you are trying. It’s exhausting. You just need some space before you blow. This is for their sake too. You don’t want to hurt them. They need to understand you can’t meet all their needs. They are becoming codependent. It’s not healthy. 
+Can they not see how hard you are trying? It’s exhausting. You just need some space before you blow. This is for their sake too. You don’t want to hurt them. They need to understand you cannot meet all their needs. They are becoming codependent. And it’s not healthy. 
 
-You start trying to carve out a bit more space. Not to be mean. You just want this relationship to work. So you need to try to make it healthy. 
+You start carving out a bit more space. You’re not trying to be mean. You want this relationship to work. You want it to be healthy. 
 
-They seem to sense you creating distance. Even though you’ve been careful to hide it. You don’t want to hurt their feelings. But this is even more evidence that they are too focused on you. They need to learn to focus on themselves and their own independence.
+But they sense the distance. Even though you’ve been so careful to hide it. You don’t want to hurt their feelings. But this is just more evidence. They’re too focused on you. They need to focus on themselves. On their own independence.
 
-Next time you see them. They try to bring it up. You tell them clearly.  *“Healthy relationships require space. Maybe you should see a therapist about why you need so much external validation”.*
+Next time you see them. They try to bring it up. You shut it down. “Healthy relationships require space. Maybe you should see a therapist about why you need so much external validation”.
 
 You mean it. You really do want this relationship to work. You need them to be healthier. Anyone would feel suffocated with what they are asking for. 
 
 Your core belief. That you aren’t capable of intimate relationships has turned into a hard boundary. A rule your partner has no choice but to learn to follow. Neither of you are healing. Just avoiding. 
 
-
 ## Labeller
+Maybe you really understand human behaviour. You can see every one of your partners' mountains in real time. You see all the work they need to do. And you want to help them. It’s not just for you. They would be happier too. So every time you see them acting out of insecurity you tell them. In a very supportive and caring way.
 
-Maybe you really understand human behaviour. You can see every one of your partners' mountains in real time. You see all the work they need to do. And you want to help them. Make things easier for you both. You would both be happier. So every time you see them acting out of insecurity you tell them. In a calm, clear and supportive way. 
+And they hear it. They acknowledge what you’re saying. They can see it too. They understand it intellectually. But it doesn't seem to be helping. They are still repeating the same patterns. Over and over. 
 
-And they hear it. They acknowledge what you are saying. Say they agree. They understand it intellectually. But it doesn't seem to be helping. They are repeating the same patterns over and over. 
+The issue is, you can’t heal mountains intellectually. And every time you point out their insecurity, you’re just triggering it. With pinpoint accuracy. And well, you know, that’s got to hurt.
 
-The issue is. You can’t heal mountains intellectually. And every time you tell them their insecurity. You are just triggering it with pin point accuracy. And, well you know, that’s got to hurt.
-
-And sometimes. Occasionally. They have just had a long day at work. Their mood isn't caused by their father's abandonment. It's just a long day.
-
+And sometimes. They have just had a long day at work. Their mood isn't caused by their father's abandonment. It's just been a long day.
 
 ## Understanding
+Even being the understanding, accommodating partner can be a form of avoidance. Maybe you believe you are unworthy of true love. You think you can only be accepted if you hide parts of yourself. That you are, simply, too much to expect people to be able to cope with.
 
-Even being the understanding, accommodating partner can be a form of avoidance. Maybe you have an insecurity about being unworthy of love. You think you couldn’t be loved if you didn’t hide parts of you. Maybe you believe you are too much. 
+And maybe your partner has a core belief of their own. That they are unable to love fully. That some part of them is broken. But you see them clearly. You understand them. They’re doing their best. It’s just their trauma, their upbringing, their insecurities speaking. So you are always accommodating towards them. Because you know it’s not their fault. 
 
-And maybe your partner has a belief that they are unable to love fully. That some part of them is broken. But you see them clearly. You understand them. They are doing their best. It’s just their trauma, their upbringing, their insecurities speaking. So you are always accommodating towards them. Because you know it’s not their fault. But it’s at the expense of your own mountains. 
+But this understanding comes at a cost. It’s strengthening your own mountains. It's confirming that there are parts of you that need to be hidden away.
 
-And you aren't helping them with mountains either. They can see they are hurting you. That you are trying desperately to be ok. When you are not. They are learning their partner has to hurt just to love them. To cope with their inadequacies. And it's confirming there are parts of you that you have to keep away from them. Your needs don’t fit into this loving relationship. Your full self is too much.
-
+And you aren't helping with their mountains either. They can see they’re hurting you. That you’re trying desperately to be ok. When you’re not. So they are learning a lesson of their own. For them to be loved, their partner must be in pain. That loving them means coping with their inadequacies. And that just confirms their deepest fear. That some part of them is broken.
 
 ## Wrong Mountains
+Maybe you think you know your mountains. But you haven't gone deep enough.
 
-Maybe you think you know your mountains. But you haven’t gone deep enough. 
+You think you know the problem. People don’t listen to you. It happens all the time. And it feels horrible. Hard to sit with. So this must be the mountain. Your core belief must be, “I don’t deserve to be heard.” It all makes perfect sense.
 
-Maybe you think your problem is that people don’t listen to you. It keeps happening to you. And it feels horrible. It’s hard to sit with. So it must be your mountain. Your core belief must be “I don’t deserve to feel heard”. It makes sense.
+It happens everywhere. You tell your partner about your day. They just scroll on their phone. You share your ideas at work. People just talk over you. Even your friends can’t seem to listen.
 
-It always happens. When you tell your partner about your day they just scroll on their own. You share your ideas at work and people just talk over you. Even your friends can’t seem to listen to you 
+So you work on a solution. You speak more assertively. You set boundaries about being interrupted. You tell your partner. “When you don’t listen to me. It really hurts. I need to feel heard in this relationship”
 
-So you work on speaking more assertively. Setting boundaries about being interrupted. You tell your partner. “*When you don’t listen to me. It really hurts. I need to feel heard in this relationship*”
-
-But somehow it gets worse. The more you demand attention. The more people stop listening. Your partner says you’re exhausting. You always need validation. And you always steer the conversation back to yourself. 
+But somehow it gets worse. The more you demand attention. The more people stop listening. Your partner says you’re exhausting. That you always need validation. That you always steer the conversation back to yourself.
 
 You’re confused. Aren’t you just asking for basic respect? To be heard? How can that be too much?  
 
-But your mountain isn’t “I deserve to be heard”. It’s” I have no value”. It’s buried down much much deeper. 
+But your mountain isn’t “I deserve to be heard”. It’s ”I have no worth”. It’s buried down much, much deeper. 
 
-And every time someone doesn’t listen. It triggers your mountain. Confirms you’re worthless. 
+And every time someone doesn’t listen. It triggers your mountain. It confirms you’re worthless. 
 
-So you’ve built a protective structure for it. Boundaries about being heard. But whenever someone questions your structure. You feel your true mountain. 
+So you built a protective structure. A boundary around being heard. But when people push back against that boundary, they aren’t just questioning the structure. They’re knocking it up against your real mountain.
 
-And the hard truth is. You do exhaust people with your protective structure. You do always steer conversations back to you. But now people’s natural reactions hit you exactly where it hurts. 
-
-# Conclusion 
-I would love to carry on writing and tell you all the answers on how to heal. But that would be disingenuous. 
-
-All I can hope is that but gaining some intellectual understand people can watch and understand themselves and others in real time. 
-
-And I hope that over time this understanding leads to small amounts of extra energy. And this allows people to start making slightly better decisions.
-
-## Scientific Underpinning
-This is a scientific theory.
-
-It leads to a better understanding of many concepts in psychology. 
-For instance, try mapping out borderline personality disorder or narcissism with this framework.
+And the hard truth is. You do exhaust people with your protective structure. You do always steer conversations back to you. But now people’s natural reactions hit you exactly where it hurts the most. 
 
 
-### Postulates
-* The brain just wants to build the most accurate energy landscape possible about the things it cares about
-* Paths map to neural circuits.
-* The energy limit is a protective metabolic threshold.
-* Even thinking uses ATP to power neural pathways.
-* Emotions became a proxy for energy over time from evolution. To move the signal further away from the outcome. 
-* An emotion is our fuzzy label for a neurochemical state.
-* Learning is a form of gradient descent.
-* Neural pathways can be gated by specific chemicals.
-* Stress chemicals block other pathways.
-* A social reward function maps onto this landscape (to be explored in a subsequent theory).
-* Evolution also developed an intrinsic reward for intellectual "aha" moments.
 
+# Author's Note
+I’m sure many people will want me to carry on writing. To turn this into a self help guide. “10 Easy Steps to Identify Your Mountains”. But that would be disingenuous. There are no easy answers. 
 
-## Mailing List
+My belief is that the answers can only live within you. The individual. We all have our own landscapes. One person’s erosion is another person’s avoidance. We should never try to judge another person’s landscape. We can’t prescribe the perfect cure for someone else. As we can never know which paths they have available. 
+
+I believe we have to look deep within ourselves to find what is true. What are our best paths. But this is hard. There is so much noise. What our partner says. What our parents say. What our friends say. What our therapist says. What society says. And maybe loudest of all, what our mountains say. Deciphering the way to head is an almost impossible task. Especially when so many of them have their own agendas which may not align with what is best for us.
+
+My only hope is this framework offers a new perspective. A new way to watch your life play out in real time. Maybe with a bit more clarity. To see your own patterns. The patterns of others in your life. And think maybe I understand them a little bit better now. And maybe over time that will free up a little bit of energy to start making slightly different choices. And maybe that first set of new choices don’t work. But maybe the 6th set does. 
+
+There are no simple solutions. Understanding doesn’t mean always empathising with others. Nor does it mean always setting boundaries. From my experience, the brain has an amazing ability to misdirect us from looking at what we really need to see. Because that’s how it learnt to keep safe. However it also deeply wants to heal. I have found the biggest sign of healing isn’t mastering techniques. It’s when you’ve realised you’ve stopped calculating the optimum way to be loved. And learnt how to just live. 
+
+Which is a lot easier said than done. Especially when the modern world is so damaging. 
+
+# Underpinnings
+This theory builds on and unifies many existing concepts in psychology. Attachment Theory. Schema Theory. Internal Family Systems. Cognitive Load Theory. Emotionally Focused Therapy.
+
+It also adds mechanisms to these concepts. Helping to map out the simple and the complicated. For instance try mapping out borderline personality disorder or narcissism with this framework.
+
+# Mailing List
 I am also writing a book based on my theory. If you would like to be emailed about its release you can <a href="#" class="mailing-list-link">join my mailing list</a>
