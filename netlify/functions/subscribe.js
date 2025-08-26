@@ -1,7 +1,7 @@
 // Netlify Function to handle mailing list subscriptions
 // Uses Netlify Blobs for subscriber storage with email encryption
 
-const { getStore } = require('@netlify/blobs');
+// const { getStore } = require('@netlify/blobs');
 const crypto = require('crypto');
 const AWS = require('aws-sdk');
 
@@ -42,49 +42,17 @@ exports.handler = async (event, context) => {
             };
         }
 
-        // Get the Netlify Blobs store
-        const store = getStore('subscribers');
-        
-        // Check if email already exists using hash
-        const emailKey = hashEmail(email.toLowerCase());
-        try {
-            await store.get(emailKey);
-            return {
-                statusCode: 409,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*'
-                },
-                body: JSON.stringify({ error: 'Email already subscribed' })
-            };
-        } catch (err) {
-            // Email doesn't exist, which is what we want
-        }
-
-        // Encrypt email for storage
-        const encryptedEmail = encryptEmail(email.toLowerCase());
+        // TODO: Implement proper storage later
+        console.log('Email subscription request for:', email.toLowerCase());
         
         // Generate confirmation token
         const confirmationToken = crypto.randomBytes(32).toString('hex');
-        
-        // Store subscriber data with encrypted email and pending status
-        const subscriberData = {
-            email: encryptedEmail,
-            subscribedAt: new Date().toISOString(),
-            status: 'pending',
-            source: 'website',
-            confirmationToken: confirmationToken,
-            confirmationExpires: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() // 24 hours
-        };
-
-        // Use hash of email as key for lookups
-        await store.set(emailKey, JSON.stringify(subscriberData));
 
         // Send confirmation email
         await sendConfirmationEmail(email.toLowerCase(), confirmationToken);
 
-        // Update analytics for subscription attempt (actual subscription counted on confirm)
-        await updateAnalytics(store, 'subscription_attempt');
+        // TODO: Update analytics later
+        console.log('Subscription attempt logged');
 
         return {
             statusCode: 200,
