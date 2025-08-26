@@ -100,13 +100,18 @@ exports.handler = async (event, context) => {
 
     } catch (error) {
         console.error('Error subscribing email:', error);
+        console.error('Error stack:', error.stack);
+        console.error('Error message:', error.message);
         return {
             statusCode: 500,
             headers: {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*'
             },
-            body: JSON.stringify({ error: 'Internal server error' })
+            body: JSON.stringify({ 
+                error: 'Internal server error',
+                details: error.message // Remove this in production
+            })
         };
     }
 };
