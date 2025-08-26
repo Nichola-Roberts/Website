@@ -170,7 +170,7 @@ function hashEmail(email) {
 
 async function sendConfirmationEmail(email, confirmationToken) {
     try {
-        const fromEmail = process.env.FROM_EMAIL || 'noreply@yoursite.com';
+        const fromEmail = process.env.SES_FROM_ADDRESS || process.env.FROM_EMAIL || 'noreply@yoursite.com';
         const confirmationUrl = `${process.env.MY_URL || 'https://yoursite.netlify.app'}/.netlify/functions/confirm?token=${confirmationToken}`;
         
         const subject = 'Please confirm your subscription - Energy Landscape Theory';
