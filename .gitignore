@@ -1,7 +1,5 @@
-scripts-backup.js
-notes-backup.js
-server.log
-transfer-management.js
-transfer.js
-test-notes.html
-old/
+node_modules/
+.env
+.env.local
+local-test.js
+test-*.js

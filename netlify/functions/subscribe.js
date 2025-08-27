@@ -172,15 +172,13 @@ function encryptEmail(email) {
         const keyString = process.env.ENCRYPTION_KEY || 'default-key-please-change-in-production!';
         const key = crypto.createHash('sha256').update(keyString).digest(); // Ensure 32 bytes
         const iv = crypto.randomBytes(16); // Random initialization vector
-        const cipher = crypto.createCipherGCM('aes-256-gcm', key, iv);
+        const cipher = crypto.createCipheriv('aes-256-cbc', key, iv);
         
         let encrypted = cipher.update(email, 'utf8', 'hex');
         encrypted += cipher.final('hex');
         
-        const authTag = cipher.getAuthTag();
-        
-        // Return IV + AuthTag + Encrypted data (all hex encoded)
-        return iv.toString('hex') + ':' + authTag.toString('hex') + ':' + encrypted;
+        // Return IV + Encrypted data (all hex encoded)
+        return iv.toString('hex') + ':' + encrypted;
     } catch (error) {
         console.error('Encryption error:', error);
         throw new Error('Failed to encrypt email');
@@ -193,16 +191,14 @@ function decryptEmail(encryptedData) {
         const key = crypto.createHash('sha256').update(keyString).digest(); // Ensure 32 bytes
         const parts = encryptedData.split(':');
         
-        if (parts.length !== 3) {
+        if (parts.length !== 2) {
             throw new Error('Invalid encrypted data format');
         }
         
         const iv = Buffer.from(parts[0], 'hex');
-        const authTag = Buffer.from(parts[1], 'hex');
-        const encrypted = parts[2];
+        const encrypted = parts[1];
         
-        const decipher = crypto.createDecipherGCM('aes-256-gcm', key, iv);
-        decipher.setAuthTag(authTag);
+        const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
         
         let decrypted = decipher.update(encrypted, 'hex', 'utf8');
         decrypted += decipher.final('utf8');
