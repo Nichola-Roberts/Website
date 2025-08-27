@@ -29,12 +29,13 @@ class ReadingTimeManager {
     }
     
     createBottomTimeDisplay() {
-        // Always create reading time display (can be disabled for current page only)
+        // Create reading time display (default to disabled)
         
         // Create bottom reading time display
         this.elements.bottomTimeDisplay = document.createElement('div');
         this.elements.bottomTimeDisplay.className = 'bottom-reading-time';
         this.elements.bottomTimeDisplay.id = 'bottomReadingTime';
+        this.elements.bottomTimeDisplay.style.display = 'none'; // Default to hidden
         
         // Create time span
         this.elements.timeSpan = document.createElement('span');

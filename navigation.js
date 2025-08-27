@@ -18,6 +18,7 @@ class Navigation {
         this.dragStartY = 0;
         this.scrollStartY = 0;
         this.scrollUpdateRequested = false;
+        this.autoHideTimeout = null;
         
         this.init();
     }
@@ -128,12 +129,12 @@ class Navigation {
     initScrollIndicator() {
         if (!this.scrollIndicator) return;
         
-        // Show scroll indicator immediately
-        this.scrollIndicator.classList.add('visible');
-        
         // Update scroll indicator on scroll - maximum speed with requestAnimationFrame
         let scrollTimeout;
         window.addEventListener('scroll', () => {
+            // Show indicator when scrolling starts
+            this.showScrollIndicator();
+            
             if (!this.scrollUpdateRequested) {
                 this.scrollUpdateRequested = true;
                 // Add scrolling class to disable transitions
@@ -150,7 +151,27 @@ class Navigation {
                     this.scrollIndicator.classList.remove('scrolling');
                 }, 150);
             }
+            
+            // Auto-hide after scrolling stops
+            clearTimeout(this.autoHideTimeout);
+            this.autoHideTimeout = setTimeout(() => {
+                this.hideScrollIndicator();
+            }, 2000); // Hide after 2 seconds
         }, { passive: true });
+        
+        // Handle mouse enter/leave for auto-hide prevention
+        this.scrollIndicator.addEventListener('mouseenter', () => {
+            clearTimeout(this.autoHideTimeout);
+            this.showScrollIndicator();
+        });
+        
+        this.scrollIndicator.addEventListener('mouseleave', () => {
+            if (!this.isDragging) {
+                this.autoHideTimeout = setTimeout(() => {
+                    this.hideScrollIndicator();
+                }, 1000); // Shorter delay after mouse leave
+            }
+        });
         
         // Handle scroll indicator dragging - Mouse events
         this.scrollIndicator.addEventListener('mousedown', (e) => {
@@ -170,6 +191,7 @@ class Navigation {
         // Handle scroll indicator dragging - Touch events
         this.scrollIndicator.addEventListener('touchstart', (e) => {
             this.startDragging(e.touches[0]);
+            clearTimeout(this.autoHideTimeout);
         }, { passive: false });
         
         document.addEventListener('touchmove', (e) => {
@@ -192,13 +214,18 @@ class Navigation {
         
         if (docHeight <= 0) return;
         
+        // Calculate scroll percentage (0 to 1)
         const scrollPercent = Math.max(0, Math.min(1, scrollTop / docHeight));
+        
+        // Get available space for indicator movement
         const viewportHeight = window.innerHeight;
         const indicatorHeight = 80;
         const margin = 10;
-        const maxTop = viewportHeight - indicatorHeight - margin;
-        const minTop = margin;
-        const topPosition = minTop + (scrollPercent * (maxTop - minTop));
+        const availableHeight = viewportHeight - (2 * margin);
+        const scrollableHeight = availableHeight - indicatorHeight;
+        
+        // Position indicator based on scroll percentage
+        const topPosition = margin + (scrollPercent * scrollableHeight);
         
         // Immediate update with no transition
         this.scrollIndicator.style.top = `${topPosition}px`;
@@ -210,6 +237,11 @@ class Navigation {
         this.scrollStartY = window.pageYOffset;
         this.scrollIndicator.classList.add('dragging');
         document.body.classList.add('dragging-scroll');
+        
+        // Temporarily disable smooth scrolling during drag
+        document.documentElement.style.scrollBehavior = 'auto';
+        
+        clearTimeout(this.autoHideTimeout);
         e.preventDefault();
     }
     
@@ -217,16 +249,17 @@ class Navigation {
         if (!this.isDragging) return;
         
         const deltaY = e.clientY - this.dragStartY;
-        const indicatorHeight = 80; // Height of the scroll indicator
+        const indicatorHeight = 80;
         const windowHeight = window.innerHeight;
         const documentHeight = document.documentElement.scrollHeight - windowHeight;
-        
-        // Calculate the usable scroll area (window height minus indicator height and margins)
         const margin = 10;
-        const scrollableArea = windowHeight - indicatorHeight - (2 * margin);
+        
+        // Use same calculation as updateScrollIndicator for consistency
+        const availableHeight = windowHeight - (2 * margin);
+        const scrollableHeight = availableHeight - indicatorHeight;
         
         // Convert mouse movement to scroll position
-        const scrollDelta = (deltaY / scrollableArea) * documentHeight;
+        const scrollDelta = (deltaY / scrollableHeight) * documentHeight;
         const newScrollY = Math.max(0, Math.min(this.scrollStartY + scrollDelta, documentHeight));
         
         window.scrollTo(0, newScrollY);
@@ -238,6 +271,25 @@ class Navigation {
         this.isDragging = false;
         this.scrollIndicator.classList.remove('dragging');
         document.body.classList.remove('dragging-scroll');
+        
+        // Restore smooth scrolling
+        document.documentElement.style.scrollBehavior = 'smooth';
+        
+        // Resume auto-hide timer after dragging
+        clearTimeout(this.autoHideTimeout);
+        this.autoHideTimeout = setTimeout(() => {
+            this.hideScrollIndicator();
+        }, 2000);
+    }
+    
+    showScrollIndicator() {
+        if (!this.scrollIndicator) return;
+        this.scrollIndicator.classList.add('visible');
+    }
+    
+    hideScrollIndicator() {
+        if (!this.scrollIndicator || this.isDragging) return;
+        this.scrollIndicator.classList.remove('visible');
     }
 }
 

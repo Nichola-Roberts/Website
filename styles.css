@@ -417,9 +417,20 @@ body.focus-mode h2 {
     border-radius: var(--space-1);
 }
 
-.font-button:hover {
+.font-button:hover,
+.font-button:focus,
+.font-button:active {
     background-color: var(--color-sage-dark);
     color: white;
+}
+
+/* Better touch handling for mobile devices */
+@media (hover: none) and (pointer: coarse) {
+    .font-button:active {
+        background-color: var(--color-sage-dark);
+        color: white;
+        transform: scale(0.95);
+    }
 }
 
 .font-button svg {
@@ -431,6 +442,12 @@ body.focus-mode h2 {
 
 /* Highlight focus button when active (when in fade mode) */
 body:not(.focus-mode) .focus-toggle {
+    background-color: var(--color-sage-dark) !important;
+    color: white !important;
+}
+
+/* Highlight reading time button when active */
+.reading-time-toggle.active {
     background-color: var(--color-sage-dark) !important;
     color: white !important;
 }
@@ -648,15 +665,14 @@ body:not(.focus-mode) .focus-toggle {
 .scroll-indicator {
     position: fixed;
     right: var(--space-5);
-    top: 50%;
+    top: 0; /* JavaScript will handle positioning */
     width: 4px;
     height: 80px;
     background-color: var(--color-sage-dark);
     border-radius: 2px;
-    transform: translateY(-50%);
     transform-origin: center;
     opacity: 0;
-    transition: opacity var(--duration-base) var(--ease-out);
+    transition: opacity var(--duration-base) var(--ease-out), top var(--duration-fast) var(--ease-out);
     z-index: 1001;
     pointer-events: none;
     cursor: pointer;

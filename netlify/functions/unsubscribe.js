@@ -1,8 +1,14 @@
 // Netlify Function to handle mailing list unsubscribes
-// Uses Netlify Blobs for subscriber storage with email encryption
+// Uses Neon PostgreSQL database for subscriber storage with email encryption
 
-const { getStore } = require('@netlify/blobs');
+const { Pool } = require('pg');
 const crypto = require('crypto');
+
+// Create connection pool for Neon PostgreSQL
+const pool = new Pool({
+    connectionString: process.env.NETLIFY_DATABASE_URL,
+    ssl: { rejectUnauthorized: false }
+});
 
 exports.handler = async (event, context) => {
     // Allow both POST and GET requests for unsubscribe links
@@ -40,16 +46,14 @@ exports.handler = async (event, context) => {
             };
         }
 
-        // Get the Netlify Blobs store
-        const store = getStore('subscribers');
-        
         // Check if email exists using hash
-        const emailKey = hashEmail(email.toLowerCase());
-        let subscriberData;
-        try {
-            const data = await store.get(emailKey);
-            subscriberData = JSON.parse(data);
-        } catch (err) {
+        const emailHash = hashEmail(email.toLowerCase());
+        const subscriber = await pool.query(
+            'SELECT id, status, subscribed_at, source FROM subscribers WHERE email_hash = $1',
+            [emailHash]
+        );
+        
+        if (subscriber.rows.length === 0) {
             return {
                 statusCode: 404,
                 headers: {
@@ -60,19 +64,19 @@ exports.handler = async (event, context) => {
             };
         }
 
-        // Soft delete: remove personal data but keep metrics data
-        const anonymizedData = {
-            email: "[deleted]",
-            subscribedAt: subscriberData.subscribedAt,
-            unsubscribedAt: new Date().toISOString(),
-            status: "unsubscribed_deleted",
-            source: subscriberData.source
-        };
-
-        await store.set(emailKey, JSON.stringify(anonymizedData));
+        const subscriberData = subscriber.rows[0];
+        
+        // Update subscriber record - soft delete but keep analytics data
+        await pool.query(`
+            UPDATE subscribers 
+            SET status = 'unsubscribed',
+                encrypted_email = '[deleted]',
+                unsubscribed_at = CURRENT_TIMESTAMP
+            WHERE email_hash = $1
+        `, [emailHash]);
         
         // Update analytics
-        await updateAnalytics(store, 'unsubscribe');
+        await updateAnalytics('unsubscribe');
 
         return {
             statusCode: 200,
@@ -109,35 +113,30 @@ function hashEmail(email) {
     return crypto.createHash('sha256').update(email).digest('hex');
 }
 
-async function updateAnalytics(store, action) {
+async function updateAnalytics(action) {
     try {
-        let analytics;
-        try {
-            const analyticsData = await store.get('_analytics');
-            analytics = JSON.parse(analyticsData);
-        } catch (err) {
-            // Analytics blob doesn't exist, create new one
-            analytics = {
-                totalSubscriptions: 0,
-                totalUnsubscriptions: 0,
-                subscriptionsByMonth: {},
-                unsubscriptionsByMonth: {}
-            };
-        }
-
         const currentMonth = new Date().toISOString().slice(0, 7); // YYYY-MM format
-
-        if (action === 'subscribe') {
-            analytics.totalSubscriptions++;
-            analytics.subscriptionsByMonth[currentMonth] = 
-                (analytics.subscriptionsByMonth[currentMonth] || 0) + 1;
-        } else if (action === 'unsubscribe') {
-            analytics.totalUnsubscriptions++;
-            analytics.unsubscriptionsByMonth[currentMonth] = 
-                (analytics.unsubscriptionsByMonth[currentMonth] || 0) + 1;
-        }
-
-        await store.set('_analytics', JSON.stringify(analytics));
+        
+        // Update total counts
+        await pool.query(`
+            INSERT INTO analytics (metric_name, metric_value, month)
+            VALUES ($1, 1, NULL)
+            ON CONFLICT (metric_name, month)
+            DO UPDATE SET 
+                metric_value = analytics.metric_value + 1,
+                updated_at = CURRENT_TIMESTAMP
+        `, [`total_${action}s`]);
+        
+        // Update monthly counts
+        await pool.query(`
+            INSERT INTO analytics (metric_name, metric_value, month)
+            VALUES ($1, 1, $2)
+            ON CONFLICT (metric_name, month)
+            DO UPDATE SET 
+                metric_value = analytics.metric_value + 1,
+                updated_at = CURRENT_TIMESTAMP
+        `, [`${action}s`, currentMonth]);
+        
     } catch (error) {
         console.error('Error updating analytics:', error);
         // Don't throw - analytics failure shouldn't break subscription

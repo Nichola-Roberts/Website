@@ -116,14 +116,32 @@ class ViewModeManager {
     
     bindEvents() {
         if (this.elements.focusToggle) {
-            this.elements.focusToggle.addEventListener('click', () => {
+            this.elements.focusToggle.addEventListener('click', (e) => {
+                e.preventDefault();
                 this.toggleMode();
+                // Force visual update on mobile
+                this.forceButtonRefresh(this.elements.focusToggle);
+            });
+            
+            // Better mobile touch handling
+            this.elements.focusToggle.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                this.forceButtonRefresh(this.elements.focusToggle);
             });
         }
         
         if (this.elements.readingTimeToggle) {
-            this.elements.readingTimeToggle.addEventListener('click', () => {
+            this.elements.readingTimeToggle.addEventListener('click', (e) => {
+                e.preventDefault();
                 this.toggleReadingTime();
+                // Force visual update on mobile
+                this.forceButtonRefresh(this.elements.readingTimeToggle);
+            });
+            
+            // Better mobile touch handling
+            this.elements.readingTimeToggle.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                this.forceButtonRefresh(this.elements.readingTimeToggle);
             });
         }
         
@@ -313,6 +331,16 @@ class ViewModeManager {
                 this.elements.readingTimeToggle.classList.add('active');
                 localStorage.setItem('readingTimeEnabled', 'true');
             }
+        }
+    }
+    
+    forceButtonRefresh(button) {
+        // Force a reflow to ensure visual updates on mobile
+        if (button) {
+            button.style.transform = 'scale(0.98)';
+            setTimeout(() => {
+                button.style.transform = '';
+            }, 150);
         }
     }
 }

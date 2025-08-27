@@ -1,7 +1,7 @@
 // Netlify Function to handle mailing list subscriptions
-// Uses Netlify Blobs for subscriber storage with email encryption
+// Uses Neon PostgreSQL database for subscriber storage with email encryption
 
-const { getStore } = require('@netlify/blobs');
+const { Pool } = require('pg');
 const crypto = require('crypto');
 const AWS = require('aws-sdk');
 
@@ -13,6 +13,45 @@ AWS.config.update({
 });
 
 const ses = new AWS.SES();
+
+// Create connection pool for Neon PostgreSQL
+const pool = new Pool({
+    connectionString: process.env.NETLIFY_DATABASE_URL,
+    ssl: { rejectUnauthorized: false }
+});
+
+// Initialize database table on first run
+async function initializeDatabase() {
+    try {
+        await pool.query(`
+            CREATE TABLE IF NOT EXISTS subscribers (
+                id SERIAL PRIMARY KEY,
+                email_hash VARCHAR(64) UNIQUE NOT NULL,
+                encrypted_email TEXT NOT NULL,
+                subscribed_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+                status VARCHAR(20) DEFAULT 'pending',
+                source VARCHAR(50) DEFAULT 'website',
+                confirmation_token VARCHAR(64),
+                confirmation_expires TIMESTAMP WITH TIME ZONE,
+                unsubscribed_at TIMESTAMP WITH TIME ZONE
+            )
+        `);
+        
+        // Create analytics table
+        await pool.query(`
+            CREATE TABLE IF NOT EXISTS analytics (
+                id SERIAL PRIMARY KEY,
+                metric_name VARCHAR(50) NOT NULL,
+                metric_value INTEGER DEFAULT 0,
+                month VARCHAR(7),
+                updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+                UNIQUE(metric_name, month)
+            )
+        `);
+    } catch (error) {
+        console.error('Database initialization error:', error);
+    }
+}
 
 exports.handler = async (event, context) => {
     // Only allow POST requests
@@ -28,6 +67,9 @@ exports.handler = async (event, context) => {
     }
 
     try {
+        // Initialize database tables
+        await initializeDatabase();
+        
         const { email } = JSON.parse(event.body);
 
         // Validate email
@@ -42,23 +84,25 @@ exports.handler = async (event, context) => {
             };
         }
 
-        // Get the Netlify Blobs store
-        const store = getStore('subscribers');
-        
         // Check if email already exists using hash
-        const emailKey = hashEmail(email.toLowerCase());
-        try {
-            await store.get(emailKey);
-            return {
-                statusCode: 409,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*'
-                },
-                body: JSON.stringify({ error: 'Email already subscribed' })
-            };
-        } catch (err) {
-            // Email doesn't exist, which is what we want
+        const emailHash = hashEmail(email.toLowerCase());
+        const existingUser = await pool.query(
+            'SELECT id, status FROM subscribers WHERE email_hash = $1',
+            [emailHash]
+        );
+        
+        if (existingUser.rows.length > 0) {
+            const user = existingUser.rows[0];
+            if (user.status === 'active' || user.status === 'pending') {
+                return {
+                    statusCode: 409,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    body: JSON.stringify({ error: 'Email already subscribed' })
+                };
+            }
         }
 
         // Encrypt email for storage
@@ -66,25 +110,27 @@ exports.handler = async (event, context) => {
         
         // Generate confirmation token
         const confirmationToken = crypto.randomBytes(32).toString('hex');
+        const confirmationExpires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
         
-        // Store subscriber data with encrypted email and pending status
-        const subscriberData = {
-            email: encryptedEmail,
-            subscribedAt: new Date().toISOString(),
-            status: 'pending',
-            source: 'website',
-            confirmationToken: confirmationToken,
-            confirmationExpires: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() // 24 hours
-        };
-
-        // Use hash of email as key for lookups
-        await store.set(emailKey, JSON.stringify(subscriberData));
+        // Insert or update subscriber
+        await pool.query(`
+            INSERT INTO subscribers (email_hash, encrypted_email, status, source, confirmation_token, confirmation_expires)
+            VALUES ($1, $2, 'pending', 'website', $3, $4)
+            ON CONFLICT (email_hash) 
+            DO UPDATE SET 
+                encrypted_email = $2,
+                status = 'pending',
+                confirmation_token = $3,
+                confirmation_expires = $4,
+                subscribed_at = CURRENT_TIMESTAMP,
+                unsubscribed_at = NULL
+        `, [emailHash, encryptedEmail, confirmationToken, confirmationExpires]);
 
         // Send confirmation email
         await sendConfirmationEmail(email.toLowerCase(), confirmationToken);
 
-        // Update analytics for subscription attempt (actual subscription counted on confirm)
-        await updateAnalytics(store, 'subscription_attempt');
+        // Update analytics for subscription attempt
+        await updateAnalytics('subscription_attempt');
 
         return {
             statusCode: 200,
@@ -173,41 +219,30 @@ function hashEmail(email) {
     return crypto.createHash('sha256').update(email).digest('hex');
 }
 
-async function updateAnalytics(store, action) {
+async function updateAnalytics(action) {
     try {
-        let analytics;
-        try {
-            const analyticsData = await store.get('_analytics');
-            analytics = JSON.parse(analyticsData);
-        } catch (err) {
-            // Analytics blob doesn't exist, create new one
-            analytics = {
-                totalSubscriptions: 0,
-                totalUnsubscriptions: 0,
-                subscriptionAttempts: 0,
-                subscriptionsByMonth: {},
-                unsubscriptionsByMonth: {},
-                subscriptionAttemptsByMonth: {}
-            };
-        }
-
         const currentMonth = new Date().toISOString().slice(0, 7); // YYYY-MM format
-
-        if (action === 'subscribe') {
-            analytics.totalSubscriptions++;
-            analytics.subscriptionsByMonth[currentMonth] = 
-                (analytics.subscriptionsByMonth[currentMonth] || 0) + 1;
-        } else if (action === 'unsubscribe') {
-            analytics.totalUnsubscriptions++;
-            analytics.unsubscriptionsByMonth[currentMonth] = 
-                (analytics.unsubscriptionsByMonth[currentMonth] || 0) + 1;
-        } else if (action === 'subscription_attempt') {
-            analytics.subscriptionAttempts++;
-            analytics.subscriptionAttemptsByMonth[currentMonth] = 
-                (analytics.subscriptionAttemptsByMonth[currentMonth] || 0) + 1;
-        }
-
-        await store.set('_analytics', JSON.stringify(analytics));
+        
+        // Update total counts
+        await pool.query(`
+            INSERT INTO analytics (metric_name, metric_value, month)
+            VALUES ($1, 1, NULL)
+            ON CONFLICT (metric_name, month)
+            DO UPDATE SET 
+                metric_value = analytics.metric_value + 1,
+                updated_at = CURRENT_TIMESTAMP
+        `, [`total_${action}s`]);
+        
+        // Update monthly counts
+        await pool.query(`
+            INSERT INTO analytics (metric_name, metric_value, month)
+            VALUES ($1, 1, $2)
+            ON CONFLICT (metric_name, month)
+            DO UPDATE SET 
+                metric_value = analytics.metric_value + 1,
+                updated_at = CURRENT_TIMESTAMP
+        `, [`${action}s`, currentMonth]);
+        
     } catch (error) {
         console.error('Error updating analytics:', error);
         // Don't throw - analytics failure shouldn't break subscription

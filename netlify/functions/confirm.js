@@ -1,8 +1,14 @@
 // Netlify Function to confirm email subscriptions
 // Handles double opt-in confirmation for GDPR compliance
 
-const { getStore } = require('@netlify/blobs');
+const { Pool } = require('pg');
 const crypto = require('crypto');
+
+// Create connection pool for Neon PostgreSQL
+const pool = new Pool({
+    connectionString: process.env.NETLIFY_DATABASE_URL,
+    ssl: { rejectUnauthorized: false }
+});
 
 exports.handler = async (event, context) => {
     // Only allow GET requests
@@ -42,30 +48,13 @@ exports.handler = async (event, context) => {
             };
         }
 
-        // Get the Netlify Blobs store
-        const store = getStore('subscribers');
-        const subscribersList = await store.list();
-        
-        let foundSubscriber = null;
-        let foundKey = null;
-
         // Find subscriber with matching token
-        for (const blob of subscribersList.blobs) {
-            if (blob.key === '_analytics') continue;
-            
-            try {
-                const subscriberData = JSON.parse(await store.get(blob.key));
-                if (subscriberData.confirmationToken === token) {
-                    foundSubscriber = subscriberData;
-                    foundKey = blob.key;
-                    break;
-                }
-            } catch (err) {
-                console.error(`Error processing subscriber ${blob.key}:`, err);
-            }
-        }
+        const subscriber = await pool.query(
+            'SELECT id, email_hash, status, confirmation_expires FROM subscribers WHERE confirmation_token = $1',
+            [token]
+        );
 
-        if (!foundSubscriber) {
+        if (subscriber.rows.length === 0) {
             return {
                 statusCode: 404,
                 headers: {
@@ -75,8 +64,10 @@ exports.handler = async (event, context) => {
             };
         }
 
+        const foundSubscriber = subscriber.rows[0];
+
         // Check if token has expired
-        if (new Date() > new Date(foundSubscriber.confirmationExpires)) {
+        if (new Date() > new Date(foundSubscriber.confirmation_expires)) {
             return {
                 statusCode: 410,
                 headers: {
@@ -98,16 +89,16 @@ exports.handler = async (event, context) => {
         }
 
         // Confirm the subscription
-        foundSubscriber.status = 'active';
-        foundSubscriber.confirmedAt = new Date().toISOString();
-        // Remove confirmation token and expiry for security
-        delete foundSubscriber.confirmationToken;
-        delete foundSubscriber.confirmationExpires;
-
-        await store.set(foundKey, JSON.stringify(foundSubscriber));
+        await pool.query(`
+            UPDATE subscribers 
+            SET status = 'active',
+                confirmation_token = NULL,
+                confirmation_expires = NULL
+            WHERE id = $1
+        `, [foundSubscriber.id]);
 
         // Update analytics for confirmed subscription
-        await updateAnalytics(store, 'subscribe');
+        await updateAnalytics('subscribe');
 
         return {
             statusCode: 200,
@@ -205,41 +196,30 @@ function generateErrorPage(title, message) {
     `;
 }
 
-async function updateAnalytics(store, action) {
+async function updateAnalytics(action) {
     try {
-        let analytics;
-        try {
-            const analyticsData = await store.get('_analytics');
-            analytics = JSON.parse(analyticsData);
-        } catch (err) {
-            // Analytics blob doesn't exist, create new one
-            analytics = {
-                totalSubscriptions: 0,
-                totalUnsubscriptions: 0,
-                subscriptionAttempts: 0,
-                subscriptionsByMonth: {},
-                unsubscriptionsByMonth: {},
-                subscriptionAttemptsByMonth: {}
-            };
-        }
-
         const currentMonth = new Date().toISOString().slice(0, 7); // YYYY-MM format
-
-        if (action === 'subscribe') {
-            analytics.totalSubscriptions++;
-            analytics.subscriptionsByMonth[currentMonth] = 
-                (analytics.subscriptionsByMonth[currentMonth] || 0) + 1;
-        } else if (action === 'unsubscribe') {
-            analytics.totalUnsubscriptions++;
-            analytics.unsubscriptionsByMonth[currentMonth] = 
-                (analytics.unsubscriptionsByMonth[currentMonth] || 0) + 1;
-        } else if (action === 'subscription_attempt') {
-            analytics.subscriptionAttempts++;
-            analytics.subscriptionAttemptsByMonth[currentMonth] = 
-                (analytics.subscriptionAttemptsByMonth[currentMonth] || 0) + 1;
-        }
-
-        await store.set('_analytics', JSON.stringify(analytics));
+        
+        // Update total counts
+        await pool.query(`
+            INSERT INTO analytics (metric_name, metric_value, month)
+            VALUES ($1, 1, NULL)
+            ON CONFLICT (metric_name, month)
+            DO UPDATE SET 
+                metric_value = analytics.metric_value + 1,
+                updated_at = CURRENT_TIMESTAMP
+        `, [`total_${action}s`]);
+        
+        // Update monthly counts
+        await pool.query(`
+            INSERT INTO analytics (metric_name, metric_value, month)
+            VALUES ($1, 1, $2)
+            ON CONFLICT (metric_name, month)
+            DO UPDATE SET 
+                metric_value = analytics.metric_value + 1,
+                updated_at = CURRENT_TIMESTAMP
+        `, [`${action}s`, currentMonth]);
+        
     } catch (error) {
         console.error('Error updating analytics:', error);
         // Don't throw - analytics failure shouldn't break subscription

@@ -10,7 +10,8 @@
   },
   "dependencies": {
     "@netlify/blobs": "^8.2.0",
-    "aws-sdk": "^2.1692.0"
+    "aws-sdk": "^2.1692.0",
+    "pg": "^8.16.3"
   },
   "devDependencies": {
     "netlify-cli": "^17.0.0"

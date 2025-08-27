@@ -94,7 +94,7 @@ class MailingList {
             const data = await response.json();
             
             if (response.ok) {
-                this.showMessage('Successfully subscribed! Thank you for joining our mailing list.', 'success');
+                this.showMessage(data.message || 'Successfully subscribed! Thank you for joining our mailing list.', 'success');
                 this.form.reset();
             } else {
                 if (response.status === 409) {
