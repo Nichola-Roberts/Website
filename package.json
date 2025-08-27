@@ -9,8 +9,8 @@
     "deploy": "netlify deploy --prod"
   },
   "dependencies": {
-    "aws-sdk": "^2.1691.0",
-    "@netlify/blobs": "^8.1.0"
+    "@netlify/blobs": "^8.2.0",
+    "aws-sdk": "^2.1692.0"
   },
   "devDependencies": {
     "netlify-cli": "^17.0.0"
@@ -23,5 +23,13 @@
     "mailing-list"
   ],
   "author": "Nichola Roberts",
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nichola-Roberts/Website.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Nichola-Roberts/Website/issues"
+  },
+  "homepage": "https://github.com/Nichola-Roberts/Website#readme"
 }
