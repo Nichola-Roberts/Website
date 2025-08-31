@@ -120,8 +120,10 @@ class ViewModeManager {
                 e.preventDefault();
                 e.stopPropagation();
                 this.toggleMode();
-                // Force visual update on mobile
-                this.forceButtonRefresh(this.elements.focusToggle);
+                // Force visual update after DOM changes
+                setTimeout(() => {
+                    this.forceButtonRefresh(this.elements.focusToggle);
+                }, 50);
             });
             
             // Better mobile touch handling
@@ -129,7 +131,10 @@ class ViewModeManager {
                 e.preventDefault();
                 e.stopPropagation();
                 this.toggleMode();
-                this.forceButtonRefresh(this.elements.focusToggle);
+                // Force visual update after DOM changes
+                setTimeout(() => {
+                    this.forceButtonRefresh(this.elements.focusToggle);
+                }, 50);
             });
         }
         
@@ -138,8 +143,10 @@ class ViewModeManager {
                 e.preventDefault();
                 e.stopPropagation();
                 this.toggleReadingTime();
-                // Force visual update on mobile
-                this.forceButtonRefresh(this.elements.readingTimeToggle);
+                // Force visual update after DOM changes
+                setTimeout(() => {
+                    this.forceButtonRefresh(this.elements.readingTimeToggle);
+                }, 50);
             });
             
             // Better mobile touch handling
@@ -147,7 +154,10 @@ class ViewModeManager {
                 e.preventDefault();
                 e.stopPropagation();
                 this.toggleReadingTime();
-                this.forceButtonRefresh(this.elements.readingTimeToggle);
+                // Force visual update after DOM changes
+                setTimeout(() => {
+                    this.forceButtonRefresh(this.elements.readingTimeToggle);
+                }, 50);
             });
         }
         
@@ -343,9 +353,14 @@ class ViewModeManager {
     forceButtonRefresh(button) {
         // Force a reflow to ensure visual updates on mobile
         if (button) {
+            // Force a reflow by reading computed style
+            button.offsetHeight;
+            
             button.style.transform = 'scale(0.98)';
             setTimeout(() => {
                 button.style.transform = '';
+                // Force another reflow after animation
+                button.offsetHeight;
             }, 150);
         }
     }
