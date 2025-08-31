@@ -735,18 +735,17 @@ body.dragging-scroll {
 
 /* Collapsible Sections */
 .collapsible-heading {
-    cursor: pointer;
     display: flex;
     align-items: center;
     gap: var(--space-2);
-    user-select: none;
     position: relative;
-    margin-left: -24px;
+    margin-left: 0;
     padding-left: 0;
 }
 
 .collapsible-heading .heading-text {
     flex: 1;
+    cursor: text;
 }
 
 .collapse-toggle {
@@ -778,7 +777,7 @@ body.dragging-scroll {
 }
 
 .collapsible-content {
-    overflow: hidden;
+    overflow: visible;
     transition: max-height 300ms ease, opacity 200ms ease;
     max-height: 100000px;
     opacity: 1;
@@ -788,6 +787,7 @@ body.dragging-scroll {
     max-height: 0;
     opacity: 0;
     margin-bottom: 0;
+    overflow: hidden;
 }
 
 /* Help Modal */

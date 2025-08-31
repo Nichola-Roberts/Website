@@ -118,6 +118,7 @@ class ViewModeManager {
         if (this.elements.focusToggle) {
             this.elements.focusToggle.addEventListener('click', (e) => {
                 e.preventDefault();
+                e.stopPropagation();
                 this.toggleMode();
                 // Force visual update on mobile
                 this.forceButtonRefresh(this.elements.focusToggle);
@@ -126,6 +127,8 @@ class ViewModeManager {
             // Better mobile touch handling
             this.elements.focusToggle.addEventListener('touchend', (e) => {
                 e.preventDefault();
+                e.stopPropagation();
+                this.toggleMode();
                 this.forceButtonRefresh(this.elements.focusToggle);
             });
         }
@@ -133,6 +136,7 @@ class ViewModeManager {
         if (this.elements.readingTimeToggle) {
             this.elements.readingTimeToggle.addEventListener('click', (e) => {
                 e.preventDefault();
+                e.stopPropagation();
                 this.toggleReadingTime();
                 // Force visual update on mobile
                 this.forceButtonRefresh(this.elements.readingTimeToggle);
@@ -141,6 +145,8 @@ class ViewModeManager {
             // Better mobile touch handling
             this.elements.readingTimeToggle.addEventListener('touchend', (e) => {
                 e.preventDefault();
+                e.stopPropagation();
+                this.toggleReadingTime();
                 this.forceButtonRefresh(this.elements.readingTimeToggle);
             });
         }

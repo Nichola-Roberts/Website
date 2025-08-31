@@ -17,12 +17,20 @@ class CollapsibleSections {
     }
 
     setup() {
-        // Wait for content to be loaded
+        // Wait for content to be loaded AND notes system to be initialized
         const checkContent = setInterval(() => {
             const content = document.querySelector('.content');
             if (content && content.textContent.length > 0) {
                 clearInterval(checkContent);
-                this.makeCollapsible();
+                // Delay slightly to ensure notes system runs first
+                setTimeout(() => {
+                    this.makeCollapsible();
+                    // If notes mode is active, refresh the notes
+                    if (window.NotesSystem && window.NotesSystem.isNotesMode) {
+                        window.NotesSystem.removeNotesFromParagraphs();
+                        window.NotesSystem.addNotesToParagraphs();
+                    }
+                }, 500);
             }
         }, 100);
     }
@@ -117,19 +125,14 @@ class CollapsibleSections {
         // Insert the section content after the h2
         h2.insertAdjacentElement('afterend', sectionContent);
 
-        // Add click handler
+        // Add click handler only to the toggle button
         toggleBtn.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
             this.toggleSection(h2, sectionContent, toggleBtn);
         });
 
-        // Also allow clicking on the heading text
-        headingText.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            this.toggleSection(h2, sectionContent, toggleBtn);
-        });
+        // Don't add click handler to heading text - let notes functionality work
     }
 
     toggleSection(heading, content, button) {

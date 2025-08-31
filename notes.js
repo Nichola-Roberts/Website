@@ -89,11 +89,14 @@ const NotesSystem = {
             }
         }
         
-        this.addNotesToParagraphs();
-        this.showAllTextRanges();
-        
-        // Update all button visibility based on current capacity
-        this.updateAllButtonVisibility();
+        // Small delay to ensure DOM is ready
+        setTimeout(() => {
+            this.addNotesToParagraphs();
+            this.showAllTextRanges();
+            
+            // Update all button visibility based on current capacity
+            this.updateAllButtonVisibility();
+        }, 100);
     },
     
     // Disable notes mode
