@@ -2,7 +2,16 @@ You know the feeling. You just got home from work. It’s been a long, hard day.
 
 You’re sitting there, trying to block out your thoughts, trying to focus on the tv. But your partner comes over and asks you how your day was. You snap at them. You don’t mean to. But replying is impossible. Your brain just wants to shut down. You don’t have the energy.
 
-A lot of actions in life can be explained by not having enough energy.
+When you start looking at life from this perspective. That you have a mental energy limit that you can’t push beyond. Things start making a lot more sense. 
+
+# A Note Before We Begin
+This theory introduces a new way of looking at our behaviour. I feel it helps explain myself and others in ways that have already been hugely beneficial to me. 
+
+I will warn you now though. It’s going to be quite a long read. Probably sometimes it might feel uncomfortable. I’ve learnt a lot about myself writing this. Some slightly uncomfortable truths. And I’m sure you will too. 
+
+It’s also helped me understand the people in my life better. Even the most confusing and complicated ones. So if that’s what you are looking for. Then I feel like this read is probably worth it.
+
+You don’t need to read it all at once. The page will save your progress. There are also other tools to help you customise the page and hopefully make it an easier read.
 
 # Energy Landscape
 Imagine you’re a ball, standing on a path in front of a vast landscape. There are hills, mountains and valleys. There are paths running everywhere. You see them tracing down the valleys. Winding round the mountains. Branching out. Joining back together. 
@@ -617,11 +626,6 @@ My only hope is this framework offers a new perspective. A new way to watch your
 There are no simple solutions. Understanding doesn’t mean always empathising with others. Nor does it mean always setting boundaries. From my experience, the brain has an amazing ability to misdirect us from looking at what we really need to see. Because that’s how it learnt to keep safe. However it also deeply wants to heal. I have found the biggest sign of healing isn’t mastering techniques. It’s when you’ve realised you’ve stopped calculating the optimum way to be loved. And learnt how to just live. 
 
 Which is a lot easier said than done. Especially when the modern world is so damaging. 
-
-# Underpinnings
-This theory builds on and unifies many existing concepts in psychology. Attachment Theory. Schema Theory. Internal Family Systems. Cognitive Load Theory. Emotionally Focused Therapy.
-
-It also adds mechanisms to these concepts. Helping to map out the simple and the complicated. For instance try mapping out borderline personality disorder or narcissism with this framework.
 
 # Mailing List
 I am also writing a book based on my theory. If you would like to be emailed about its release you can <a href="#" class="mailing-list-link">join my mailing list</a>

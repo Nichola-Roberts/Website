@@ -31,16 +31,34 @@ class Navigation {
     
     bindEvents() {
         // Accessibility panel toggle
-        this.accessibilityTrigger?.addEventListener('click', () => {
+        this.accessibilityTrigger?.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
             this.toggleAccessibilityPanel();
         });
         
-        // Font size controls
-        this.fontSizeButtons.increase?.addEventListener('click', () => {
+        // Font size controls with both click and touch support
+        this.fontSizeButtons.increase?.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
             this.adjustFontSize(1);
         });
         
-        this.fontSizeButtons.decrease?.addEventListener('click', () => {
+        this.fontSizeButtons.increase?.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            this.adjustFontSize(1);
+        });
+        
+        this.fontSizeButtons.decrease?.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            this.adjustFontSize(-1);
+        });
+        
+        this.fontSizeButtons.decrease?.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
             this.adjustFontSize(-1);
         });
         
