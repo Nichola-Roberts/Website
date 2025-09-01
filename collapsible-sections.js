@@ -65,8 +65,8 @@ class CollapsibleSections {
             
             // Process H2s after Core Beliefs
             if (foundCoreBeliefs && heading.tagName === 'H2') {
-                // Make this H2 collapsible and start collapsed
-                this.makeHeadingCollapsible(heading, true);
+                // Make this H2 collapsible but start expanded
+                this.makeHeadingCollapsible(heading, false);
             }
         });
 

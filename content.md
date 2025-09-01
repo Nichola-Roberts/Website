@@ -178,7 +178,7 @@ Another child might have been taught “You’re a failure” at school.
 
 They noticed they were always the last to finish their work. Or the teacher came to check on them more than the others. As they got older they struggled with tests and exams. I mean it’s obvious isn’t it, they just aren’t that clever. When they grew up, they also failed job interviews. They finally got a job at a supermarket. But then it closed down.
 
-Now they go to the job centre. And oh my god is it stressful. It’s so hard for them to think about getting another job. They go to so many interviews. And in every one, they have to face the interviewer. Look them in the eye. And all they can think is, they see it too. They see the failure. They wonder why this person even bothered showing up. Why would anyone hire them?
+Now they go to the job centre. And oh my god is it stressful. It’s so hard for them to think about getting another job. They go to so many interviews. And in every one, they have to face the interviewer. Look them in the eye. And all they can think is, they see it too. They see the failure. They are wondering why this person even bothered showing up. Why would anyone hire them?
 
 ## "I'm Too Much"
 Another child was taught their feelings were too much. When they cried they were told to grow up. When they were excited, they were told to calm down. They learned that their emotions were a dangerous force that pushed people away. 
