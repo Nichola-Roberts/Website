@@ -63,11 +63,8 @@ class CollapsibleSections {
             // Skip making H2s in Emotional Overload section collapsible
             // (This section will have no collapsible subsections)
             
-            // Process H2s after Core Beliefs
-            if (foundCoreBeliefs && heading.tagName === 'H2') {
-                // Make this H2 collapsible but start expanded
-                this.makeHeadingCollapsible(heading, false);
-            }
+            // Skip making H2s after Core Beliefs collapsible
+            // (All sections will display as regular headings)
         });
 
         // Restore collapsed state from localStorage (if user has previously expanded any)
