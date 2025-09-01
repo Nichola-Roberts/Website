@@ -30,51 +30,59 @@ Now imagine you’re a teenager instead. Full of life and feeling excited. You'r
 
 Maybe you could flatten this mountain. Maybe you could defend yourself. Maybe your mum might be reasonable. Then you can calm down. And go out. Or maybe. Maybe arguing back might trigger one of her mountains. Lead to an escalation. Even more stress. And probably extra punishment. It’s not worth the risk. It’s better to hide your bedroom. 
 
-So you can see our landscapes are inherently chaotic. It's like the butterfly effect. They change in unpredictable ways. Often based on circumstances we don’t know, and can’t control. 
+Our landscapes are always changing and fluctuating. Often because of other people. Based on circumstances we don't know. And things we don't understand and can't control. It's chaotic, and often seemingly random like the butterfly effect. 
 
 # Energy Limit
-These moments, when life has pushed us too far. When everything feels impossibly hard. Because all our mental energy is taken up just trying to keep going. This is our energy limit. We hit it. Then we lose our ability to think. And to do pretty much anything. Except feel stressed.
+These fluctuations. Sometimes they throw us right up our mountains unexpectedly. 
 
-Take this example. Your child goes missing at the park. You shift to survival mode. And the only thing that matters is finding them. Suddenly, even your partner's affair slips your mind. All you care about is this one task. Finding your child. You’re hypervigilant. Focusing on any clues you can spot... Oh, wait. There they are. Everything is fine again. That’s a relief. 
+These are the moments when life has pushed us too far. When everything feels impossibly hard. When we can feel our heartbeat thud. The anxiety rising in our chest. When it feels too much to bear. Like we are about to blow. This is our energy limit. When we hit it we lose our ability to think. And to do pretty much anything.  Except feel stressed. All our mental energy is taken up just trying to survive the moment.
 
-Or maybe you just had a job interview. And you didn’t get the job. You really wanted it, it felt perfect for you. Now your thoughts are spiralling out of control in your mind. You really need to get your act together. Everyone is going to think you’re a failure if you keep getting rejected from these jobs. Your mind goes over all the stupid things you said. Like laughing at their jokes too hard. It came across as desperate didn’t it. And that awful answer. Why did you not think. You did a whole project on that last year. How could you not remember. You really will never find a job if you keep being this stupid in interviews. 
+Take this example. Your child goes missing at the park. A random fluctuation. But it's devastating to your system. You feel absolute panic. Instantly taken to your energy limit. Suddenly the only thing that matters is finding them. You've shifted to survival mode. All you care about is this one task. Finding your child. You’re hypervigilant. Even your partner's affair slips your mind. You scan the park. Focusing on any clues you can spot... Oh, wait. There they are. Everything is fine again. That’s a relief. Slowly the mountain starts to subside.
 
-You’re sitting there ruminating. You’re meant to take your partner shopping. But how can you now. You can’t bear to leave the house. You don’t want to have to face the real world.
+Or maybe you just had a job interview. And you didn’t get the job. You really wanted it, it felt perfect for you. You can't think straight. Now your thoughts are spiraling out of control in your mind. Your anxiety is peaking. You're trapped up at your energy limit unable to escape your thoughts. 
 
-Do you remember when you snapped at your partner earlier? Looking back, in theory you could have been nice to them. Apparently being nice costs nothing. But in that moment it felt beyond your abilities. The energy it would have taken to reply was beyond your limits. 
+You really need to get your act together. Everyone is going to think you’re a failure if you keep getting rejected from these jobs. Your mind goes over all the stupid things you said. Like laughing at their jokes too hard. It came across as desperate didn’t it. And that awful answer. Why did you not think. You did a whole project on that last year. How could you not remember. You really will never find a job if you keep being this stupid in interviews. You’re sitting there ruminating. You’re meant to take your partner shopping. But how can you now. You can’t bear to leave the house. You don’t want to have to face the real world.
 
-At least snapping meant the conversation was over. And they left you alone for the rest of the night. It’s not that you don’t care about them. You do love them. Your brain’s just doing its best. It only has limited energy. 
+This is when you might snap at your partner. They ask how you are. And in theory you could have been nice to them. Apparently being nice costs nothing. But in this moment it feels beyond your abilities. You have no energy left to formulate a nice reply. 
 
-This energy limit is relatively fixed. Always around the same height in the landscape.
+At least snapping means the conversation is over. And they leave you alone for the rest of the night. It’s not that you don’t care about them. You do love them. Your brain’s just doing its best. It only has limited energy.
 
-Sometimes we quickly return to our baseline. Like when we spotted our child and we relaxed. We gave them a hug. And then sat back down on the bench. We could feel our heart rate return to normal. And thoughts of the affair creep back into our mind. For a while, there was still a background exhaustion. But that slowly wore off too. 
+Sometimes we quickly return to our baseline. Like when we spotted our child and we relaxed. We gave them a hug. And then sat back down on the bench. We could feel our heart rate return to normal. And thoughts of the affair creep back into our mind.
 
-Sometimes, however, it can last weeks. Like when we were worried about being a failure for not having a job. We were stuck thinking about it. A lot. We only managed to stop when we were distracted, or blocking it out. But we knew the mountain was there still. Just below our awareness. Vulnerable to knocks. Those little triggers. The ones that make it too big to carry on ignoring. 
+Sometimes, however, it can last weeks. Like when we were worried about being a failure for not having a job. We can get stuck in our thoughts. And while we can distract ourselves or block it out. The mountain is there still. Just below our awareness. Vulnerable to any little knocks. Triggering us. Making it too big to carry on ignoring.
 
-Understanding this helps explain why we're not lazy or mean. We're just working within our limited energy budget.
+Understanding this helps explain why we're not lazy or mean. We're just working within our limited energy budget. This energy limit is relatively fixed. A height in our landscape we cannot go above.
+
+Over time we learn to anticipate this height. And we become protective over it. We learn to avoid the dangerous paths. The events. The conversations. The risks. The things that could suddenly fluctuate and blow everything up.
 
 # Planning 
-It's hard to plan our way out of a situation when we’re stressed. It’s like a mountain fog blocks the paths we could take. We can’t see them any more.
+Sometimes we can look out at our landscape and contemplate our paths. Maybe we can map them all out clearly. And choose with a clear head. We can calmly decide some risks aren't worth taking, no matter how big the reward might be. Or sometimes we might decide they are. 
+
+But some paths. They feel scary. We don't want to even look at them. To acknowledge they exist. Like the test next week. Or making that hospital appointment we know we need. 
+
+And this gets even harder when we are stressed. We can't plan our way out. It’s like a mountain fog blocks the paths we could take. So we can’t see them any more.
 
 Take this example. 
 
 Your dad died 6 months ago. It still feels awful. On top of that you hate your job. Two huge mountains. Intersecting below your feet. Holding you up at your energy limit.
 
-Every day feels endless. There is no end in sight. How can you even begin to feel better? You can’t. You’re just surviving. Trying to get through the next 5 minutes. High up on these mountains, right at your limit.
+Every day feels endless. There really is no end in sight. How can you even begin to feel better? You can’t. You’re just surviving. Trying to get through the next 5 minutes. High up on these mountains, right at your limit.
 
-You’ve managed to carve yourself a little pocket. In bed, at 10am. Where you can just about breathe. Barely. But it still feels like relief. You can hide there for the moment. But all around you. in every direction, the landscape rises up. The paths go beyond your energy limit. Every task feels beyond your capabilities. 
+You’ve managed to carve yourself a little pocket. In bed, at 10am. Where you can just about breathe. Barely. But it still feels like relief. You can hide there for the moment. But all around you. In every direction, the landscape rises up. The paths go beyond your energy limit. Every task feels beyond your capabilities. 
 
 Making a coffee is too much. Replying to a message, it’s too much. Getting out of bed, too much. You’re completely overwhelmed all the time. It’s uncomfortable to think about these tasks. To even glance at their paths. You just want to stay in your pocket.
 
 And if you can’t even make coffee, how can you plan your way down the mountain? You feel absolutely trapped. You can’t face thinking about anything. You literally cannot even see the paths out. Even if others point them out. They stay purely theoretical. Not things you could actually do.
 
-Now, instead. Imagine you have to make a presentation for your course. But every time you try to think about it, it feels too much. You immediately get stressed. Actually opening the laptop and starting on it. Well that’s impossible. 
+Now, instead. Imagine you have to make a presentation for your course. The path is obvious. Just start working. But every time you try to think about it, it feels too much. You immediately get stressed. Actually opening the laptop and starting on it. Well that’s impossible. 
 
 You know the consequences. You just can’t make yourself do it. You know it’s procrastination. But what can you do? You always leave it to the last minute. But somehow it just seems to work. 
 
-The days creep by. And lo and behold. Suddenly the day before it’s due you feel the focus coming. Just like you knew it would. A new mountain is rising quickly beneath your feet. You start to feel the inevitable stress of not finishing in time. And suddenly the consequences feel very real. You will fail your course if you don’t start right now. Right at this very moment. So quick, get the laptop.
+The days creep by. And lo and behold. Suddenly the day before it’s due you feel the focus coming. Just like you knew it would. A new mountain is rising quickly beneath your feet. You start to feel the inevitable stress of not finishing in time. And suddenly the consequences feel very real. You will fail your course if you don’t start right now. Right at this very moment. So quick, get the laptop. Get on that path.
 
 The mountain you felt about starting is now eclipsed by a bigger, much more imposing mountain. This one represents failing your course. It’s taking you up high, right up to your energy limit. But it doesn’t feel like panic. It feels like focus. It’s shutting down your other thoughts. You’re entering fight or flight. All just to create a presentation. 
+
+When we most need to plan our way out. When we're stuck in pain or desperation. Or facing a deadline. That's when the fog is thickest. The paths that seem so obvious to others aren't just hidden. It's like they don't exist.
 
 # Relationships
 But life isn't only full of climbing mountains. There are also the valleys. The moments that make it all worthwhile. Like falling in love.
@@ -142,12 +150,14 @@ You finally get to school. You still can’t concentrate. People try to talk to 
 
 There’s no one to make you feel safe. No one to tell you it wasn’t your fault. So you cry alone in bed that night. Blaming yourself, if only you could be a better child, then maybe your mum would love you better, take care of you better. Maybe you wouldn’t be a burden to her life and she wouldn’t regret your existence.
 
+These unprocessed emotions don't disappear or even fade away. They become mountains we've never fully mapped. They're cordoned off with a wide no go area. Sometimes it's temporary. Just a stressful day we'll process next week when the stress has passed. But sometimes the experience was too big. And our baseline stress too high. So we never have the excess energy to relive the emotions and begin to process. The cordons become a permanent feature.
+
 # Core Beliefs
 And this is how core beliefs are formed. Often in childhood. Extreme moments that shape our landscape profoundly. These mountains will remain for much of our lives. 
 
 That child had no other options. Their survival depended on their mum. And they learned their landscape. Telling their mum how they felt was a path that only made things worse.
 
-Making themselves small kept them safe. It’s backwards, but, to be cared for the child had to act like their existance was a burden. Because then, sometimes, on her good days, that allowed their mum to have the energy to care for them.
+Making themselves small kept them safe. It’s backwards, but, to be cared for the child had to act like their existence was a burden. Because then, sometimes, on her good days, that allowed their mum to have the energy to care for them.
 
 This was the most accurate map they had. The only landscape that worked.
 
@@ -209,6 +219,8 @@ Maybe their mum forgot their birthday. They casually mentioned it to her on the 
 But then a week later. She said she didn’t forget. That she got them a present. It was confusing. The child knows it didn’t happen. Or they think they know. They can’t find any evidence of a present anyway. Maybe they lost it. They don’t think they got one. But their mum seems so sure.
 
 Their mum makes them perform the lie. Makes them say thank you.  It’s getting more confusing. What’s the truth? But the child knows it deep down. They just aren’t allowed to think it anymore. It gets buried down deep inside. And a false narrative lives over the surface.
+
+These are just some of the mountains that could have formed. Each person's landscape is unique. Someone could have one core belief. Someone else could have several, all interlinking.
 
 # Triggers
 The more mountains someone has the higher their baseline stress. When your landscape’s full of mountains you’re always on high alert. You’re extra vigilant. Those natural fluctuations feel dangerous. Any one of them could trigger you. And you’ll be right up that mountain. So you have to be careful all the time. Particularly around your core beliefs. And the sad thing is. Your optimum path. The steepest downward path is often hidden behind the mountains. So you keep bumping into them. 
