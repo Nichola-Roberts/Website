@@ -11,7 +11,7 @@ I will warn you now though. It’s going to be quite a long read. Sometimes it m
 
 It’s also helped me understand the people in my life better. Even the most confusing and complicated ones. So if that’s what you are looking for. Then this read is probably worth it.
 
-You don’t need to read it all at once. The page will save your progress. There are also other tools to help you customise the page and hopefully make it an easier.
+You don’t need to read it all at once. The page will save your progress. There are also other tools to help you customise the page and hopefully make it easier to read.
 
 So let's get started.
 
