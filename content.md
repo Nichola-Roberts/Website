@@ -614,12 +614,10 @@ So you built a protective structure. A boundary around being heard. But when peo
 
 And the hard truth is. You do exhaust people with your protective structure. You do always steer conversations back to you. But now people’s natural reactions hit you exactly where it hurts the most. 
 
-
-
 # Author's Note
 I’m sure many people will want me to carry on writing. To turn this into a self help guide. “10 Easy Steps to Identify Your Mountains”. But that would be disingenuous. There are no easy answers. 
 
-I believe we have to look deep within ourselves to find what is true. What are our best paths. But this is hard. There is so much noise. What our partner says. What our parents say. What our friends say. What our therapist says. What society says. And maybe loudest of all, what our mountains say. Deciphering the best way to head is an almost impossible task. Especially when so many of them have their own agendas which may not align with what is best for us.
+I believe we have to look deep within ourselves to find what is true. Which are our best paths. But this is hard. There is so much noise. What our partner says. What our parents say. What our friends say. What our therapist says. What society says. And maybe loudest of all, what our mountains say. Deciphering the best way to head is an almost impossible task. Especially when so many of them have their own agendas which may not align with what is best for us.
 
 It's important to remember that we all have our own landscapes. We can’t prescribe the perfect cure for someone else. As one person’s erosion is another person’s avoidance. We should also never judge another person’s landscape. As we can never know the mountains they have and which paths are available. 
 

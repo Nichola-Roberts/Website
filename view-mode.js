@@ -3,7 +3,7 @@
 
 class ViewModeManager {
     constructor() {
-        this.currentMode = this.getStoredMode() || 'fade'; // Default to fade mode
+        this.currentMode = this.getStoredMode() || 'focus'; // Default to focus mode (plain text)
         this.elements = {
             body: document.body,
             fadeTop: null,
@@ -310,7 +310,8 @@ class ViewModeManager {
         // Wait for reading time manager to be ready
         setTimeout(() => {
             // Check if reading time was previously enabled (default to false)
-            const isEnabled = localStorage.getItem('readingTimeEnabled') === 'true';
+            const storedPreference = localStorage.getItem('readingTimeEnabled');
+            const isEnabled = storedPreference === 'true'; // Explicitly false unless set to 'true'
             
             if (window.readingTimeManager) {
                 if (isEnabled) {
@@ -324,7 +325,10 @@ class ViewModeManager {
                     if (this.elements.readingTimeToggle) {
                         this.elements.readingTimeToggle.classList.remove('active');
                     }
-                    localStorage.setItem('readingTimeEnabled', 'false');
+                    // Set preference if not already stored
+                    if (storedPreference === null) {
+                        localStorage.setItem('readingTimeEnabled', 'false');
+                    }
                 }
             }
         }, 100);
