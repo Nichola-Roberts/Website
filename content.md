@@ -5,13 +5,15 @@ You’re sitting there, trying to block out your thoughts, trying to focus on th
 When you start looking at life from this perspective. That you have a mental energy limit that you can’t push beyond. Things start making a lot more sense. 
 
 # A Note Before We Begin
-This theory introduces a new way of looking at our behaviour. I feel it helps explain myself and others in ways that have already been hugely beneficial to me. 
+This theory introduces a new way of looking at our behaviour. It's already help me understand myself and others in ways that have been hugely beneficial to me. 
 
-I will warn you now though. It’s going to be quite a long read. Probably sometimes it might feel uncomfortable. I’ve learnt a lot about myself writing this. Some slightly uncomfortable truths. And I’m sure you will too. 
+I will warn you now though. It’s going to be quite a long read. Sometimes it might feel uncomfortable. I’ve learnt a lot about myself writing this. Including some slightly uncomfortable truths. And I’m sure you will too. 
 
-It’s also helped me understand the people in my life better. Even the most confusing and complicated ones. So if that’s what you are looking for. Then I feel like this read is probably worth it.
+It’s also helped me understand the people in my life better. Even the most confusing and complicated ones. So if that’s what you are looking for. Then this read is probably worth it.
 
-You don’t need to read it all at once. The page will save your progress. There are also other tools to help you customise the page and hopefully make it an easier read.
+You don’t need to read it all at once. The page will save your progress. There are also other tools to help you customise the page and hopefully make it an easier.
+
+So let's get started.
 
 # Energy Landscape
 Imagine you’re a ball, standing on a path in front of a vast landscape. There are hills, mountains and valleys. There are paths running everywhere. You see them tracing down the valleys. Winding round the mountains. Branching out. Joining back together. 
@@ -617,13 +619,15 @@ And the hard truth is. You do exhaust people with your protective structure. You
 # Author's Note
 I’m sure many people will want me to carry on writing. To turn this into a self help guide. “10 Easy Steps to Identify Your Mountains”. But that would be disingenuous. There are no easy answers. 
 
-My belief is that the answers can only live within you. The individual. We all have our own landscapes. One person’s erosion is another person’s avoidance. We should never try to judge another person’s landscape. We can’t prescribe the perfect cure for someone else. As we can never know which paths they have available. 
+I believe we have to look deep within ourselves to find what is true. What are our best paths. But this is hard. There is so much noise. What our partner says. What our parents say. What our friends say. What our therapist says. What society says. And maybe loudest of all, what our mountains say. Deciphering the best way to head is an almost impossible task. Especially when so many of them have their own agendas which may not align with what is best for us.
 
-I believe we have to look deep within ourselves to find what is true. What are our best paths. But this is hard. There is so much noise. What our partner says. What our parents say. What our friends say. What our therapist says. What society says. And maybe loudest of all, what our mountains say. Deciphering the way to head is an almost impossible task. Especially when so many of them have their own agendas which may not align with what is best for us.
+It's important to remember that we all have our own landscapes. We can’t prescribe the perfect cure for someone else. As one person’s erosion is another person’s avoidance. We should also never judge another person’s landscape. As we can never know the mountains they have and which paths are available. 
 
-My only hope is this framework offers a new perspective. A new way to watch your life play out in real time. Maybe with a bit more clarity. To see your own patterns. The patterns of others in your life. And think maybe I understand them a little bit better now. And maybe over time that will free up a little bit of energy to start making slightly different choices. And maybe that first set of new choices don’t work. But maybe the 6th set does. 
+My only hope is that this framework offers a new perspective. Maybe a bit more clarity to see your own patterns. And the patterns and actions of others in your life. And maybe over time, that frees up a small amount of energy to start making slightly different choices. And maybe the first set of choices don’t work. But maybe the 6th set does. 
 
-There are no simple solutions. Understanding doesn’t mean always empathising with others. Nor does it mean always setting boundaries. From my experience, the brain has an amazing ability to misdirect us from looking at what we really need to see. Because that’s how it learnt to keep safe. However it also deeply wants to heal. I have found the biggest sign of healing isn’t mastering techniques. It’s when you’ve realised you’ve stopped calculating the optimum way to be loved. And learnt how to just live. 
+There are no simple solutions. Understanding doesn’t mean always empathising with others. Nor does it mean always setting boundaries. From my experience, the brain has an amazing ability to misdirect us from looking at what we really need to see. Because that’s how it learnt to keep safe. Our mountains, however badly optimised they look from the outside, were the best solution our brains found at the time they were formed. They were made to keep us safe.
+
+ However our brain also deeply wants to heal. But I've found the biggest sign of healing isn’t mastering techniques. It’s when you’ve realised you’ve stopped calculating the optimum way to be loved or to be appreciated. And learnt to just live.
 
 Which is a lot easier said than done. Especially when the modern world is so damaging. 
 
