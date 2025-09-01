@@ -617,13 +617,13 @@ And the hard truth is. You do exhaust people with your protective structure. You
 # Author's Note
 I’m sure many people will want me to carry on writing. To turn this into a self help guide. “10 Easy Steps to Identify Your Mountains”. But that would be disingenuous. There are no easy answers. 
 
-I believe we have to look deep within ourselves to find what is true. Which are our best paths. But this is hard. There is so much noise. What our partner says. What our parents say. What our friends say. What our therapist says. What society says. And maybe loudest of all, what our mountains say. Deciphering the best way to head is an almost impossible task. Especially when so many of them have their own agendas which may not align with what is best for us.
+I believe we have to look deep within ourselves to find what is true. Which are our best paths. But this is hard. There's so much noise. What our partner says. What our parents say. What our friends say. What our therapist says. What society says. And maybe loudest of all, what our mountains say. Deciphering the best direction to head is an almost impossible task. Especially when so many of them have their own agendas which may not align with what is best for us.
 
 It's important to remember that we all have our own landscapes. We can’t prescribe the perfect cure for someone else. As one person’s erosion is another person’s avoidance. We should also never judge another person’s landscape. As we can never know the mountains they have and which paths are available. 
 
 My only hope is that this framework offers a new perspective. Maybe a bit more clarity to see your own patterns. And the patterns and actions of others in your life. And maybe over time, that frees up a small amount of energy to start making slightly different choices. And maybe the first set of choices don’t work. But maybe the 6th set does. 
 
-There are no simple solutions. Understanding doesn’t mean always empathising with others. Nor does it mean always setting boundaries. From my experience, the brain has an amazing ability to misdirect us from looking at what we really need to see. Because that’s how it learnt to keep safe. Our mountains, however badly optimised they look from the outside, were the best solution our brains found at the time they were formed. They were made to keep us safe.
+There are no simple solutions. Understanding doesn’t mean always empathising with others. Nor does it mean always setting boundaries. From my experience, the brain has an amazing ability to misdirect us from looking at what we really need to see. Because that’s how it learnt to keep us safe. Our mountains, however badly optimised they look from the outside, were the best solution our brains found at the time they were formed. They were made to keep us safe.
 
  However our brain also deeply wants to heal. But I've found the biggest sign of healing isn’t mastering techniques. It’s when you’ve realised you’ve stopped calculating the optimum way to be loved or to be appreciated. And learnt to just live.
 
