@@ -158,7 +158,7 @@ And this is how core beliefs are formed. Often in childhood. Extreme moments tha
 
 That child had no other options. Their survival depended on their mum. And they learned their landscape. Telling their mum how they felt was a path that only made things worse.
 
-Making themselves small kept them safe. It’s backwards, but, to be cared for the child had to act like a burden. Because then, sometimes, on her good days, their mum had the energy to care.
+Making themselves small kept them safe. It’s backwards, but, to be cared for the child had to act like their existance was a burden. Because then, sometimes, on her good days, that allowed their mum to have the energy to care for them.
 
 This was the most accurate map they had. The only landscape that worked.
 

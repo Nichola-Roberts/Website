@@ -781,7 +781,7 @@ body.dragging-scroll {
     transition: max-height 300ms ease, opacity 200ms ease;
     max-height: 100000px;
     opacity: 1;
-    font-size: inherit;
+    font-size: var(--text-base) !important;
 }
 
 .collapsible-content.collapsed {
