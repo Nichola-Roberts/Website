@@ -4,17 +4,6 @@ You’re sitting there, trying to block out your thoughts, trying to focus on th
 
 When you start looking at life from this perspective. That you have a mental energy limit that you can’t push beyond. Things start making a lot more sense. 
 
-# A Note Before We Begin
-This theory introduces a new way of looking at our behaviour. It's already help me understand myself and others in ways that have been hugely beneficial to me. 
-
-I will warn you now though. It’s going to be quite a long read. Sometimes it might feel uncomfortable. I’ve learnt a lot about myself writing this. Including some slightly uncomfortable truths. And I’m sure you will too. 
-
-It’s also helped me understand the people in my life better. Even the most confusing and complicated ones. So if that’s what you are looking for. Then this read is probably worth it.
-
-You don’t need to read it all at once. The page will save your progress. There are also other tools to help you customise the page and hopefully make it easier to read.
-
-So let's get started.
-
 # Energy Landscape
 Imagine you’re a ball, standing on a path in front of a vast landscape. There are hills, mountains and valleys. There are paths running everywhere. You see them tracing down the valleys. Winding round the mountains. Branching out. Joining back together. 
 
@@ -213,11 +202,11 @@ So they learnt vulnerability was a weakness. It would always get them hurt.
 As an adult they never trust anyone. They never truly let anyone in. Even when they want to. Because that’s the trick. That’s when they get hurt the most. In a world where you can’t trust anyone. You have to be smart. You have to play the system. Learn to get what you need. Without risking a thing.
 
 ## “Don’t Trust Reality”
-Another child has their reality diminished. 
+Another child has their reality dismissed. 
 
-Maybe their mum forgot their birthday. They casually mentioned it on the day. And their mum even said sorry.
+Maybe their mum forgot their birthday. They casually mentioned it to her on the day. And their mum even said sorry.
 
-But then a week later. She said she didn’t forget. That she got them a present. It was confusing. The child knows it didn’t happen. Or they think they know. They can’t find any evidence of a present though. Maybe they lost it. They don’t think they got one. But their mum seems so sure.
+But then a week later. She said she didn’t forget. That she got them a present. It was confusing. The child knows it didn’t happen. Or they think they know. They can’t find any evidence of a present anyway. Maybe they lost it. They don’t think they got one. But their mum seems so sure.
 
 Their mum makes them perform the lie. Makes them say thank you.  It’s getting more confusing. What’s the truth? But the child knows it deep down. They just aren’t allowed to think it anymore. It gets buried down deep inside. And a false narrative lives over the surface.
 
