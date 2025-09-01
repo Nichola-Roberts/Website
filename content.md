@@ -225,6 +225,8 @@ These are just some of the mountains that could have formed. Each person's lands
 # Triggers
 The more mountains someone has the higher their baseline stress. When your landscape’s full of mountains you’re always on high alert. You’re extra vigilant. Those natural fluctuations feel dangerous. Any one of them could trigger you. And you’ll be right up that mountain. So you have to be careful all the time. Particularly around your core beliefs. And the sad thing is. Your optimum path. The steepest downward path is often hidden behind the mountains. So you keep bumping into them. 
 
+Let me demonstrate through the two most talked about opposing romantic scenarios.
+
 ## “They’ll see who I really Am”
 You just met someone perfect. But that’s what’s scary. No way would someone perfect waste their time with you. They just don’t know you yet. They can’t see who you really are. They can’t see that you’re damaged. That you're emotionally inadequate. The dark truth you carry around with you. 
 
@@ -249,7 +251,7 @@ It’s your partner. They are very sorry. They left their phone in a taxi. They 
 
 Phew. It was just a random fluctuation in the landscape after all. 
 
-These linked experiences reinforce our mountains. Turning them into mountain ranges of connecting peaks, all circling around the same dark “truth”.
+These repeated experiences reinforce our mountains. Turning them into mountain ranges of connecting peaks, all circling around the same dark “truth”.
 
 # Emergency Escape Routes 
 When you’re up a mountain. Stressed out of your mind. It feels unbearable. You can’t sit with it. You can’t wait until you calm down. It’s killing you. You need to get down. Right now. This very second. 
