@@ -89,12 +89,20 @@ class TimeTracker {
             });
         }, options);
         
-        // Observe all sections after content is loaded
+        // Observe all sections and H2 headings after content is loaded
         const waitForSections = () => {
             const sections = document.querySelectorAll('.content-section');
+            const h2Elements = document.querySelectorAll('.content h2[id]');
+            
             if (sections.length > 0) {
+                // Observe H1 sections
                 sections.forEach(section => {
                     observer.observe(section);
+                });
+                
+                // Also observe H2 elements that have IDs (from navigation)
+                h2Elements.forEach(h2 => {
+                    observer.observe(h2);
                 });
             } else {
                 // Keep checking until sections are available
@@ -129,23 +137,18 @@ class TimeTracker {
             return 'complete'; // 2+ minutes = green
         }
         
-        // For h2 sections - only show if parent h1 has 2+ minutes
-        // Get the parent h1 section ID (h2 IDs are like "section-h2-0")
-        const parentSectionId = sectionId.split('-h2-')[0];
-        const parentTime = this.getSectionTime(parentSectionId);
-        const parentSeconds = parentTime / 1000;
-        
-        // If parent h1 doesn't have 2+ minutes, keep h2 invisible
-        if (parentSeconds < 120) {
-            return 0; // Stay invisible
+        // For h2 sections - turn green after 30 seconds
+        if (seconds >= 30) {
+            return 'complete'; // Green after 30 seconds
         }
         
-        // If parent h1 has 2+ minutes and we're on this page 20+ seconds, show it
-        if (seconds >= 20) {
-            return 4; // 75% opacity - matching original max darkness
-        }
+        // Show progressive levels before 30 seconds
+        if (seconds === 0) return 0;
+        if (seconds < 10) return 1;
+        if (seconds < 20) return 2;
+        if (seconds < 30) return 3;
         
-        return 0; // Otherwise stay invisible
+        return 0;
     }
     
     updateSectionReadingLevel(sectionId) {
