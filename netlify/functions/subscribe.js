@@ -67,6 +67,25 @@ exports.handler = async (event, context) => {
     }
 
     try {
+        // Test database connection first
+        try {
+            await pool.query('SELECT 1');
+        } catch (dbError) {
+            console.error('Database connection error:', dbError.message);
+            // Return a user-friendly message when database is unavailable
+            return {
+                statusCode: 503,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*'
+                },
+                body: JSON.stringify({ 
+                    error: 'The subscription service is temporarily unavailable. Please try again later or contact support.',
+                    message: 'Service temporarily unavailable'
+                })
+            };
+        }
+        
         // Initialize database tables
         await initializeDatabase();
         

@@ -99,6 +99,8 @@ class MailingList {
             } else {
                 if (response.status === 409) {
                     this.showMessage('This email is already subscribed to our mailing list.', 'info');
+                } else if (response.status === 503) {
+                    this.showMessage('The subscription service is temporarily unavailable. Please try again later or contact us directly.', 'error');
                 } else {
                     this.showMessage(data.error || 'Failed to subscribe. Please try again.', 'error');
                 }

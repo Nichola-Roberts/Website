@@ -3,3 +3,6 @@ node_modules/
 .env.local
 local-test.js
 test-*.js
+
+# Local Netlify folder
+.netlify
