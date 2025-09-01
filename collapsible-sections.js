@@ -60,13 +60,8 @@ class CollapsibleSections {
                 return;
             }
 
-            // Process H2s in Emotional Overload section
-            if (foundEmotionalOverload && heading.tagName === 'H2') {
-                const headingText = heading.textContent.trim();
-                // Everyday Overload starts open, Trauma starts closed
-                const startCollapsed = headingText !== 'Everyday Overload';
-                this.makeHeadingCollapsible(heading, startCollapsed);
-            }
+            // Skip making H2s in Emotional Overload section collapsible
+            // (This section will have no collapsible subsections)
             
             // Process H2s after Core Beliefs
             if (foundCoreBeliefs && heading.tagName === 'H2') {
