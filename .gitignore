@@ -3,6 +3,8 @@ node_modules/
 .env.local
 local-test.js
 test-*.js
+check-subscribers.js
+*-subscribers.js
 
 # Local Netlify folder
 .netlify
