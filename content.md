@@ -316,20 +316,22 @@ Suddenly, you don’t feel hurt anymore. How could someone so small hurt you? It
 ## Self Sacrifice 
 Let’s imagine you were the child who learnt “I am a burden”. You just got bullied at school. You’re relieved to be home. But you're still feeling really upset. It’s hard to get it all off your mind. Your mum gets home from work. She does a double take. She can see you were crying. Oh no. 
 
-Your mum has just worked two shifts. And had an argument with her ex. She looks at you. It sends her even further up her own mountains. This one, in particular, represents her insecurity about being a bad parent. She knows she is failing you. But the thought is too much for her to bear. She snaps. She needs you to be ok. She needs to end the guilt you are creating in her. “Grow up. It’s not the end of the world. I have enough going on already. You'll push me over the edge if you keep this up”
+Your mum has just worked two shifts. And had an argument with her ex. She looks at you. It sends her even further up her own mountains. This one, in particular, represents her insecurity about being a bad parent. She knows she's failing you. But the thought is too much for her to bear. She snaps. She needs you to be ok. She needs to end the guilt you're creating in her. “Grow up. It’s not the end of the world. I have enough going on already. You'll push me over the edge if you keep this up”
 
 Right. You dry your eyes. You’re just making everything worse. You can see your mum visibly relax. Look. She’s right. You’re fine. You don’t need to ruin everything. Just put it out of your mind. Help her bring the shopping in. That will help her calm down. Maybe she’ll have some time for you later if you help her with her stress. You’ve learnt your only way down your mountain is to block it out. 
 
 If you give endlessly, how could you be a burden? 
 
-This is a strategy you carry into adulthood. If you never ask for anything you can’t be a burden. No one can trigger your core belief. The problem is you’ve expanded its footprint. Now. If someone doesn’t need your help. Then you must be an even bigger burden than you thought. You’re in the way. Even when all you’re trying to do is help. 
+This is a strategy you carry into adulthood. If you never ask for anything you can’t be a burden. No one can trigger your core belief. The problem is, now you’ve expanded its footprint. Now. If someone doesn’t need your help. Then you must be an even bigger burden than you thought. You’re in the way. Even when all you’re trying to do is help. 
 
-Everyone has their own strategies. But one thing is always true. When people feel the unbearable, they will do absolutely anything to get down. To make things worse, these can become their own core beliefs, a new connecting mountain range. Your exit strategy becomes its own mountain. You might learn “I am dangerous”, “I’m an alcoholic”, “I need to lie to be accepted”. 
+## The New Mountain
+Everyone has their own strategies. But one thing is always true. When people feel the unbearable, they will do absolutely anything to get down. 
 
-Now you’re trapped between two mountains. The one you were running from. And the one you built to get away.
+And to make things even worse. These can become their own core beliefs. A new connecting mountain range. Your escape strategy becomes its own mountain. You learn “I am dangerous”, or “I’m an alcoholic”, or “I need to lie to be accepted”. 
 
-## Pushing People Away
-When someone else is infringing on your mountains. You might feel an urge to push them away. Snap. Go cold. Stonewall. Distract them by poking at their own mountains. At least this way they will stop. 
+So now you’re trapped between two mountains. The one you were running from. And the one you built to get away.
+
+And the very worst part? People can see this new one. Your escape route. The one that's automatic. It becomes a label. "Controlling", "Alcoholic", "Manipulator". A new mountain of shame. That others feel justified pointing out. Right to your face.
 
 # Protective Structures
 These emergency exits get us down the mountain. But we still feel the pain. The core belief has still been triggered.
