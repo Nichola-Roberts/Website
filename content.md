@@ -338,33 +338,31 @@ So now you’re trapped between two mountains. The one you were running from. An
 And the very worst part? People can see this new one. Your escape route. The one that's automatic. It becomes a label. "Controlling", "Alcoholic", "Manipulator". A new mountain of shame. One that others feel justified pointing out. Right to your face.
 
 # Protective Structures
-These emergency exits get us down the mountain. But we still feel the pain. The core belief has still been triggered.
+These emergency escape routes might have got us down the mountain. But it was messy and painful. Far from ideal.
 
-So over time, we learn a new strategy. We learn to be protective of our mountains. To instinctively feel when they might be encroached upon. And stop the triggers before they even hit us. We build rules and systems to keep people away from our mountains. These are our protective structures.
+So over time, we developed better systems. We built defenses. Walls and rules designed to protect our mountains. Trying to ensure triggers never get within touching distance of our vulnerabilities. These are our protective structures.
 
-And these structures don't feel like a choice. They feel like a right. And it makes sense. We feel entitled not to be hurt.
+And when someone questions or challenges these structures, we feel justified defending ourselves. Because, we know, that deep down. Below this mountain. Behind all our defences, lies our most innocent and fragile self. So, of course, we are going to feel a responsibility to keep it safe.
 
 ## Monitoring 
-Imagine you grew up believing “I have no autonomy”. As a child, every decision was made for you.
+Imagine, as a child, every decision was made for you. You were taught “I have no autonomy.” 
 
-You were told when to wake up. When to go to school. At school, you were told what to do all day. You got home and had to start your homework. Then you had to start your chores. You weren’t allowed to see your friends. Weren’t allowed on your phone. Weren’t allowed to watch TV. Or listen to music. You weren’t even allowed to choose your own clothes. Or the words that were acceptable to say to your father. It was like your whole life happened to you.
+There were rules for chores. For homework. For when you could see your friends. Rules for your phone, your TV, your music. Rules for what you could wear, what you could say, even what you were allowed to think. It was like your life was something happening to you. Now, as an adult, every compromise hits that same loss of autonomy. Triggering that original wound. The same powerlessness. The feeling that your voice, your wishes, your safety simply doesn't matter enough. And it still hurts. A lot. 
 
-Now as an adult every time you compromise yourself you feel the stabbing pain. The pain of your voice not being enough. The pain of being worth less than someone else’s wishes. The pain of never being considered. And it hurts. A lot. 
+The only way to feel even remotely ok. And in control. Is by designing defences that finally create a space for yourself. So you check your partner’s phone. Because you need to know where they are. Who they’re with. What time they’re coming home. Everything. Not because you don’t trust them. But because their actions impact you. And you will be damned if you let someone have that much control over your life. Again.
 
-You have to find ways to protect yourself. It’s the only way to feel ok in life.
+They were back an hour late last time they were out with their brother. You remember sitting at home. Waiting. Feeling like your autonomy was out of control. All over again. So this time. You explain yourself. Calmly. You emphasise how important it is for them to stick to their word. To be courteous. Honorable. And you make sure they are clear. This isn't a preference you have. It's a non-negotiable part of a relationship with you. 
 
-Now you check your partner’s phone constantly. You need to know where they are. Who they’re with. What time they’re coming home. You need to know everything. Not because you don’t trust them. But because their actions impact you. And you don’t want someone having that much control over your life. Not again. It's not asking for much, is it. For them to just stick to the time they agreed to. I mean, they agreed.
-
-Last month they were an hour late. You remember sitting at home. Waiting. Feeling like your life was out of control all over again. You don’t want to control them. You just want control over your own life. 
+You don’t want to control them. You just want control over your own life.
 
 ## Manipulation 
-And maybe over time. You learn even that doesn’t work. Maybe you’ve been kind one too many times. But you can see it clearly now. Everyone is playing their own game. Everyone is looking out for themselves. You’ve learnt the world is cruel. And if you don't play the game you lose automatically. 
+And maybe over time. You learn even that doesn’t work. You feel like you've been kind one too many times. And you can finally see it all clearly now. Everyone in life is playing their own game. Solely looking out for themselves. You’ve been taught the world is cruel. And if you don't play the game then you lose automatically.
 
-Your partner wants to go out with their friends. And it would be ok. But not these friends. These friends think you’re bad. But you know what’s really going on. You see through it all. The friends are planting seeds. Suggesting they stand up for themselves more. That they aren’t being treated well. But it’s not fair. Your partner only tells them one side. Not the full story.
+Your partner wants to go out with their friends. And normally it would be ok. But not these friends. These friends think you’re problematic.
 
-Your partner asks if you'd be okay with them going. And no. You're not. But you can see they aren't really listening. They still want to go. You can feel the panic rising. What can you do? Then it pops into your mind. You’re reminded about a comment you overheard recently. About how these friends think your partner talks too much. Well that’s not quite what they said. You've twisted it slightly. You know you have. But it wouldn't work if you didn't.
+And it is so frustrating. Because you know what’s really going on. You see through it all. These friends are always planting seeds. Twisting your actions. Suggesting your partner is not being treated well. That they should stand up for themselves more. But it’s not accurate. Your partner only tells them their side. Not the full story.When your partner asks if you're ok with it. You think no. You're not. You can feel the panic rising. But what can you do? Then it pops into your mind. You’re reminded about a comment you overheard recently. These friends think your partner talks too much. Well that’s not quite what they said. You've twisted it slightly. You know you have. But it wouldn't work if you didn't.
 
-It slips out before you really think about it. You see your partner’s face drop. And they decide to stay home with you.
+It slips out before you really think about it. You see your partner’s face drop. They're embarrassed. And decide to stay home with you.
 
 Maybe you did lie a little. But everyone does. At least you are protecting yourself. You're not naive. You've been stomped on too many times to play fair.
 
