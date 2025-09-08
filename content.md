@@ -367,38 +367,76 @@ It slips out before you really think about it. You see your partner’s face dro
 Maybe you did lie a little. But everyone does. At least you are protecting yourself. You're not naive. You've been stomped on too many times to play fair.
 
 ## Keeping Score
-Maybe you have a mountain representing “I have no value”. 
+Maybe you have a mountain representing “I have no value”.
 
-You feel an unbearable emptiness every time someone doesn’t give back equally. It’s the pain of not being appreciated. Not being valuable enough to be treated well. Every time they forget to reciprocate it hurts. 
+You're on constant guard. Always scanning. Looking for moments when your value is overlooked. People prove it to you all over again. Your friends. Your family. Your partner. Your coworkers. Every time someone doesn't give back equally you sense it immediately. The emptiness. The loneliness. Knowing yet again that you are not valued enough to be treated well. No one thinks you need reciprocation. You are always over looked. Just not important enough. And it's not right.
 
-Last night you listened to your partner talk about work for hours. Tonight you’re a bit upset, but they want to go out with their friends. So you’re left alone with it. You feel the imbalance. And oh my god does it hurt. 
+Last night you listened to your partner talk about work for hours. Tonight it should be your turn. You've had an awful day at work. You feeling like quitting and you want to talk about it. You told your partner. But they won't cancel their plans with their friends. They won't even pop home first. There's a quiet rage inside you. You don't know what to do do about it. But it won't go away. In fact the more you think about it. The bigger it becomes. You feel a raw indignation about the injustice of it all.
 
-They've also not done the washing up. When it was their turn. And you paid for the last two meals out. The evidence is mounting. They take you for granted. But that’s what people do. You’re the kind of person who gets taken for granted. But inside you remain firm. You deserve better than this. You deserve to be valued. 
+No matter what you do. You can't quiet your mind. And there's list that keeps growing the more think about it. Each item you add triggers a new wave of anger. 6) they've also not done the washing up. And 7) they've not paid their half of the electricity. 8) or the take away last week. The evidence is mounting up.
 
-So you start keeping a mental scorecard. Maybe a real spreadsheet. Every interaction is weighed up and measured. You can't help it. It's automatic. You start making rules. Bills have to be split exactly. Chores assigned rigidly. Then at least your value feels provable. You are just making absolutely sure you get your worth back.
+They take you for granted. Just like everyone else does. You’re the kind of person who gets taken for granted. And it's not fair. You can't take it anymore. You just want someone to care about you enough. Just once. For someone to notice your needs. And care about them.
+
+You know you deserve better than this. You deserve to be valued.
+
+You double down your commitment to your mental scorecard. Maybe you even start a real spreadsheet. Every interaction is weighed up and measured. You can't help it. It's automatic. You start making rules. Bills have to be split exactly. Chores assigned rigidly. Then at least your value can be proven. You will make sure you get your value back. What ever it takes. No one is going to be taking advantage of you anymore.
 
 ## Competence
-Maybe your worth is tied to your competence.
+Maybe you were taught your worth is tied to your competence.
 
-Maybe as a child your parents didn’t know how to meet you where you were. Didn’t know how to be there when you fell out with your friends. When you failed your spelling test. When you fell over. 
+Your parents didn’t know how to meet you where you were. As a whole, beautifully complex person.
 
-But they were there for gymnastics. This is when you had their attention. You learnt to channel your needs through this lens. When you did well at gymnastics you were loved, you were validated, you had worth. 
+They didn’t know how to be there when you fell out with your friends. When you failed your spelling test. When you fell over. Or even when you won the school award for best poem.
 
-Now as an adult, your self-worth is still wrapped up in your achievements. They are the structure you’ve built to hide your mountain. They are propping you up. But the structure barely works. You still feel worthlessness inside.
+But they were always there for gymnastics. At gymnastics you had their attention, their love. Even your sadness about falling brought connection. At gymnastics you had worth.
 
-So you overcompensate. You channel all your energy into achieving even more. You never feel brave enough to pause. To be your true self. Because if you are not your achievements, then who are you?
+Now as an adult. You feel alive when achieve. In fact it's the only time you ever really feel ok. In between successes a stark reality starts to creep in. Am I valuable without an achievement on display? And it's uncomfortable to think about.
 
-Or maybe it wasn't sports. Maybe it was your academic achievements. Your parents always praised you when you did well at school.
+But it's also what drives you. Powers you to achieve more than others. Which ensures you stay special. And therefore deserving of taking up space on this planet.
 
-Now, at work, you’ve just finished a challenging project. You’ve been working on it for months. And you’re proud of what the team has achieved. Your contribution was the most important. Of course. But everyone did well.
+This pattern follows you into your job.
 
-At a stakeholder meeting, your colleague answers a question. He explains one of your core ideas, but he doesn't mention your name. You watch the faces in the room light up. They're impressed. It's infuriating. You did that. And he's getting the credit. You know it will look desperate. Petty, even. But you can't help it. You don’t want to. But you have to say it. “I actually did that part.” You feel embarrassed. But you had to. You had to get your worth on the record.
+You’ve just finished a challenging project. Everyone's been working hard for months. You’re proud of what the team has achieved. Your contribution was the most important. Of course. But everyone did well.
 
-Over time, it becomes a habit. You document all your contributions. You steer conversations towards your achievements. It becomes an insatiable hunger. Because without the constant proof, you feel like you are nothing. Just like you always feared you were deep down. 
+Your manager asks a colleague to present the results at a stakeholder meeting. It should have been you. It really should have been you. It's infuriating.
 
-And as if this wasn’t bad enough. Later that year someone new joins the team. And they're a little bit better than you. At first you don’t believe it. But then their ideas keep working. And better than yours. And they’re funny too. Everyone seems to like them. You can’t help but feel resentful.
+Anyway. In the meeting the colleague answers a question. He explains one of your core ideas. But he doesn't mention your name. The rage intensifies.
 
-How do you prove your worth now. Being good at your job was the only thing you had. It was the one thing that kept you afloat. The one thing that gave you purpose. And now it’s gone. It’s unbearable. You have to bring them down. You have no alternative.
+You watch the faces in the room light up. They're impressed. It's maddening.
+
+You did that. And he's getting the credit. You know it will look desperate. Petty, even. You don’t want to. But you have to say it. You can't help it. “I actually did that part.”
+
+You feel embarrassed. But you had to. You had to get your worth on the record.
+
+Over time, it becomes a habit. You document all your contributions. You steer conversations towards your achievements. It becomes an insatiable hunger. Because without the constant proof, you feel like you are worth nothing. Just like you always feared you were deep down.
+
+And as if this wasn’t bad enough. Later that year someone new joins the team. They keep getting better results than you.
+
+At first you thought it was luck. But it keeps happening. And you've worked out how. They are cheating the system. They are picking the easiest projects. No one else can see it though. People keep complimenting them. Like they are great. You feel that old drive to achieve kicking in. Full force.
+
+But it's not working like it used to. You don't line up and get scored fairly like in gymnastics. Workplace politics mean you aren't being seen. The metrics are being manipulated. It's just not right.
+
+Later that day. You watch them making jokes. Everyone's laughing. The idiots. Why can't they see through them. See they are being played.
+
+Your anger is hugely motivating still. But you're running out of options to channel it down. How can you prove your worth now. No one is paying you any attention.
+
+The emptiness is becoming louder. Unbearably so. The motivation getting stronger and stronger. You think to yourself. You need to show everyone the truth. Show everyone they are a charlatan. That they are the one who is worthless. Not you. You have no alternative.
+
+## Self Sacrifice 
+Maybe you protect yourself by always giving.
+
+As a child you were constantly punished. Whether you did something wrong or not. Maybe you were taught there was something inherently bad within you. So you learnt to be a good person. To always do the right thing. To hold yourself to the highest standards. A perfectionist over your own character.
+
+Now you’re the one in the friendship group who's s always there. You lend money. Buy gifts. Listen to everyone’s problems. Even organise the events. You’re indispensable. You know it. They know it. But you have to be. Because you don’t believe you are worth much.
+
+Why would anyone keep you around unless you compensate. Overcompensate. This way your friends know your worth. Because you are constantly demonstrating it. Proving it. They’d be mad to let you go.
+
+But when you haven't given for a while. The feeling builds inside. What if they have stopped needing me. What if I am not valuable any more. My personality isnt enough to maintain these relationships. Quick let's bake them a cake.
+And it's even worse when someone thinks a bad thought about you. Or makes a bad comment. It kills you inside.
+
+But no you can't be bad. You know it can't be true. You are a good person. You try so hard to be good. You know that you are. You have to be.
+
+Because if the criticism were true. If, after all that effort, you were still bad. What could you do? What would that say about you?
 
 ## Hiding Yourself
 Maybe your core belief is “I am different”. 
@@ -413,23 +451,23 @@ Maybe it's a deep secret you hold. Something from childhood that got locked away
 
 So you are never fully present. You are always calculating how much can you show them. How close can you be without risking it all being taken away.
 
-## Self Sacrifice 
-Maybe you protect yourself by always giving. 
-
-You’re the one in the friendship group that’s always there. You lend money. Buy gifts. Listen to everyone’s problems. Maybe even organise the events. You’re indispensable. You know it. They know it. But you have to be. Because you don’t believe you are worth much. 
-
-Why would anyone keep you around unless you compensate. Overcompensation. This way your friends know your worth. Because you are constantly proving it. They’d be mad to let you go.
-
-Maybe as a child you were constantly punished. Whether you did something wrong or not. Maybe you were taught there was something inherently bad within you. So you learnt to be a good person. To always do the right thing. To hold yourself to the highest standards. A perfectionist over your own character. 
-
-So at least you knew you were good. Even if no one else did. 
-
-So now. When someone thinks a bad thought about you, or says a bad comment, it still kills you inside. But your defences are ready. You know it’s not true. You know you are a good person. You try so hard to be good. You know that you are.
-
-This is the only way you can feel safe. Being able to defend character, your actions. Because if the criticism were true. If, after all that effort, you were still bad. What could you do? What would that say about you?
-
 ## Beat Them To It
 Maybe you believe everyone has the truth about you ready to go. On the tip of their tongue. Ready to hurt you. So you learn to make that self deprecating joke first. Learn to say “It doesn’t matter anyway”. Learn never to chase that dream job. Or to ask out the person who obviously likes you. You can't stop the pain of the impact. But you can dampen it.
+
+Maybe when someone starts to get too close. You hurt them. Say something mean to push them away.
+
+## The Painful Catch 22
+The saddest truth is that our protection always fails. Even when our structures work perfectly, they're never enough. They can dampen the pain. But never heal the wound we're trying to hide.
+
+They fail for a simple reason. Demonstrations of worth only count when they are freely given. Controlling someone doesn't make us feel valuable. We know it was our ultimatum, not our worth, that motivated them. Achievements just become a shield hiding the real person we want to be loved for. And hiding ourselves makes it impossible for anyone to see us. Let alone value us.
+
+So what's the alternative? To put our structures aside. To be vulnerable. But that feels like the most dangerous option of all. It leaves us exposed to our mountains, and to making everything even worse. Because what is certain in life? Death, taxes, and being badly hurt by the people we love the most.
+
+The other people in our lives are navigating their own mountains, too. Their own energy limits. Our vulnerability and honesty is probably enough to trigger them. Being open isn't always the sensible option. It could easily leave us even more alone.
+
+Ultimately, we can't heal ourselves. Our brains learned the truth of our wounds accurately, and they won't unlearn it without new evidence from the outside world. And unfortunately we need that counter-evidence from the real, imperfect people in our lives.
+
+And that is the painful catch-22. The very people we need to heal us are the same people who are guaranteed to hurt us. And trying to force them not to hurt us, closes off any chance of healing.
 
 # Erosion
 Our mountains feel permanent. Insurmountable. But they’re not. They can erode. 
