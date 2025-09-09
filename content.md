@@ -291,7 +291,7 @@ You might have learnt to ignore your emotions. Block them out through compartmen
 ## Desperation
 Instead. You might have learnt to make your emotions so loud they are impossible for others to ignore. You might beg and plead when you fear abandonment. “Please, I can’t cope without you”. “I don’t know what I would do if you left”. You feel so desperate. If they could see how deeply you were hurting. Maybe then they would help you down your mountain. 
 
-## Manipulative
+## Manipulation
 You might have learnt the world doesn’t listen to your truth. 
 
 Your partner wants to go away for the weekend with their family. And you can already feel your abandonment mountain rising. You don't want to spend the whole weekend on this mountain. But the sad thing is. You can't ask them not to go. You know exactly what would happen if you did. 
@@ -452,59 +452,67 @@ Maybe it's a deep secret you hold. Something from childhood that got locked away
 So you are never fully present. You are always calculating how much can you show them. How close can you be without risking it all being taken away.
 
 ## Beat Them To It
-Maybe you believe everyone has the truth about you ready to go. On the tip of their tongue. Ready to hurt you. So you learn to make that self deprecating joke first. Learn to say “It doesn’t matter anyway”. Learn never to chase that dream job. Or to ask out the person who obviously likes you. You can't stop the pain of the impact. But you can dampen it.
+Maybe you believe everyone has the truth about you ready to go. Right on the tip of their tongue. About to hit you at any moment. So you learn to make that self deprecating joke first. Learn to say “It doesn’t matter anyway”. Learn to never chase that dream job. Or to ask out the person who obviously likes you. 
 
-Maybe when someone starts to get too close. You hurt them. Say something mean to push them away.
+But sometimes that's not enough. Sometimes you have to push them away first. Before they get the chance to do it to you.
+
+You can't stop the pain of reality. But you can soften the impact.
 
 ## The Painful Catch 22
-The saddest truth is that our protection always fails. Even when our structures work perfectly, they're never enough. They can dampen the pain. But never heal the wound we're trying to hide.
+The saddest truth is that these structures always fail us. Even when they work perfectly. And we get that validation. It’s never real. It never soothes the wound we were trying to heal. 
 
-They fail for a simple reason. Demonstrations of worth only count when they are freely given. Controlling someone doesn't make us feel valuable. We know it was our ultimatum, not our worth, that motivated them. Achievements just become a shield hiding the real person we want to be loved for. And hiding ourselves makes it impossible for anyone to see us. Let alone value us.
+But to put them to one side. And risk being vulnerable. It may be virtuous. But it’s bound to get us hurt. It’s probably the most dangerous option of them all. Because what is certain in life? Death, taxes and being hurt by others. Especially the ones who love us the most. 
 
-So what's the alternative? To put our structures aside. To be vulnerable. But that feels like the most dangerous option of all. It leaves us exposed to our mountains, and to making everything even worse. Because what is certain in life? Death, taxes, and being badly hurt by the people we love the most.
+Because they’re all navigating their own mountains too. Hitting their own energy limits. So asking them to pause. To hear our honesty. Our openness. Just for a second. It could be asking for too much from them. We could be asking for more than they have to give. So even after all that risk. All that vulnerability. We could easily end up being even more hurt, even more alone. 
 
-The other people in our lives are navigating their own mountains, too. Their own energy limits. Our vulnerability and honesty is probably enough to trigger them. Being open isn't always the sensible option. It could easily leave us even more alone.
+But ultimately, we also can’t heal ourselves. Our core beliefs were supported by evidence. They were learnt. They were what kept us safe. Kept us alive. We can’t risk writing over them until we know it’s safe. Until we’ve seen different outcomes. Gotten counter evidence. And unfortunately. We can only get this new evidence from the real, messy and imperfect people in our lives. 
 
-Ultimately, we can't heal ourselves. Our brains learned the truth of our wounds accurately, and they won't unlearn it without new evidence from the outside world. And unfortunately we need that counter-evidence from the real, imperfect people in our lives.
+And these are our painful catch 22s. The very people we need to heal us are the ones destined to hurt us. And the structures we need to keep us safe, also stop us from healing. 
 
-And that is the painful catch-22. The very people we need to heal us are the same people who are guaranteed to hurt us. And trying to force them not to hurt us, closes off any chance of healing.
+And if that wasn’t bad enough. There’s also another truth. Maybe the harshest truth of them all. 
+
+The more we try to stop people from hurting us. The less chance we have to heal. 
+
+Ultimatums are always coercive. Achievements are always props. Mirages are always masks. Using these tools can never prove to us our worth. 
 
 # Erosion
-Our mountains feel permanent. Insurmountable. But they’re not. They can erode. 
+And while that sounds very fatalistic. Absolute doom and gloom. It's not. Our mountains might feel permanent. Insurmountable even. But they can and they do erode.
 
 ## Time
-Think about your worst break up. How it felt like the end of the world. Life didn’t feel like living anymore. You thought you would never recover. Never find a love like that again. 
+Think about your worst break up. How you didn’t think you’d ever recover. Life didn’t feel like living anymore. You were sure you would never love like that again. 
 
-But looking back 10 years later, the memory feels distant. A bit absurd. It might as well be someone else's life. You can see they were never right for you. 
+But now. Looking back. 10 years later. The memory is distant. In fact, it’s a bit absurd. It might as well have been someone else’s life. You can see it very clearly now. They were never right for you. 
 
-But at the time it was devastating. You cringe when you remember how you acted. Trying to be friends, even though it broke you. Pretending to be happy when they got a new partner. It's embarrassing to think back.
+But at the time it was devastating. You cringe thinking about it. How you tried to be friends. Even though it broke you. Pretending to be happy for them when they got a new partner. It’s embarrassing to think about. 
 
-Back then, your whole landscape was shaped by them. Every path led back to them. The gravity of your old life together kept pulling you in. Even when every step you took. To try to reach them, only  ended with them walking further away.
+Back then. Your whole landscape was shaped around them. Every path rolled down towards them. The gravity of your old life kept pulling you back. Only to feel the thud. The thud of them caring less. The thud of them moving on. Every path you took to reach them, led to them walking further away. 
 
-You remember the song you played on repeat. The one that spoke directly to your heart. You remember your friends and their endless patience. The times you cried together over a rom-com. The way they helped you see the relationship more clearly.
+You remember the song you played on repeat. The one that spoke directly to your broken heart. It’s funny to think about now. You also remember your friends' endless patience. The times you cried together over a rom-com. The way their wisdom helped you see the flaws in the relationship more clearly. 
 
-And then you remember the day you bumped into them in the street, a few years later. You were genuinely pleased to see them. You said hello. And then you just carried on with your life.
-
-Healing from our core wounds is harder. A core wound is often a mountain range. One we spent our entire lives navigating around. We built paths and protective structures to keep it safe. The paths we use to avoid it are deep and well worn. We rarely feel brave enough to start a different path and look at it head on. 
+And then you remember the day you bumped into them in the street. A few years later. You were genuinely pleased to see them. You said hello. Asked how they were. And then just carried on with your life. 
 
 ## Processing
-Processing the pain of our past also helps us heal. Often this happens with a safe person. Like in therapy.
+Healing from our core wounds is harder. It's often a whole interconnected mountain range. One we’ve spent a lifetime building detours around. And these bypasses are deep and well worn. So we rarely feel brave enough to take the sharp turn and look at it head on. 
 
-A therapist can give you the validation you never got as a child. They might say things like "Yes, what happened to you was bad." or "You did well to survive that." And for the first time. It becomes safe to think maybe it wasn't your fault. Maybe these aren't failings with you. Maybe what happened to you was enough to break anyone. Maybe you're not actually broken. Maybe you can heal.
+But sometimes we can. Sometimes we take that dusty single lane road. And start the hard, and scary process of processing the pain of our past.
 
-So, slowly you test them. Do they really accept you? Are they just being nice because you pay them? Can you trust them with your deepest fears?
+A therapist can give you some of the validation you never got as a child. They might say things like "Yes, what happened to you was bad." or "You did well to survive that." And for the first time. It feels safe to think maybe it wasn't your fault. Maybe these things weren’t failings of you. Maybe what happened was enough to harm anyone. Maybe you're not actually broken. And maybe. Just maybe. You can heal.
 
-You imagine telling them. Seeing it in their face. Their flinch. Their awkwardness. Then they have to pretend you are normal. That your behaviour wasn’t bad. Because that's their job. 
+So, slowly you test them. Do they really accept you? Or are they being nice because they're paid? Can you actually trust them with your deepest fears?
 
-But if a therapist can’t accept you. Then you know no one can. You can’t take any risk.
+You imagine telling them. But then you also imagine seeing the truth in their face. Their flinch. Their awkwardness. And then you imagine their lie. Having to pretend you’re normal. That your behaviour wasn’t that bad. Because that's their job. They have to tell you they accept you.
 
-Over time you slowly circle closer and closer. They seem to like you. Enjoy your company. Maybe you should trust them with the truth. But actually. What is the truth? You don’t even know it. All you have is a tangled web of memories, and feelings you were told were wrong. You can’t tell them any truth. You can’t find it yourself.
+But if a therapist can’t accept you. Then you know that no one can. You can’t take any risk on this.
 
-Together you work through everything. You process some painful memories. Gain some new understanding. Then suddenly it hits you both. You believe love is something you have to earn. But you can never be good enough to earn it. That’s it. That’s the rule you’ve been living your whole life around.
+Over time you slowly circle closer and closer. They seem to like you. Enjoy your company. Maybe you should trust them with the truth. But actually. What is the truth? You don’t even know the truth. All you have is a tangled web of memories, and feelings you were told were wrong. You can’t actually tell them any truth. You can’t find it yourself.
 
-You knew it on some level. But you never truly knew it. You feel relieved. You can see you've been treating relationships like a job interview. And you always felt destined to fail it.
+Together you work through things. You process some painful memories. Gain some new understanding. Then suddenly it hits you both. You believe love is something you have to earn. But you can never be good enough to earn it. That’s it. That’s the rule you’ve been living your whole life around.
 
-You're not cured. The mountain of unworthiness is still there. But for the first time, you can see it. You can look at it. And it’s ludicrous. Everyone deserves love. You can’t make someone love you by doing tasks.
+You knew it on some level. That mountain was always there. But now you’ve mapped it. You feel relieved. You can see you've been treating relationships like a job interview. Trying to prove to them, and to yourself that you’re valuable. 
+
+You're not cured. The mountain of unworthiness is still there. But for the first time, you can see it. You can look at it. And it’s ludicrous. Everyone deserves love. You know you can’t make someone love you by doing tasks.
+
+In reality. You’ve been controlling them. While hiding yourself. You’ve never given anyone the autonomy to love you for you. To start to erode your mountains.
 
 ## Counter Evidence
 Nothing has the power to both hurt and heal like romantic relationships. 
@@ -539,9 +547,13 @@ But it turns out your mountains directly oppose each other. Your “I’m too mu
 Solving these patterns is where the hard work begins. Years of trial and error. Cycles of hurt and healing. Hoping that somehow you are circling towards each other rather than away. This is where the real erosion happens. And there are no easy answers.
 
 ## Opposing Mountains
-Our biggest healing often happens through meeting our opposite. The person who naturally finds it hard to give what we need to heal. Anxious attachment meets avoidant. Unworthy meets incapable. True, deep healing comes from being loved by someone who has to overcome their own mountains to love you. 
+Our biggest healing often happens through meeting our opposite. The person who naturally finds it hard to give what we need to heal. Anxious attachment meets avoidant. Unworthy meets incapable.
 
 It can be a gift or a curse, or both depending on the relationship.
+
+But to heal our mountains. We have to circle their bases. Sometimes find ourselves up their paths. Because we have to forge those other roads. We have to form those counter arguements. 
+
+And true, deep healing comes from being loved enough by someone. That they are driven to overcome their own mountains just to love you better.
 
 # Holding Patterns
 Eroding isn’t a given in a relationship. Our protective structures can make relationships stable. Often at the expense of erosion. 
