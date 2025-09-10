@@ -515,27 +515,33 @@ You're not cured. The mountain of unworthiness is still there. But for the first
 In reality. You’ve been controlling them. While hiding yourself. You’ve never given anyone the autonomy to love you for you. To start to erode your mountains.
 
 ## Counter Evidence
-Nothing has the power to both hurt and heal like romantic relationships. 
+Nothing has the power to both hurt and heal us like romantic relationships. 
 
-Imagine you have a core belief that you are too much. It’s date seven now. And they seem to like you. You’re in the honeymoon period. Free falling down the landscape. Ecstatically happy. All your paths are aligning towards them. It’s starting to feel like meeting them was inevitable. It was fate.
+Imagine you’re dating someone new. And you have a core belief that you’re too much. 
 
-You’re so happy. You’re not affected by your normal triggers. Your brain is forming new pathways. 
+It’s date seven now. They seem to like you. It’s nice. You’re still in the honeymoon period. Free falling down the slopes. Ecstatically happy. All your paths are aligning towards them. Towards their gravity. And it’s starting to feel like fate. Meant to be. Like meeting them was inevitable. 
 
-Take last week. You casually mentioned that it hurt when they didn't kiss you goodbye. You braced yourself for a fight. But they just said they were sorry. They were in a rush. Then, the next time they left, they went out of their way to make you feel special.
+And it feels blissful. You’re not affected by any of your normal triggers. Your brain is happily taking risks and creating new neural pathways. 
 
-This isn't how it's supposed to work. People are supposed to get defensive. To call you needy. To hurt you back. But this person doesn't think you're too much. They’re rewriting your landscape.
+Take last week for example. You casually mentioned that it hurt when they didn't kiss you goodbye. You braced yourself for a fight. But then. Then, they just said they were sorry. They were in a rush. They felt bad. Then. The next time they left, they went out of their way to make you feel special.
 
-Then, the next week, your mum calls. She makes a seemingly harmless comment. “Oh, your sister did that last week and said it was easy. But you’ve always found these things a bit harder, haven't you? So you did really well.” You know it's just how she is. She doesn't mean much. But it still knocks you for 6. Why is she always like this.
+That’s not how it's supposed to work. People are supposed to get defensive. To call you needy. To hurt you back. But it seems like. Well. Maybe. Maybe, this person doesn't actually. Um. Think you are too much. 
 
-A lot of people have worse childhoods. This shouldn’t affect you so much. You must be weak. Sticks and stones and all that. Your mum just has a habit of making you feel worthless. Like you were the consolation prize daughter. And it really gets to you. Even though you know it shouldn’t.
+And with every kind word. Every promise kept. They’re slowly rewriting your landscape.
 
-Your partner comes round. They can see you’re upset. You don’t want to tell them. It feels embarrassing. Letting a little thing like this affect you so much. You know how people usually react.
+Then, the next week. Your mum calls. She makes a seemingly harmless comment. “Oh, your sister did that last week. She said it was easy. But you’ve always found these things a little bit harder, haven't you? So you did really well.” 
 
-They’re dismissive. They say like "All parents damage their kids." Which is just the polite way of saying your pain doesn't count. That it isn’t big enough to matter. That you should have got over it a long time ago.
+You know it's just how she is. She doesn't mean it how you took it. But it still knocks you. Why is she always like this?
 
-They really want to know though. So you take the risk. And they listen. Suddenly, you realise three hours have passed. And they are still there. Still listening. You feel something you have never felt before. Validation. Like maybe your mum’s words were cruel. And maybe it’s ok that they hurt you so much. 
+A lot of people have worse childhoods. You shouldn’t let it affect you so much. You must be weak. Sticks and stones and all that. Your mum just has a knack of making you feel worthless. Like. Like you were the consolation prize child. And it really gets to you. Even though you know it shouldn’t.
 
-And maybe, just maybe your emotions are valid. Maybe you aren't too much. Maybe people don’t leave when they know you better. Maybe sometimes you are emotional. Sometimes you do cry. But that’s ok. They will love you anyway.
+Later your partner comes round. They can see you’re upset. It feels embarrassing. You don’t want to tell them. You’re overreacting. It’s only a little thing. And you know how people normally react.
+
+Normally they’re dismissive. They say like "All parents damage their kids." or “Oh my mum was like that too”. Which is just the polite way of saying your pain doesn't count. This isn’t big enough to matter. You should have got over it a long time ago.
+
+Your partner really wants to know though. They’re pushing you. So you take the risk. And they listen. Weird. But suddenly you realise three hours have passed. And they’re still there. Still listening. You feel something you’ve never felt before. Validation. Security. Like maybe your mum’s words were cruel. And maybe it’s ok.
+
+Maybe, just maybe your emotions are valid. Maybe you aren't too much. Maybe people don’t leave when they know you better. Maybe sometimes you are emotional. Sometimes you do cry. But maybe that’s ok. Maybe people will love you anyway.
 
 ## Resolving Friction
 But inevitably one day. When you are both stressed. And you both have other things on your mind. You have an argument. And it’s a big one. Your partner was supposed to meet your parents, but they cancelled at the last minute. Said they had to work. It feels suspicious. You're not sure you believe them.
@@ -547,47 +553,58 @@ But it turns out your mountains directly oppose each other. Your “I’m too mu
 Solving these patterns is where the hard work begins. Years of trial and error. Cycles of hurt and healing. Hoping that somehow you are circling towards each other rather than away. This is where the real erosion happens. And there are no easy answers.
 
 ## Opposing Mountains
-Our biggest healing often happens through meeting our opposite. The person who naturally finds it hard to give what we need to heal. Anxious attachment meets avoidant. Unworthy meets incapable.
+But to heal our mountains. We have to circle their bases. Sometimes take their paths. Because that’s what enables us to forge new routes. Live those counter arguments.
 
-It can be a gift or a curse, or both depending on the relationship.
+That’s why our biggest healing often happens through meeting our opposite. The person who naturally finds it hard to give what we seek to heal. 
 
-But to heal our mountains. We have to circle their bases. Sometimes find ourselves up their paths. Because we have to forge those other roads. We have to form those counter arguements. 
+Anxious meets avoidant. Unworthy meets incapable. Controlling meets submissive.
 
-And true, deep healing comes from being loved enough by someone. That they are driven to overcome their own mountains just to love you better.
+And it can be a gift or a curse. Or both depending on the relationship.
+
+But true, deep healing comes from acceptance. From someone seeing the beautiful, messed up human being that we are. And loving us anyway. And that person caring enough. Being driven enough. To overcome their own mountains. Just to love us that little bit better each day. 
 
 # Holding Patterns
-Eroding isn’t a given in a relationship. Our protective structures can make relationships stable. Often at the expense of erosion. 
+But as we've seen, healing isn’t a given in a relationship. Our protective structures can make relationship patterns stable. Often at the expense of erosion.
 
 ## Careful Distance
-Your partner forgot to take the bin out. Yet again. It riles you up a little bit. Not enough to start a real fight. But you can’t help but make a sarcastic comment. “I’ll take the bins out myself then shall I?”. They look at you. They know exactly what you meant. They answer you back. “Well, I did walk the dog twice today.”
+Your partner forgot to take the bin out. Yet again. It riles you up a little bit. Not enough to start a real fight. But you still can’t help but make a sarcastic comment. “I’ll take the bins out myself then shall I?”. They look at you. They know exactly what you meant. So they answer you back. “Well, I did walk the dog twice today. How many times did you do it?”
 
-You want to say more. But you know to just leave it. You said your piece. Made your point the only way you know how. Neither of you have ever worked out how to feel heard in this situation. Nothing you’ve tried has ever worked. 
+You want to say more. But you know it’s best to leave it. You said your piece. Made your point the only way you know how. Neither of you have ever worked out how to do this. How to feel heard in this situation. Nothing you’ve tried has ever worked. 
 
-You could try to tell the truth. That it made you feel uncared for. But that would hit their mountain about not being good enough. They would get defensive. Which would have sent you further up your mountain. 
+You could tell the truth. That it made you feel uncared for. But that would hit their mountain. About not being good enough. They would get defensive. Which would’ve sent you further up your mountain. Then it would have escalated.
 
-You both know the games and the moves by now. 
+You both know the game. And the moves by now. 
 
-Over time you’re drifting further apart. You still love them. But they feel so far away sometimes. 
+Over time you’re drifting further apart. You still love them. But they feel so far away sometimes.
 
 ## Oscillating Closeness 
 Some couples find stability through intense cycles.
 
-You’re very, very deeply in love. So is your partner. But you can’t seem to make it work. You seem to constantly trigger each other. Your relationship has become a battle ground. You can’t help but think. Maybe it’s just a trauma bond now. 
+You’re very, very deeply in love. So is your partner. But you can’t seem to make it work. You seem to constantly trigger each other. So your relationship has become a battle ground. Sometimes you can’t help but think. Maybe it’s just a trauma bond these days. 
 
-After a particularly bad argument you break up. Again. Maybe you have to finally accept they aren’t the one for you. You just can’t find any way to make it work. You wish you could. But this is too hard. You can’t keep living like this. 
+After a particularly bad argument you break up. Again. Maybe you have to finally accept they aren’t the one for you. Because you just can’t find any way to make this work. You wish you could. But it’s too hard. You can’t keep living like this. 
 
-You spend some time apart. It hurts. You just want to call them. Get back together. All your paths still lead to them. But you can’t take the pain of the relationship anymore. So instead, you’re living in a daze. Trying to find new paths. Putting yourself out there. If you force yourself to keep going, one will have to appear. It will finally lead you away from the pain. 
+You spend some time apart. It hurts. You just want to call them. Get back together. All your paths still lead to them. But you can’t take the pain of the relationship anymore. So instead, you’re living in a daze. Trying to find new paths. Putting yourself out there. Maybe if you force yourself to keep going. The right pathway will appear. The one that will finally lead you away from all this pain. 
 
-But then a video comes up on tiktok. About love. About how hard it is. But that it’s worth it. You’ve been so unhappy without them. Maybe the video is right, love is worth it. You don’t want to get hurt again. But you miss them. Later that night you text them casually. You just want to know if they are still there. 
+But then a video comes up on tiktok. About love. About how hard it is. But that it’s worth it. You’ve been so unhappy without them. Maybe the video is right. Love is worth it. You don’t want to get hurt again. But you miss them. Later that night you text them casually. You just want to know if they are still there. 
 
-Before you know it, you’re back together. Rolling down those hills all over again. These paths are carved deep into the landscape by now. The gravity makes it feel right. Like it’s just meant to be. It was silly to think you could live without them. 
+Before you know it, you’re back together. Rolling down those hills all over again. The descent is carved deep into the landscape by now. The gravity makes it feel right. Somehow even better than that first time. Like it’s just meant to be. It was silly to think you could ever live without them. 
 
-Over time you build more and more paths through the multiple breakups. Maybe you tried dating others. You tried focusing on work. You tried finding yourself. But in the end these paths all just cycle back. They all lead back to this person. This person who can give you the instant rush of rolling down to the valley together. 
+You’ve tried so many different things. Through the multiple breakups. Maybe you’ve tried dating others. You’ve tried focusing on work. You’ve tried to find yourself. But in the end. All these new paths just cycle back round. They always lead to this person. The one who can always give you that instant rush. The intensity of falling into the valleys bound together. 
 
-Maybe this is true love trying to find a way. Maybe it’s just dysfunction. You just don’t know. It would be easier if someone just told you. 
+Maybe this is true love trying to find a way. Maybe it’s just dysfunction. You just don’t know. It would be easier if someone just told you.
 
 # False Erosion 
-Sometimes we believe we are becoming a better person. That we are healing ourselves. But it’s just another form of avoidance. 
+It’s not just relationships we lie to ourselves about. 
+
+Often when we believe we’re becoming a better person. That we are healing. It’s actually just another form of avoidance.
+
+The brain is a master of avoidance. So when we realise our protective structures are maladaptive. What are we going to do? Are we going to heal? Or will we just build a brand new, more sophisticated bypass? 
+
+One that makes us feel superior to all the others who are still blindly crawling around on the floor.
+
+When actually in reality. All we’ve done. Is built a structure upon a structure. We’ve just got better at hiding it. And now, ironically, we’re even further away from healing. 
+
 
 ## Reassurance Seeking
 You’ve read the books. Been to therapy. Done the work. Learnt to be brave and communicate your needs. Even if they aren’t always well received. You are doing what is right for you.
@@ -693,4 +710,4 @@ There are no simple solutions. Understanding doesn’t mean always empathising w
 Which is a lot easier said than done. Especially when the modern world is so damaging. 
 
 # Mailing List
-I am also writing a book based on my theory. If you would like to be emailed about its release you can <a href="#" class="mailing-list-link">join my mailing list</a>
+I am releasing a book based on my theory. If you would like to be kept up to date you can <a href="#" class="mailing-list-link">join my mailing list</a>
