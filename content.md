@@ -607,55 +607,63 @@ When actually in reality. All we’ve done. Is built a structure upon a structur
 
 
 ## Reassurance Seeking
-You’ve read the books. Been to therapy. Done the work. Learnt to be brave and communicate your needs. Even if they aren’t always well received. You are doing what is right for you.
+You’ve read the books. Been to therapy. Done the work. Learnt to be brave and communicate your needs. 
 
-So it’s friday night. Your partner wants to go out with their friends. You can feel your abandonment fear creeping in. But that’s ok. You understand what to do. You just need to name it. You say to your partner. “I’m feeling really anxious about you going out. Can we just talk through my feelings first? Then you can go out.” 
+Even if this isn’t always well received. You’re doing what is right for you.
 
-You feel mature. You finally feel like you are growing. Learning to take up some space. You’ve learnt to explain your anxiety. And how it connects to your childhood wounds. 
+So it’s friday night. Your partner wants to go out with their friends. You can feel your fear of abandonment creeping in. But that’s ok. You understand what to do. You just need to name it. You say to your partner. “I’m feeling really anxious about you going out. Can we just talk through my feelings first? Then you can go out.” 
 
-You just need some reassurance to help with your anxiety. It’s asking for what you need. Exactly what you’re meant to do. But by the time you feel calm. They say they can’t be bothered to go out now.
+You feel mature. Like you’re finally growing. Learning to take up some space. You’ve learnt to name your anxiety. And how it connects to your childhood wounds. And right now you just need some reassurance. 
 
-They do seem a bit frustrated. You can understand that. But you’re their partner. They should want to care for you when you’re struggling. You’re just sharing your needs. What you don’t realise. Is that expressing your needs has just become a new, more enlightened form of control. 
+It’s asking for what you need. Exactly what you’re meant to do. 
+
+So they sit and talk to you. But by the time you feel calm. They say it’s too late to go out now. That they can’t be bothered.
+
+And they do seem a bit frustrated. You can understand that. But you’re their partner. They should want to care for you when you’re struggling. And there’s a bonus. You’re being vulnerable. Surely that should bring you closer together.
+
+But what you don’t realise. Is that all of this. Is not as it seems. It’s just a new, more enlightened form of control. 
 
 ## Being Upfront 
-Maybe you have completely mapped out your own patterns. You’ve learnt to accept you are flawed, and that’s ok. It’s taken a lot of work.
+Maybe you have completely mapped out your own patterns. You’ve learnt to accept you’re flawed. And that’s ok. It’s taken a lot of work.
 
 You meet someone new. It's only fair you tell them about yourself up front. "I have anxiety issues. Sometimes I need extra support. If this is too much for you, I understand". You're being clear aren't you. You need someone who can handle you. This way you know the relationship works for both of you. Before you get too invested.
 
-On your 5th date. Their mum calls. They look stressed. They say “I’m sorry this is really important. I need to go. I’m so sorry.” You don’t like it. If it’s not their mum it's their best friend. Or their niece. There’s always someone more important than you. You just want to feel important to your partner. It’s a familiar hurt. Because it reminds you of your emotionally distant mother always prioritising your sister. 
+On your 5th date. Their mum calls. They look stressed. They say “I’m sorry this is really important. I need to go. I’m so sorry.” You don’t like it. If it’s not their mum it's their best friend. Or their niece. There’s always someone more important than you. 
 
-It’s time to stand your ground isn’t it. If they can’t prioritise you now when will they ever be able to. You are clear. You are being boundaried. “I told you this up front. You knew what you were getting into. But if I am too much for you. We’d just better end it now”. 
+You just want to feel important to your partner. It’s a familiar hurt. Because it reminds you of your emotionally distant mother always prioritising your sister. 
 
-Now they are trapped between a rock and a hard place. Your upfront declaration has worked. You have silenced them. The relationship now runs on your terms.
+So it’s time to stand your ground isn’t it. If they can’t prioritise you now when will they ever be able to. You are clear. You are boundaried. “I told you this up front. You knew what you were getting into. But if I am too much for you. We’d just better end it now”. 
+
+Now they are trapped between a rock and a hard place. Your upfront declaration has worked. They are silenced. The relationship now runs on your terms.
 
 ## Codependence Boundary
 You know all about codependence. You’ve been there. Bought the t-shirt. And you know it’s not healthy.
 
 Partners in the past always expected too much. For you to take care of their emotions.
 
-To come running whenever they called. They had issues. They needed to learn independence. They always wanted to change you. Never again. 
+To come running whenever they called. They had issues. They needed to learn some independence. They always wanted to change you. Never again. 
 
 You’ve told your new partner that sometimes you need space. Sometimes you get overwhelmed and just need some time to yourself. They seemed to accept it. They said they understood. They came across reasonable at the time.
 
 But then, in an argument. They bring it up. Hold it against you. And it triggers something in you. 
 
-You are really trying to be a good partner in this relationship. But sometimes you push way beyond your comfort level. And they just don’t seem to get it. They don’t appreciate your efforts. 
+You’re really trying to be a good partner in this relationship. But sometimes you push way beyond your comfort level. And they just don’t seem to get it. They don’t appreciate your efforts. 
 
-Sometimes they message you too much. You force yourself to reply, just so you don’t hurt their feelings. Sometimes they want to cuddle too much. You do it. Even though it’s way beyond your comfort level. You don’t want to hurt their feelings. But it’s smothering.
+Sometimes they message you too much. You force yourself to reply, just so you don’t hurt their feelings. Sometimes they want to cuddle too much. You do it. Even though it’s sometimes uncomfortable. You don’t want to hurt their feelings. But it’s smothering.
 
 Can they not see how hard you are trying? It’s exhausting. You just need some space before you blow. This is for their sake too. You don’t want to hurt them. They need to understand you cannot meet all their needs. They are becoming codependent. And it’s not healthy. 
 
 You start carving out a bit more space. You’re not trying to be mean. You want this relationship to work. You want it to be healthy. 
 
-But they sense the distance. Even though you’ve been so careful to hide it. You don’t want to hurt their feelings. But this is just more evidence. They’re too focused on you. They need to focus on themselves. On their own independence.
+But they sense the distance. Even though you’ve been so careful to hide it. You don’t want to hurt their feelings. But this is just more evidence. They’re too focused on you. They need to focus on themselves. On their own life.
 
 Next time you see them. They try to bring it up. You shut it down. “Healthy relationships require space. Maybe you should see a therapist about why you need so much external validation”.
 
 You mean it. You really do want this relationship to work. You need them to be healthier. Anyone would feel suffocated with what they are asking for. 
 
-Your core belief. That you aren’t capable of intimate relationships has turned into a hard boundary. A rule your partner has no choice but to learn to follow. Neither of you are healing. Just avoiding. 
+Your core belief. That you aren’t capable of intimate relationships has turned into a hard boundary. A rule your partner has no choice but to learn to follow. Neither of you are healing. Just avoiding.
 
-## Labeller
+## The Labeller
 Maybe you really understand human behaviour. You can see every one of your partners' mountains in real time. You see all the work they need to do. And you want to help them. It’s not just for you. They would be happier too. So every time you see them acting out of insecurity you tell them. In a very supportive and caring way.
 
 And they hear it. They acknowledge what you’re saying. They can see it too. They understand it intellectually. But it doesn't seem to be helping. They are still repeating the same patterns. Over and over. 
@@ -664,35 +672,33 @@ The issue is, you can’t heal mountains intellectually. And every time you poin
 
 And sometimes. They have just had a long day at work. Their mood isn't caused by their father's abandonment. It's just been a long day.
 
-## Understanding
-Even being the understanding, accommodating partner can be a form of avoidance. Maybe you believe you are unworthy of true love. You think you can only be accepted if you hide parts of yourself. That you are, simply, too much to expect people to be able to cope with.
+## Being Understanding
+Even being the understanding, accommodating partner can be a form of avoidance. Maybe you believe you’re unworthy of true love. You think you can only be accepted if you hide parts of yourself. That no one could accommodate all of your needs. 
 
-And maybe your partner has a core belief of their own. That they are unable to love fully. That some part of them is broken. But you see them clearly. You understand them. They’re doing their best. It’s just their trauma, their upbringing, their insecurities speaking. So you are always accommodating towards them. Because you know it’s not their fault. 
+And maybe your partner has a core belief of their own. That they are unable to love fully. That some part of them is broken. But you can see them clearly. You understand them. It’s not their fault. They’re doing their best. It’s just their trauma, their upbringing, their insecurities speaking. So you are always accommodating towards them. Because you understand.
 
 But this understanding comes at a cost. It’s strengthening your own mountains. It's confirming that there are parts of you that need to be hidden away.
 
 And you aren't helping with their mountains either. They can see they’re hurting you. That you’re trying desperately to be ok. When you’re not. So they are learning a lesson of their own. For them to be loved, their partner must be in pain. That loving them means coping with their inadequacies. And that just confirms their deepest fear. That some part of them is broken.
 
 ## Wrong Mountains
-Maybe you think you know your mountains. But you haven't gone deep enough.
+Maybe you think you know your mountains. But actually you haven't gone deep enough.
 
-You think you know the problem. People don’t listen to you. It happens all the time. And it feels horrible. Hard to sit with. So this must be the mountain. Your core belief must be, “I don’t deserve to be heard.” It all makes perfect sense.
+You think you know the problem. People don’t listen to you. It happens all the time. And it feels horrible. Hard to sit with. So this must be the mountain. Your core belief must be “I don’t deserve to be heard.” And it all makes perfect sense.
 
-It happens everywhere. You tell your partner about your day. They just scroll on their phone. You share your ideas at work. People just talk over you. Even your friends can’t seem to listen.
+It happens everywhere. You tell your partner about your day. And just scroll on their phone. You share your ideas at work. And people talk over you. Even your friends can’t seem to listen.
 
-So you work on a solution. You speak more assertively. You set boundaries about being interrupted. You tell your partner. “When you don’t listen to me. It really hurts. I need to feel heard in this relationship”
+So you decide on a plan. To speak more assertively. To set boundaries about being interrupted. You tell your partner “When you don’t listen to me. It really hurts. I need to feel heard in this relationship”
 
-But somehow it gets worse. The more you demand attention. The more people stop listening. Your partner says you’re exhausting. That you always need validation. That you always steer the conversation back to yourself.
+But it doesn’t work. Somehow it gets worse. The more you demand attention. The more people stop listening. Your partner says you’re exhausting. That you constantly require validation. That you steer every conversation back to yourself.
 
-You’re confused. Aren’t you just asking for basic respect? To be heard? How can that be too much?  
+And you’re confused. Aren’t you just asking for basic respect? Just to be heard. How can that be too much?
 
-But your mountain isn’t “I deserve to be heard”. It’s ”I have no worth”. It’s buried down much, much deeper. 
+But your mountain isn’t “I don’t deserve to be heard”. It’s “I have no worth”. And it’s buried down much, much deeper. Every time someone doesn’t listen. It triggers this core belief. And confirms you are worthless. 
 
-And every time someone doesn’t listen. It triggers your mountain. It confirms you’re worthless. 
+So this new protective structure. A boundary about being heard. It’s just an extension. Built further away from the mountain base. And when people push back against your boundary. They aren’t just knocking the structure. It’s butting up against your real mountain. 
 
-So you built a protective structure. A boundary around being heard. But when people push back against that boundary, they aren’t just questioning the structure. They’re knocking it up against your real mountain.
-
-And the hard truth is. You do exhaust people with your protective structure. You do always steer conversations back to you. But now people’s natural reactions hit you exactly where it hurts the most. 
+And the hard truth is. You do exhaust people with your protective structure. You do always steer conversations back to you. But now people’s natural reactions to this hit you exactly where it hurts the most.
 
 # Author's Note
 I’m sure many people will want me to carry on writing. To turn this into a self help guide. “10 Easy Steps to Identify Your Mountains”. But that would be disingenuous. There are no easy answers. 
