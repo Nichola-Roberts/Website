@@ -729,8 +729,7 @@ Which is a lot easier said than done. Especially when the modern world is so dam
 
 And so it’s certain. We will keep being hurt. Keep hurting others. Keep building those bypasses. And keep lying to ourselves. This is the messiness. The friction. And this is how we erode. And that has to be ok. 
 
-Because it’s all just physics.
-
+Because it’s all just physics. We are balls on a dangerous, jagged, and fluctuating landscape of hills and mountains. Trying to work out how to build our own valleys.
 
 # Mailing List
 I am releasing a book based on my theory. If you would like to be kept up to date you can <a href="#" class="mailing-list-link">join my mailing list</a>
