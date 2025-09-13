@@ -459,21 +459,21 @@ But sometimes that's not enough. Sometimes you have to push them away first. Bef
 You can't stop the pain of reality. But you can soften the impact.
 
 ## The Painful Catch 22
-The saddest truth is that these structures always fail us. Even when they work perfectly. And we get that validation. It’s never real. It never soothes the wound we were trying to heal. 
+The saddest truth is that these structures always fail us. Even when they work perfectly. And we get that validation. It’s never real. It never soothes the wound that still wants to heal. 
 
-But to put them to one side. And risk being vulnerable. It may be virtuous. But it’s bound to get us hurt. It’s probably the most dangerous option of them all. Because what is certain in life? Death, taxes and being hurt by others. Especially the ones who love us the most. 
+But to put them to one side. And risk being vulnerable. It may be virtuous. But it’s bound to get us hurt. And it’s probably the most dangerous option of them all. Because what’s certain in life? Death, taxes and being hurt by others. Especially the ones who love us the most. 
 
 Because they’re all navigating their own mountains too. Hitting their own energy limits. So asking them to pause. To hear our honesty. Our openness. Just for a second. It could be asking for too much from them. We could be asking for more than they have to give. So even after all that risk. All that vulnerability. We could easily end up being even more hurt, even more alone. 
 
-But ultimately, we also can’t heal ourselves. Our core beliefs were supported by evidence. They were learnt. They were what kept us safe. Kept us alive. We can’t risk writing over them until we know it’s safe. Until we’ve seen different outcomes. Gotten counter evidence. And unfortunately. We can only get this new evidence from the real, messy and imperfect people in our lives. 
+But ultimately, we also can’t heal ourselves. Because our core beliefs were supported by evidence. They were learnt. They were what kept us safe. Kept us alive. We can’t risk writing over them until we know the alternatives are safe. Until we’ve seen different outcomes. Gathered enough counter evidence. And unfortunately. We can only get this new evidence from the real, messy and imperfect people in our lives. 
 
-And these are our painful catch 22s. The very people we need to heal us are the ones destined to hurt us. And the structures we need to keep us safe, also stop us from healing. 
+And these are our painful catch 22s. The very people we need to heal us are the ones who are destined to hurt us. And the very structures we need to keep us safe are the ones which stop us from healing. 
 
 And if that wasn’t bad enough. There’s also another truth. Maybe the harshest truth of them all. 
 
-The more we try to stop people from hurting us. The less chance we have to heal. 
+The more we try to prevent people from hurting us. The less room we allow them to prove our insecurities wrong.
 
-Ultimatums are always coercive. Achievements are always props. Mirages are always masks. Using these tools can never prove to us our worth. 
+Ultimatums are always coercive. Achievements are always props. Mirages are always masks. Any validation they bring is always counterfeit.
 
 # Erosion
 And while that sounds very fatalistic. Absolute doom and gloom. It's not. Our mountains might feel permanent. Insurmountable even. But they can and they do erode.
@@ -561,7 +561,7 @@ Anxious meets avoidant. Unworthy meets incapable. Controlling meets submissive.
 
 And it can be a gift or a curse. Or both depending on the relationship.
 
-But true, deep healing comes from acceptance. From someone seeing the beautiful, messed up human being that we are. And loving us anyway. And that person caring enough. Being driven enough. To overcome their own mountains. Just to love us that little bit better each day. 
+But true, deep healing comes from acceptance. From someone seeing the beautiful, messed up human being we are. And loving us anyway. And that person caring enough. Being driven enough. To overcome their own mountains. Just to love us that little bit better. 
 
 # Holding Patterns
 But as we've seen, healing isn’t a given in a relationship. Our protective structures can make relationship patterns stable. Often at the expense of erosion.
@@ -594,19 +594,18 @@ You’ve tried so many different things. Through the multiple breakups. Maybe yo
 
 Maybe this is true love trying to find a way. Maybe it’s just dysfunction. You just don’t know. It would be easier if someone just told you.
 
-# False Erosion 
-It’s not just relationships we lie to ourselves about. 
+# The Sophisticated Bypass
+It’s not just relationships we lie to ourselves about.
 
-Often when we believe we’re becoming a better person. That we are healing. It’s actually just another form of avoidance.
+As we start to do the hard work of improving ourselves. Becoming self aware. Becoming accountable. We learn the correct labels. Toxic. Abusive. Maladaptive. And suddenly, our old escape routes become too shameful to defend. They have become their own mountains.
 
-The brain is a master of avoidance. So when we realise our protective structures are maladaptive. What are we going to do? Are we going to heal? Or will we just build a brand new, more sophisticated bypass? 
+But the brain is a master of avoidance. So what are we going to do? Are we going to heal? Or will we just build a brand new, more sophisticated bypass?
 
-One that makes us feel superior to all the others who are still blindly crawling around on the floor.
+So we build the bypass. And this one has higher, more sturdy walls. Built confidently with bricks labelled healthy and healing. Passed to us by others, and by society. And we feel justified and superior. Like we have finally got it right.
 
-When actually in reality. All we’ve done. Is built a structure upon a structure. We’ve just got better at hiding it. And now, ironically, we’re even further away from healing. 
+But in reality. All we’ve done is built a structure upon a structure. We’ve just got better at hiding it. And more confident at enacting it. But ironically. It’s just diverted us even further away from the true messy negotiation of healing.
 
-
-## Reassurance Seeking
+## Asking for what you Need
 You’ve read the books. Been to therapy. Done the work. Learnt to be brave and communicate your needs. 
 
 Even if this isn’t always well received. You’re doing what is right for you.
@@ -623,7 +622,7 @@ And they do seem a bit frustrated. You can understand that. But you’re their p
 
 But what you don’t realise. Is that all of this. Is not as it seems. It’s just a new, more enlightened form of control. 
 
-## Being Upfront 
+## Being Transparent
 Maybe you have completely mapped out your own patterns. You’ve learnt to accept you’re flawed. And that’s ok. It’s taken a lot of work.
 
 You meet someone new. It's only fair you tell them about yourself up front. "I have anxiety issues. Sometimes I need extra support. If this is too much for you, I understand". You're being clear aren't you. You need someone who can handle you. This way you know the relationship works for both of you. Before you get too invested.
@@ -636,7 +635,7 @@ So it’s time to stand your ground isn’t it. If they can’t prioritise you n
 
 Now they are trapped between a rock and a hard place. Your upfront declaration has worked. They are silenced. The relationship now runs on your terms.
 
-## Codependence Boundary
+## Taking Space
 You know all about codependence. You’ve been there. Bought the t-shirt. And you know it’s not healthy.
 
 Partners in the past always expected too much. For you to take care of their emotions.
@@ -663,10 +662,10 @@ You mean it. You really do want this relationship to work. You need them to be h
 
 Your core belief. That you aren’t capable of intimate relationships has turned into a hard boundary. A rule your partner has no choice but to learn to follow. Neither of you are healing. Just avoiding.
 
-## The Labeller
+## The Diagnoser
 Maybe you really understand human behaviour. You can see every one of your partners' mountains in real time. You see all the work they need to do. And you want to help them. It’s not just for you. They would be happier too. So every time you see them acting out of insecurity you tell them. In a very supportive and caring way.
 
-And they hear it. They acknowledge what you’re saying. They can see it too. They understand it intellectually. But it doesn't seem to be helping. They are still repeating the same patterns. Over and over. 
+And they hear it. They acknowledge what you’re saying. They can see it too. They understand it intellectually. But it doesn't seem to be helping. They are still repeating the same old patterns. Over and over. 
 
 The issue is, you can’t heal mountains intellectually. And every time you point out their insecurity, you’re just triggering it. With pinpoint accuracy. And well, you know, that’s got to hurt.
 
@@ -700,20 +699,38 @@ So this new protective structure. A boundary about being heard. It’s just an e
 
 And the hard truth is. You do exhaust people with your protective structure. You do always steer conversations back to you. But now people’s natural reactions to this hit you exactly where it hurts the most.
 
-# Author's Note
-I’m sure many people will want me to carry on writing. To turn this into a self help guide. “10 Easy Steps to Identify Your Mountains”. But that would be disingenuous. There are no easy answers. 
+# The Noise
+I’m sure many people will want me to carry on writing. To turn this into a self help guide. “10 Easy Steps to Identify Your Mountains”. But that would be disingenuous.
 
-I believe we have to look deep within ourselves to find what is true. Which are our best paths. But this is hard. There's so much noise. What our partner says. What our parents say. What our friends say. What our therapist says. What society says. And maybe loudest of all, what our mountains say. Deciphering the best direction to head is an almost impossible task. Especially when so many of them have their own agendas which may not align with what is best for us.
+I believe we know our own answers. Deep within ourselves. We just can’t make out our own voice when there is so much noise. 
 
-It's important to remember that we all have our own landscapes. We can’t prescribe the perfect cure for someone else. As one person’s erosion is another person’s avoidance. We should also never judge another person’s landscape. As we can never know the mountains they have and which paths are available. 
+The noise of what our partner says. What our parents say. What our friends say. What our therapist says. What society says. And maybe loudest of all, what our mountains say. It’s an almost impossible task to decipher the best direction to head. Especially when everyone is convinced they have the best agendas and maps for us.
 
-My only hope is that this framework offers a new perspective. Maybe a bit more clarity to see your own patterns. And the patterns and actions of others in your life. And maybe over time, that frees up a small amount of energy to start making slightly different choices. And maybe the first set of choices don’t work. But maybe the 6th set does. 
+And we need to remember this goes both ways. We can’t prescribe the perfect map for anyone else either. One person’s erosion is another person’s avoidance. So we should never judge another person’s landscape. As we can never know their mountains and which routes they have available. 
 
-There are no simple solutions. Understanding doesn’t mean always empathising with others. Nor does it mean always setting boundaries. From my experience, the brain has an amazing ability to misdirect us from looking at what we really need to see. Because that’s how it learnt to keep us safe. Our mountains, however badly optimised they look from the outside, were the best solution our brains found at the time they were formed. They were made to keep us safe.
+# The Onward Journey
+While our conscious and unconscious minds are both desperate to heal. The brain has an amazing ability to misdirect us. Because that’s how it learnt to keep us safe. Our mountains, however badly optimised they look from the outside, were the best solution our brains had at the time they were formed. They were created to keep us safe. They were never meant to be our enemies.
 
- However our brain also deeply wants to heal. But I've found the biggest sign of healing isn’t mastering techniques. It’s when you’ve realised you’ve stopped calculating the optimum way to be loved or to be appreciated. And learnt to just live.
+But these mountains are still our stressors. And we are still living under that energy limit. And the more we shame ourselves into healing. The more we take the mountain paths before we’re ready. The more we build those new bypasses. Mistaking their sophistication for healing.
 
-Which is a lot easier said than done. Especially when the modern world is so damaging. 
+And so we are going to mess this up. Over and over again. Even when we think we should be doing better. 
+
+And that’s the beauty of being human. It’s nothing to be ashamed of.
+
+We are just doing our best. Trying to survive the landscape we found ourselves in.
+
+And we have no choice but to take the detours, while the mountains slowly erode away. Along with their power over us.
+
+My only hope is that this framework offers a new perspective. A little bit more clarity to see your own patterns. And the patterns and actions of others. And maybe over time. This frees up a small amount of energy to start making slightly different choices. And maybe the first set of choices don’t work. And nor does the second. But maybe the 6th set does. 
+
+What I’ve learnt is that the biggest sign of healing isn’t mastering techniques. It’s when you’ve realised you’ve stopped calculating the optimum way to be loved or to be appreciated. And learnt to just live.
+
+Which is a lot easier said than done. Especially when the modern world is so damaging.
+
+And so it’s certain. We will keep being hurt. Keep hurting others. Keep building those bypasses. And keep lying to ourselves. This is the messiness. The friction. And this is how we erode. And that has to be ok. 
+
+Because it’s all just physics.
+
 
 # Mailing List
 I am releasing a book based on my theory. If you would like to be kept up to date you can <a href="#" class="mailing-list-link">join my mailing list</a>
