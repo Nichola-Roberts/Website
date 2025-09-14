@@ -699,37 +699,39 @@ So this new protective structure. A boundary about being heard. It’s just an e
 
 And the hard truth is. You do exhaust people with your protective structure. You do always steer conversations back to you. But now people’s natural reactions to this hit you exactly where it hurts the most.
 
+##  The Path to True Erosion
+As we've seen, the path to true erosion never runs smooth. Healing isn’t linear, and the brain has an amazing ability to misdirect us, even when it desperately wants to heal.
+
+This is because our mountains, defenses, and walls are the very things that kept us safe. However badly optimised they look now, they were the best solution we had at the time they were created. They were never meant to be our enemies.
+
+The more we shame ourselves into healing. Better, faster, and healthier, the more we risk taking mountain paths before we are ready. Those mountains are still our stressors, and we are still living under that energy limit. This pressure will only force us to build new bypasses, continually mistaking their sophistication for health.
+
+And we are going to mess things up. We will hurt people. We will make catastrophic mistakes, over and over again, even when we think we should be doing better.
+But that’s the beauty of being human. It’s nothing to be ashamed of.
+
+We are all just doing our best, trying to survive the landscape we found ourselves in. We have no choice but to take the detours, living our lives as best we can while hoping the mountains, and their power over us, slowly erode away.
+
 # The Noise
-I’m sure many people will want me to carry on writing. To turn this into a self help guide. “10 Easy Steps to Identify Your Mountains”. But that would be disingenuous.
+So are you ready for the answers. The “Ten Easy Steps to Map Your Mountains.” Well I don’t have them to give. 
 
-I believe we know our own answers. Deep within ourselves. We just can’t make out our own voice when there is so much noise. 
+That would be disingenuous. It would also take you further away from your own path. Because I believe we already know our own truth. Deep within ourselves. Our mind wants to get us to the lowest valley. I believe we all have those moments where our soul meets another soul free from all the noise. 
 
-The noise of what our partner says. What our parents say. What our friends say. What our therapist says. What society says. And maybe loudest of all, what our mountains say. It’s an almost impossible task to decipher the best direction to head. Especially when everyone is convinced they have the best agendas and maps for us.
+But most of the time we can’t make out our own voice. It’s buried under all the noise. 
 
-And we need to remember this goes both ways. We can’t prescribe the perfect map for anyone else either. One person’s erosion is another person’s avoidance. So we should never judge another person’s landscape. As we can never know their mountains and which routes they have available. 
+The noise of what our partner says. What our parents say. What our friends say. What our therapist says. What society says. And maybe loudest of all, what our mountains say. It’s an almost impossible task to decipher the best direction to head. Especially when everyone is convinced they have the best maps for us.
 
-# The Onward Journey
-While our conscious and unconscious minds are both desperate to heal. The brain has an amazing ability to misdirect us. Because that’s how it learnt to keep us safe. Our mountains, however badly optimised they look from the outside, were the best solution our brains had at the time they were formed. They were created to keep us safe. They were never meant to be our enemies.
+And we must remember this when we talk to others.  We can’t prescribe the perfect map for anyone else either. One person’s erosion is another’s sophisticated bypass. We should never judge another person’s landscape, because we can never truly know the height of their mountains, the pain that formed them, and the detours they've been forced to take to survive.
 
-But these mountains are still our stressors. And we are still living under that energy limit. And the more we shame ourselves into healing. The more we take the mountain paths before we’re ready. The more we build those new bypasses. Mistaking their sophistication for healing.
+# The Journey Onwards
+My only hope is that this framework offers a new perspective. A little bit more clarity to see your own patterns. And the patterns and actions of others. And maybe over time. This frees up a small amount of energy to start making slightly different choices. And maybe the first set of choices don’t work. And nor does the second. But maybe the 6th set does.
 
-And so we are going to mess this up. Over and over again. Even when we think we should be doing better. 
-
-And that’s the beauty of being human. It’s nothing to be ashamed of.
-
-We are just doing our best. Trying to survive the landscape we found ourselves in.
-
-And we have no choice but to take the detours, while the mountains slowly erode away. Along with their power over us.
-
-My only hope is that this framework offers a new perspective. A little bit more clarity to see your own patterns. And the patterns and actions of others. And maybe over time. This frees up a small amount of energy to start making slightly different choices. And maybe the first set of choices don’t work. And nor does the second. But maybe the 6th set does. 
-
-What I’ve learnt is that the biggest sign of healing isn’t mastering techniques. It’s when you’ve realised you’ve stopped calculating the optimum way to be loved or to be appreciated. And learnt to just live.
+What I’ve learnt is that the biggest sign of healing isn’t mastering techniques. It’s when you’ve realised you’ve stopped calculating the optimum way to be loved or to be appreciated. You’ve stopped oscillating between your entitlements and your insecurities. And learnt to just live.
 
 Which is a lot easier said than done. Especially when the modern world is so damaging.
 
-And so it’s certain. We will keep being hurt. Keep hurting others. Keep building those bypasses. And keep lying to ourselves. This is the messiness. The friction. And this is how we erode. And that has to be ok. 
+And so it’s certain. We will keep being hurt. Keep hurting others. Keep building those bypasses. And keep lying to ourselves. This is the messiness. The friction. And this is how we erode. And that has to be ok.
 
-Because it’s all just physics. We are balls on a dangerous, jagged, and fluctuating landscape of hills and mountains. Trying to work out how to build our own valleys.
+Because it’s all just physics. We are balls on a dangerous, jagged, and fluctuating landscape of hills and mountains. Trying to work out how to build towards our deepest valleys. While continually navigating that energy limit.
 
 # Mailing List
 I am releasing a book based on my theory. If you would like to be kept up to date you can <a href="#" class="mailing-list-link">join my mailing list</a>

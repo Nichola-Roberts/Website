@@ -73,7 +73,7 @@
 * This stability often prevents erosion
 * Patterns include careful avoidance or cyclical breakup-reunion dynamics
 
-## False Erosion
+## The Sophisticated Bypass
 * Apparent healing can mask sophisticated avoidance
 * Therapy language becomes a tool for control rather than erosion
 * Being accommodating or independent can both prevent real erosion
