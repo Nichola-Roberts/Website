@@ -1,8 +1,14 @@
 // Netlify Function to list subscribers (admin function)
-// Uses Netlify Blobs for subscriber storage
+// Uses Neon PostgreSQL database for subscriber storage
 // Requires authentication in production
 
-const { getStore } = require('@netlify/blobs');
+const { Pool } = require('pg');
+
+// Create connection pool for Neon PostgreSQL
+const pool = new Pool({
+    connectionString: process.env.NETLIFY_DATABASE_URL,
+    ssl: { rejectUnauthorized: false }
+});
 
 exports.handler = async (event, context) => {
     // Only allow GET requests
@@ -27,42 +33,67 @@ exports.handler = async (event, context) => {
         //     };
         // }
 
-        // Get the Netlify Blobs store
-        const store = getStore('subscribers');
-        const subscribersList = await store.list();
+        // Get subscriber statistics from PostgreSQL
+        const statsQuery = `
+            SELECT 
+                COUNT(CASE WHEN status = 'confirmed' THEN 1 END) as active,
+                COUNT(CASE WHEN status = 'pending' THEN 1 END) as pending,
+                COUNT(CASE WHEN status = 'unsubscribed' THEN 1 END) as unsubscribed,
+                COUNT(*) as total
+            FROM subscribers
+        `;
         
-        const subscribers = [];
-        let activeCount = 0;
-        let deletedCount = 0;
-        let analytics = null;
+        const statsResult = await pool.query(statsQuery);
+        const stats = statsResult.rows[0];
 
-        for (const blob of subscribersList.blobs) {
-            // Handle analytics blob separately
-            if (blob.key === '_analytics') {
-                try {
-                    analytics = JSON.parse(await store.get(blob.key));
-                } catch (err) {
-                    console.error('Error processing analytics:', err);
-                }
-                continue;
-            }
+        // Get recent subscribers (optional - remove if you just want counts)
+        const recentQuery = `
+            SELECT 
+                id,
+                status,
+                source,
+                subscribed_at,
+                unsubscribed_at
+            FROM subscribers
+            ORDER BY subscribed_at DESC
+            LIMIT 100
+        `;
+        
+        const recentResult = await pool.query(recentQuery);
+        const recentSubscribers = recentResult.rows;
 
-            try {
-                const subscriberData = JSON.parse(await store.get(blob.key));
-                subscribers.push(subscriberData);
-                
-                if (subscriberData.status === 'active') {
-                    activeCount++;
-                } else if (subscriberData.status === 'unsubscribed_deleted') {
-                    deletedCount++;
+        // Get analytics from analytics table if it exists
+        let analytics = {
+            totalSubscriptions: parseInt(stats.total) || 0,
+            totalUnsubscriptions: parseInt(stats.unsubscribed) || 0
+        };
+
+        try {
+            const analyticsQuery = `
+                SELECT metric_name, metric_value, month
+                FROM analytics
+                WHERE metric_name IN ('subscriptions', 'unsubscriptions')
+                ORDER BY month DESC
+            `;
+            const analyticsResult = await pool.query(analyticsQuery);
+            
+            const subscriptionsByMonth = {};
+            const unsubscriptionsByMonth = {};
+            
+            analyticsResult.rows.forEach(row => {
+                if (row.metric_name === 'subscriptions') {
+                    subscriptionsByMonth[row.month] = row.metric_value;
+                } else if (row.metric_name === 'unsubscriptions') {
+                    unsubscriptionsByMonth[row.month] = row.metric_value;
                 }
-            } catch (err) {
-                console.error(`Error processing subscriber ${blob.key}:`, err);
-            }
+            });
+            
+            analytics.subscriptionsByMonth = subscriptionsByMonth;
+            analytics.unsubscriptionsByMonth = unsubscriptionsByMonth;
+        } catch (err) {
+            // Analytics table might not exist, that's ok
+            console.log('Analytics table not available:', err.message);
         }
-
-        // Sort by subscription date (newest first)
-        subscribers.sort((a, b) => new Date(b.subscribedAt) - new Date(a.subscribedAt));
 
         return {
             statusCode: 200,
@@ -73,17 +104,13 @@ exports.handler = async (event, context) => {
             body: JSON.stringify({
                 success: true,
                 stats: {
-                    active: activeCount,
-                    deleted: deletedCount,
-                    total: activeCount + deletedCount
+                    active: parseInt(stats.active) || 0,
+                    pending: parseInt(stats.pending) || 0,
+                    unsubscribed: parseInt(stats.unsubscribed) || 0,
+                    total: parseInt(stats.total) || 0
                 },
-                analytics: analytics || {
-                    totalSubscriptions: 0,
-                    totalUnsubscriptions: 0,
-                    subscriptionsByMonth: {},
-                    unsubscriptionsByMonth: {}
-                },
-                subscribers
+                analytics: analytics,
+                recentSubscribers: recentSubscribers
             })
         };
 

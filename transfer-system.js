@@ -8,8 +8,9 @@ const TransferSystem = {
         codeChars: 'ABCDEFGHIJKLMNPQRSTUVWXYZ123456789', // No O/0 for clarity
         expirationTime: 2 * 60 * 60 * 1000, // 2 hours
         apiEndpoints: {
-            store: '/.netlify/functions/store-transfer-redis',
-            retrieve: '/.netlify/functions/retrieve-transfer-redis'
+            // Using Neon PostgreSQL instead of Redis (more reliable, won't get deleted)
+            store: '/.netlify/functions/store-transfer-neon',
+            retrieve: '/.netlify/functions/retrieve-transfer-neon'
         }
     },
 

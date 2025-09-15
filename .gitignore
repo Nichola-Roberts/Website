@@ -5,6 +5,7 @@ local-test.js
 test-*.js
 check-subscribers.js
 *-subscribers.js
+CHECK_SUBSCRIBERS.md
 
 # Local Netlify folder
 .netlify

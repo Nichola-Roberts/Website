@@ -711,27 +711,59 @@ But that’s the beauty of being human. It’s nothing to be ashamed of.
 
 We are all just doing our best, trying to survive the landscape we found ourselves in. We have no choice but to take the detours, living our lives as best we can while hoping the mountains, and their power over us, slowly erode away.
 
-# The Noise
-So are you ready for the answers. The “Ten Easy Steps to Map Your Mountains.” Well I don’t have them to give. 
+#The Onwards Journey
+When we want to do better. For ourselves. For others. It can be incredibly frustrating not knowing what to do for the best. There are times all of us wish someone would just tell us what we should be doing. The shortcuts to our valleys. Or the paths away from our Mountains. Or even the “Ten Easy Steps to Map Your Mountains”.
 
-That would be disingenuous. It would also take you further away from your own path. Because I believe we already know our own truth. Deep within ourselves. Our mind wants to get us to the lowest valley. I believe we all have those moments where our soul meets another soul free from all the noise. 
+But that’s exactly what we don’t need. More noise drawing out your own voice. 
 
-But most of the time we can’t make out our own voice. It’s buried under all the noise. 
+## The Noise
+The noise of what our partner says. What our parents say. What our friends say. What our therapist says. What society says. And maybe loudest of all, what our mountains say. Deciphering the best direction to head is almost impossible. Especially when everyone else is convinced they have the best maps for us.
 
-The noise of what our partner says. What our parents say. What our friends say. What our therapist says. What society says. And maybe loudest of all, what our mountains say. It’s an almost impossible task to decipher the best direction to head. Especially when everyone is convinced they have the best maps for us.
+Let’s imagine the example of our partner crossing our non negotiable deal breaker. 
+
+You’re angry. Absolutely livid. You always said you would break up with them if they did this. They knew that. How could they do this to you? Now you’re left with no choice. You have to break up with them. 
+
+But it’s so hard to follow through. But you should shouldn't you? How can you stay now. What would it say about you? What would people think?
+
+You talk to your mum. She says forgive them as everyone makes mistakes. Your best friend says you deserve better. But they never liked them anyway. So they would say that. Of course reddit says you should break up. 
+
+You could never respect yourself again if you didn’t break up with them. But then you could never look at them the same. 
+
+You think about all the hassle of moving out. Of dating again. Back to square one. It’s so hard to know what you want. What will your colleagues say if they find out? 
+
+Really you have to break up with them. You have to. You will tell them this evening. 
+
+But then when they get home later that day. They look sad. And they are so apologetic. And you can’t bear the thought of life without them. But you have to. For your own self respect. 
+
+You feel so sad about it all. So hurt that they could do this. You thought they were different. That you could trust them. It’s such a betrayal.
+
+You can feel your view oscillating around. Between everyone else's views. Societies’ shoulds. The oscillation between your mountain and the protective structures. You have no idea how to hear what you really want. What’s actually best for you?
+
+Our voice is there somewhere. But it’s so much quieter than all the others.
 
 And we must remember this when we talk to others.  We can’t prescribe the perfect map for anyone else either. One person’s erosion is another’s sophisticated bypass. We should never judge another person’s landscape, because we can never truly know the height of their mountains, the pain that formed them, and the detours they've been forced to take to survive.
 
-# The Journey Onwards
+## Under The Mountains
+Under all the surface chaos. Our own and other peoples. And under our mountains. Somewhere buried deep is our true self. Resting in the valleys. That’s not to say the mountains aren’t part of us. But they are not who we are when we are calm and at peace. When all our defences fade away. 
+
+We can feel it sometimes. Moments of true connection with another human. When it feels like our soul reaches for theirs. When our defences have faded away. We see them and they see us. It could be a moment with a partner. Or with our child. Anyone we have let this close. 
+
+It can also be a moment connecting with our passions. Painting. Sports. Maths. Cooking. Adventures. Helping others. Challenging others. Any time we have connected deeply with our inner self. 
+
+These moments give us glimpses of what life could be like if we succeed on our journey down our own unique path. 
+
+## True Erosion
+But as we keep seeing. That path is impossibly hard to track. 
+
 My only hope is that this framework offers a new perspective. A little bit more clarity to see your own patterns. And the patterns and actions of others. And maybe over time. This frees up a small amount of energy to start making slightly different choices. And maybe the first set of choices don’t work. And nor does the second. But maybe the 6th set does.
 
-What I’ve learnt is that the biggest sign of healing isn’t mastering techniques. It’s when you’ve realised you’ve stopped calculating the optimum way to be loved or to be appreciated. You’ve stopped oscillating between your entitlements and your insecurities. And learnt to just live.
+What I’ve learnt is that the biggest sign of healing isn’t mastering techniques. It’s when you’ve realised you’ve stopped calculating the optimum way to be loved or to be appreciated. You’ve stopped oscillating between your defences and your insecurities. And learnt to just live.
 
 Which is a lot easier said than done. Especially when the modern world is so damaging.
 
 And so it’s certain. We will keep being hurt. Keep hurting others. Keep building those bypasses. And keep lying to ourselves. This is the messiness. The friction. And this is how we erode. And that has to be ok.
 
-Because it’s all just physics. We are balls on a dangerous, jagged, and fluctuating landscape of hills and mountains. Trying to work out how to build towards our deepest valleys. While continually navigating that energy limit.
+Because it’s all just physics. We are balls on a dangerous, jagged, and fluctuating landscape of hills and mountains. Trying to work out how to build towards our deepest valleys. While continually navigating that pesky energy limit.
 
 # Mailing List
 I am releasing a book based on my theory. If you would like to be kept up to date you can <a href="#" class="mailing-list-link">join my mailing list</a>
