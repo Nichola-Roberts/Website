@@ -831,7 +831,7 @@ But that’s the beauty of being human. It’s nothing to be ashamed of.
 
 We are all just doing our best, trying to survive the landscape we found ourselves in. We have no choice but to take the detours, living our lives as best we can while hoping the mountains, and their power over us, slowly erode away.
 
-#The Onwards Journey
+# The Onwards Journey
 
 When we want to do better. For ourselves. For others. It can be incredibly frustrating not knowing what to do for the best. There are times all of us wish someone would just tell us what we should be doing. The shortcuts to our valleys. Or the paths away from our Mountains. Or even the “Ten Easy Steps to Map Your Mountains”.
 
