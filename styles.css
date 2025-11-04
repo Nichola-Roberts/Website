@@ -125,14 +125,22 @@ body {
     align-items: center;
 }
 
+.header-brand {
+    flex: 1;
+    min-width: 0; /* Allow flex item to shrink below content size */
+}
+
 .header-brand h1 {
     font-family: var(--font-body);
-    font-size: var(--text-xl);
+    font-size: clamp(0.875rem, 4vw, var(--text-xl)); /* Shrink only when viewport is small */
     font-weight: 500;
     color: var(--color-sage-dark);
     letter-spacing: var(--tracking-tight);
     line-height: 1;
     margin: 0;
+    white-space: nowrap; /* Prevent wrapping */
+    overflow: hidden;
+    text-overflow: ellipsis; /* Fallback if still too long */
 }
 
 .site-author {
@@ -271,6 +279,7 @@ body {
     display: flex;
     gap: var(--space-2);
     align-items: center;
+    flex-shrink: 0; /* Prevent nav buttons from shrinking */
 }
 
 .nav-button {
@@ -930,23 +939,6 @@ body.dragging-scroll {
     .nav-menu {
         width: 100%;
         right: -100%;
-    }
-
-    /* Fix title overflow on mobile */
-    .header-brand h1 {
-        font-size: 1rem; /* Reduced from 1.25rem */
-        line-height: 1.2; /* Slightly more flexible */
-    }
-
-    .site-author {
-        font-size: 0.6875rem; /* Slightly smaller to maintain proportion */
-    }
-}
-
-/* Extra small devices - further reduce if needed */
-@media (max-width: 375px) {
-    .header-brand h1 {
-        font-size: 0.9375rem; /* Even smaller for very small phones */
     }
 }
 
