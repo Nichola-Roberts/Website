@@ -922,14 +922,31 @@ body.dragging-scroll {
         padding-left: var(--space-8);
         padding-right: var(--space-8);
     }
-    
+
     .accessibility-panel {
         padding: 0 var(--space-8);
     }
-    
+
     .nav-menu {
         width: 100%;
         right: -100%;
+    }
+
+    /* Fix title overflow on mobile */
+    .header-brand h1 {
+        font-size: 1rem; /* Reduced from 1.25rem */
+        line-height: 1.2; /* Slightly more flexible */
+    }
+
+    .site-author {
+        font-size: 0.6875rem; /* Slightly smaller to maintain proportion */
+    }
+}
+
+/* Extra small devices - further reduce if needed */
+@media (max-width: 375px) {
+    .header-brand h1 {
+        font-size: 0.9375rem; /* Even smaller for very small phones */
     }
 }
 
