@@ -2267,3 +2267,223 @@ body:not(.notes-mode) .note-input-container {
         width: 100%;
     }
 }
+
+/* Google Sync Modal Styles */
+.google-sync-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+.google-sync-modal.active {
+    display: flex;
+}
+
+.google-sync-content {
+    text-align: left;
+}
+
+.sync-description {
+    color: var(--color-ink);
+    font-size: var(--text-sm);
+    line-height: var(--leading-normal);
+    margin-bottom: var(--space-13);
+}
+
+.google-signin-btn {
+    width: 100%;
+    padding: var(--space-5) var(--space-8);
+    background: white;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    font-size: var(--text-base);
+    font-family: var(--font-body);
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.google-signin-btn:hover {
+    background: #f8f9fa;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.sync-user-info {
+    display: flex;
+    align-items: center;
+    gap: var(--space-8);
+    padding: var(--space-8);
+    background: var(--color-mist);
+    border-radius: 8px;
+    margin-bottom: var(--space-13);
+}
+
+.sync-user-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 2px solid var(--color-sage);
+}
+
+.sync-user-details {
+    flex: 1;
+}
+
+.sync-user-name {
+    font-weight: 500;
+    color: var(--color-ink);
+    margin: 0 0 var(--space-1) 0;
+    font-size: var(--text-base);
+}
+
+.sync-user-email {
+    color: var(--color-ink-light);
+    font-size: var(--text-sm);
+    margin: 0;
+}
+
+.sync-status {
+    padding: var(--space-5);
+    background: rgba(59, 125, 105, 0.05);
+    border-radius: 4px;
+    margin-bottom: var(--space-13);
+}
+
+.sync-last-sync {
+    font-size: var(--text-sm);
+    color: var(--color-ink-light);
+    margin: 0;
+    text-align: center;
+}
+
+.sync-actions {
+    display: flex;
+    gap: var(--space-5);
+    margin-bottom: var(--space-8);
+}
+
+.sync-now-btn {
+    flex: 1;
+    padding: var(--space-5) var(--space-8);
+    background: var(--color-sage);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: var(--text-sm);
+    font-family: var(--font-body);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sync-now-btn:hover:not(:disabled) {
+    background: var(--color-sage-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(59, 125, 105, 0.3);
+}
+
+.sync-now-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.sync-signout-btn {
+    padding: var(--space-5) var(--space-8);
+    background: var(--color-mist);
+    color: var(--color-ink-light);
+    border: 1px solid rgba(59, 125, 105, 0.2);
+    border-radius: 4px;
+    font-size: var(--text-sm);
+    font-family: var(--font-body);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.sync-signout-btn:hover {
+    background: rgba(59, 125, 105, 0.05);
+    border-color: var(--color-sage);
+}
+
+.sync-message {
+    padding: var(--space-5);
+    border-radius: 4px;
+    font-size: var(--text-sm);
+    line-height: var(--leading-normal);
+    display: none;
+    text-align: center;
+}
+
+.sync-message.visible {
+    display: block;
+}
+
+.sync-message.success {
+    background: rgba(46, 204, 113, 0.1);
+    color: #27ae60;
+    border: 1px solid rgba(46, 204, 113, 0.3);
+}
+
+.sync-message.error {
+    background: rgba(231, 76, 60, 0.1);
+    color: #c0392b;
+    border: 1px solid rgba(231, 76, 60, 0.3);
+}
+
+.sync-message.info {
+    background: rgba(52, 152, 219, 0.1);
+    color: #2980b9;
+    border: 1px solid rgba(52, 152, 219, 0.3);
+}
+
+@media (max-width: 640px) {
+    .sync-actions {
+        flex-direction: column;
+    }
+
+    .sync-now-btn {
+        flex: none;
+    }
+}
+
+/* Mailing list checkbox in sync modal */
+.mailing-list-checkbox-container {
+    margin-bottom: var(--space-13);
+}
+
+.mailing-list-checkbox-label {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-5);
+    cursor: pointer;
+    font-size: var(--text-sm);
+    color: var(--color-ink-light);
+    line-height: var(--leading-normal);
+}
+
+.mailing-list-checkbox {
+    margin-top: 2px;
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
+    accent-color: var(--color-sage);
+}
+
+.mailing-list-checkbox-label:hover {
+    color: var(--color-ink);
+}
