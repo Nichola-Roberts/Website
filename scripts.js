@@ -192,8 +192,36 @@ function renderPart(partIndex) {
         }, 100);
     }
 
+    // Track part view in Google Analytics
+    trackPartView(partIndex, part.title);
+
     // Update current part index
     window.currentPartIndex = partIndex;
+}
+
+// Track part views in Google Analytics
+function trackPartView(partIndex, partTitle) {
+    // Check if gtag is available
+    if (typeof gtag === 'function') {
+        // Create a virtual page path for each part
+        const virtualPath = partIndex === 0 ? '/' : `/part-${partIndex + 1}`;
+
+        // Send virtual pageview
+        gtag('event', 'page_view', {
+            page_title: partTitle,
+            page_path: virtualPath,
+            page_location: window.location.origin + virtualPath
+        });
+
+        // Also send a custom event for part progression
+        if (partIndex > 0) {
+            gtag('event', 'content_progression', {
+                event_category: 'engagement',
+                event_label: partTitle,
+                part_number: partIndex + 1
+            });
+        }
+    }
 }
 
 function loadNextPart(partIndex) {
