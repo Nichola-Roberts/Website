@@ -3,6 +3,9 @@
  * Syncs user data to Google Drive
  */
 
+const crypto = require('crypto');
+const { neon } = require('@neondatabase/serverless');
+
 exports.handler = async (event, context) => {
     // Set CORS headers
     const headers = {
@@ -207,6 +210,12 @@ exports.handler = async (event, context) => {
             resultFileId = fileData.id;
         }
 
+        // Record anonymous sync stats (async, don't wait for it)
+        recordSyncStats(accessToken).catch(err => {
+            console.error('Stats recording error:', err);
+            // Don't fail sync if stats recording fails
+        });
+
         return {
             statusCode: 200,
             headers,
@@ -228,3 +237,49 @@ exports.handler = async (event, context) => {
         };
     }
 };
+
+/**
+ * Record anonymous sync stats
+ * @param {string} accessToken - Google access token
+ */
+async function recordSyncStats(accessToken) {
+    const databaseUrl = process.env.DATABASE_URL || process.env.NETLIFY_DATABASE_URL;
+    if (!databaseUrl) {
+        return; // No database configured, skip stats
+    }
+
+    try {
+        // Fetch user info from Google to get the user ID
+        const userInfoResponse = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        });
+
+        if (!userInfoResponse.ok) {
+            console.error('Failed to fetch user info for stats');
+            return;
+        }
+
+        const userInfo = await userInfoResponse.json();
+        const googleId = userInfo.id;
+
+        const sql = neon(databaseUrl);
+
+        // Hash the Google ID (SHA-256 for anonymity)
+        const userHash = crypto.createHash('sha256').update(googleId).digest('hex');
+
+        // Update sync count and last_sync time
+        await sql`
+            INSERT INTO sync_stats (user_hash, first_sync, last_sync, sync_count)
+            VALUES (${userHash}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1)
+            ON CONFLICT (user_hash)
+            DO UPDATE SET
+                last_sync = CURRENT_TIMESTAMP,
+                sync_count = sync_stats.sync_count + 1
+        `;
+    } catch (error) {
+        console.error('Failed to record sync stats:', error);
+        // Don't throw - we don't want to break sync if stats fail
+    }
+}

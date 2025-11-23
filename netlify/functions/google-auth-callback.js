@@ -3,6 +3,9 @@
  * Exchanges authorization code for access tokens and user info
  */
 
+const crypto = require('crypto');
+const { neon } = require('@neondatabase/serverless');
+
 exports.handler = async (event, context) => {
     // Set CORS headers
     const headers = {
@@ -103,6 +106,12 @@ exports.handler = async (event, context) => {
             };
         }
 
+        // Record anonymous stats (async, don't wait for it)
+        recordAuthStats(userInfo.id).catch(err => {
+            console.error('Stats recording error:', err);
+            // Don't fail auth if stats recording fails
+        });
+
         return {
             statusCode: 200,
             headers,
@@ -131,3 +140,33 @@ exports.handler = async (event, context) => {
         };
     }
 };
+
+/**
+ * Record anonymous authentication stats
+ * @param {string} googleId - The user's Google ID
+ */
+async function recordAuthStats(googleId) {
+    const databaseUrl = process.env.DATABASE_URL || process.env.NETLIFY_DATABASE_URL;
+    if (!databaseUrl) {
+        return; // No database configured, skip stats
+    }
+
+    try {
+        const sql = neon(databaseUrl);
+
+        // Hash the Google ID (SHA-256 for anonymity)
+        const userHash = crypto.createHash('sha256').update(googleId).digest('hex');
+
+        // Insert or update stats
+        await sql`
+            INSERT INTO sync_stats (user_hash, first_sync, last_sync, sync_count)
+            VALUES (${userHash}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1)
+            ON CONFLICT (user_hash)
+            DO UPDATE SET
+                last_sync = CURRENT_TIMESTAMP
+        `;
+    } catch (error) {
+        console.error('Failed to record auth stats:', error);
+        // Don't throw - we don't want to break auth if stats fail
+    }
+}
