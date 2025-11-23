@@ -1908,9 +1908,10 @@ body:not(.notes-mode) .note-input-container {
 /* Mobile adjustments */
 @media (max-width: 600px) {
     .transfer-modal-inner {
-        padding: var(--space-13);
+        padding: var(--space-8) var(--space-13);
         margin: var(--space-8);
         max-width: 90%;
+        max-height: 85vh;
     }
     
     .transfer-methods {
