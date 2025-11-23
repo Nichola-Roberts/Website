@@ -73,21 +73,27 @@ class NavigationMenu {
         
         sections.forEach(section => {
             const sectionId = section.id;
-            
-            // Check for h1 in the section
+
+            // Check for h1 in the section (PART headers)
             const h1 = section.querySelector('h1');
             if (h1) {
                 navHTML.push(this.createNavLink(h1.textContent, sectionId, 'h1'));
-                
-                // Look for h2 elements in this section
-                const h2Elements = section.querySelectorAll('h2');
-                h2Elements.forEach((h2, index) => {
-                    const h2Id = `${sectionId}-h2-${index}`;
-                    h2.id = h2Id; // Add ID to h2 for navigation
-                    navHTML.push(this.createNavLink(h2.textContent, h2Id, 'h2'));
+            }
+
+            // Check for h2 in the section (main section headers)
+            const h2 = section.querySelector('h2');
+            if (h2) {
+                navHTML.push(this.createNavLink(h2.textContent, sectionId, 'h1'));
+
+                // Look for h3 elements in this section (subsections)
+                const h3Elements = section.querySelectorAll('h3');
+                h3Elements.forEach((h3, index) => {
+                    const h3Id = `${sectionId}-h3-${index}`;
+                    h3.id = h3Id; // Add ID to h3 for navigation
+                    navHTML.push(this.createNavLink(h3.textContent, h3Id, 'h2'));
                 });
-            } else {
-                // Introduction section (no h1)
+            } else if (!h1) {
+                // Introduction section (no h1 or h2)
                 const firstParagraph = section.querySelector('p');
                 if (firstParagraph) {
                     const introText = 'Introduction';

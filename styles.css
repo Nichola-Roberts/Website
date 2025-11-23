@@ -133,6 +133,7 @@ body {
     letter-spacing: var(--tracking-tight);
     line-height: 1;
     margin: 0;
+    white-space: nowrap;
 }
 
 .site-author {
@@ -182,14 +183,15 @@ body {
 /* Headings */
 .content h1 {
     font-family: var(--font-body);
-    font-size: 0.92rem; /* Word size 11 = ~14.7px = ~0.92rem */
-    font-weight: 600;
+    font-size: 1.5rem; /* Larger for part dividers */
+    font-weight: 700; /* Bolder */
     color: var(--color-sage-dark); /* #0F4C3A */
-    margin-bottom: 0;
-    margin-top: 1rem; /* Just a new line space before */
+    margin-bottom: 2rem;
+    margin-top: 3rem; /* More space before part dividers */
     letter-spacing: var(--tracking-normal);
     text-transform: none; /* No capitals */
     line-height: 1.5; /* Word 1.5 spacing */
+    text-align: center; /* Centered */
 }
 
 .content h2 {
@@ -206,6 +208,19 @@ body {
 
 /* h3 - Same style as h2 but not in navigation */
 .content h3 {
+    font-family: var(--font-body);
+    font-size: 0.75rem; /* Word size 9 = 12px = 0.75rem */
+    font-weight: 700; /* Bold like Word */
+    color: var(--color-sage-dark); /* #0F4C3A */
+    margin-bottom: 0;
+    margin-top: 1rem; /* Just a new line space before */
+    letter-spacing: var(--tracking-normal);
+    text-transform: none; /* No capitals */
+    line-height: 1.5; /* Word 1.5 spacing */
+}
+
+/* h4 - Same style as h3 */
+.content h4 {
     font-family: var(--font-body);
     font-size: 0.75rem; /* Word size 9 = 12px = 0.75rem */
     font-weight: 700; /* Bold like Word */
@@ -922,14 +937,18 @@ body.dragging-scroll {
         padding-left: var(--space-8);
         padding-right: var(--space-8);
     }
-    
+
     .accessibility-panel {
         padding: 0 var(--space-8);
     }
-    
+
     .nav-menu {
         width: 100%;
         right: -100%;
+    }
+
+    .header-brand h1 {
+        font-size: var(--text-base);
     }
 }
 

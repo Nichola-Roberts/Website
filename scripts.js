@@ -25,7 +25,7 @@ function parseMarkdownSections(markdown) {
     let foundFirstHeading = false;
     
     for (const line of lines) {
-        if (line.startsWith('# ') && !line.startsWith('## ')) {
+        if (line.startsWith('## ') && !line.startsWith('### ')) {
             // If we haven't found a heading yet, save intro content
             if (!foundFirstHeading && introContent.length > 0) {
                 sections.push({
@@ -34,7 +34,7 @@ function parseMarkdownSections(markdown) {
                 });
             }
             foundFirstHeading = true;
-            
+
             // Save previous section if exists
             if (currentSection) {
                 sections.push({
@@ -43,7 +43,7 @@ function parseMarkdownSections(markdown) {
                 });
             }
             // Start new section
-            currentSection = line.substring(2).trim();
+            currentSection = line.substring(3).trim();
             currentContent = [];
         } else {
             if (!foundFirstHeading) {
@@ -97,7 +97,7 @@ function renderSections(sections) {
         
         // Add heading if not introduction
         if (section.title !== 'introduction') {
-            const heading = document.createElement('h1');
+            const heading = document.createElement('h2');
             heading.textContent = section.title;
             sectionElement.appendChild(heading);
         }
@@ -199,7 +199,7 @@ function addConclusionSection() {
     sectionElement.id = 'conclusion';
     
     // Add heading
-    const heading = document.createElement('h1');
+    const heading = document.createElement('h2');
     heading.textContent = section.title;
     sectionElement.appendChild(heading);
     
