@@ -1599,6 +1599,44 @@ body:not(.notes-mode) .note-input-container {
 
 /* Removed hover rule - now handled by JavaScript */
 
+/* Expiry Duration Selection */
+.expiry-selection {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin: var(--space-8) 0;
+    align-items: center;
+}
+
+.expiry-label {
+    font-size: var(--text-sm);
+    color: rgba(26, 31, 29, 0.7);
+    font-weight: 500;
+}
+
+.expiry-dropdown {
+    padding: var(--space-3) var(--space-5);
+    border: 1px solid rgba(181, 188, 181, 0.3);
+    border-radius: 4px;
+    background: white;
+    color: var(--color-ink);
+    font-size: var(--text-sm);
+    font-family: var(--font-body);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 150px;
+}
+
+.expiry-dropdown:hover {
+    border-color: var(--color-sage);
+}
+
+.expiry-dropdown:focus {
+    outline: none;
+    border-color: var(--color-sage);
+    box-shadow: 0 0 0 2px rgba(59, 125, 105, 0.1);
+}
+
 .transfer-button {
     padding: var(--space-5) var(--space-8);
     border: 1px solid rgba(181, 188, 181, 0.3);
@@ -1870,9 +1908,9 @@ body:not(.notes-mode) .note-input-container {
 /* Mobile adjustments */
 @media (max-width: 600px) {
     .transfer-modal-inner {
-        padding: var(--space-6);
-        margin: var(--space-3);
-        max-width: 360px;
+        padding: var(--space-13);
+        margin: var(--space-8);
+        max-width: 90%;
     }
     
     .transfer-methods {
