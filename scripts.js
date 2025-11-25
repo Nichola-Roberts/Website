@@ -153,10 +153,10 @@ async function loadNextPart(partIndex) {
 
 
 // Reading position tracking
-function initReadingPosition() {
+async function initReadingPosition() {
     // Restore saved reading position
-    restoreReadingPosition();
-    
+    await restoreReadingPosition();
+
     // Hook into TimeTracker's section detection for saving position
     // Wait for TimeTracker to be available
     setTimeout(() => {
