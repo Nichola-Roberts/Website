@@ -67,43 +67,44 @@ class NavigationMenu {
     
     populateMenu() {
         if (!this.navLinks) return;
-        
+
         const sections = document.querySelectorAll('.content-section');
         const navHTML = [];
-        
+
         sections.forEach(section => {
-            const sectionId = section.id;
+            // Check for ALL h2 elements in this section (main section headers)
+            const h2Elements = section.querySelectorAll('h2');
 
-            // Check for h1 in the section (PART headers)
-            const h1 = section.querySelector('h1');
-            if (h1) {
-                navHTML.push(this.createNavLink(h1.textContent, sectionId, 'h1'));
-            }
+            h2Elements.forEach(h2 => {
+                // Use the h2's ID if it has one, otherwise generate one
+                const h2Id = h2.id || h2.textContent.toLowerCase()
+                    .replace(/\s+/g, '-')
+                    .replace(/[^\w-]/g, '');
 
-            // Check for h2 in the section (main section headers)
-            const h2 = section.querySelector('h2');
-            if (h2) {
-                navHTML.push(this.createNavLink(h2.textContent, sectionId, 'h1'));
-
-                // Look for h3 elements in this section (subsections)
-                const h3Elements = section.querySelectorAll('h3');
-                h3Elements.forEach((h3, index) => {
-                    const h3Id = `${sectionId}-h3-${index}`;
-                    h3.id = h3Id; // Add ID to h3 for navigation
-                    navHTML.push(this.createNavLink(h3.textContent, h3Id, 'h2'));
-                });
-            } else if (!h1) {
-                // Introduction section (no h1 or h2)
-                const firstParagraph = section.querySelector('p');
-                if (firstParagraph) {
-                    const introText = 'Introduction';
-                    navHTML.push(this.createNavLink(introText, sectionId, 'h1'));
+                if (!h2.id) {
+                    h2.id = h2Id; // Assign ID if it doesn't have one
                 }
-            }
+
+                navHTML.push(this.createNavLink(h2.textContent, h2Id, 'h1'));
+
+                // Look for h3 elements after this h2 (subsections)
+                let nextElement = h2.nextElementSibling;
+                let h3Index = 0;
+
+                while (nextElement && nextElement.tagName !== 'H2') {
+                    if (nextElement.tagName === 'H3') {
+                        const h3Id = `${h2Id}-${h3Index}`;
+                        nextElement.id = h3Id;
+                        navHTML.push(this.createNavLink(nextElement.textContent, h3Id, 'h2'));
+                        h3Index++;
+                    }
+                    nextElement = nextElement.nextElementSibling;
+                }
+            });
         });
-        
+
         this.navLinks.innerHTML = navHTML.join('');
-        
+
         // Add click handlers to nav links
         this.navLinks.querySelectorAll('.nav-link').forEach(link => {
             link.addEventListener('click', (e) => {
@@ -251,5 +252,5 @@ class NavigationMenu {
 
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-    new NavigationMenu();
+    window.navigationMenu = new NavigationMenu();
 });

@@ -634,11 +634,11 @@ body:not(.focus-mode) .focus-toggle {
     margin-bottom: var(--space-1);
 }
 
-/* H2 navigation links - indented */
+/* H2 navigation links - indented (for h3 subsections) */
 .nav-link.nav-h2 {
     font-weight: 400;
-    padding-left: calc(var(--space-8) + var(--space-3));
-    font-size: 0.8125rem; /* Slightly smaller */
+    padding-left: calc(var(--space-8) * 2); /* Double indent for tab effect */
+    font-size: 0.75rem; /* Smaller than h1 nav items */
     margin-top: 0;
 }
 

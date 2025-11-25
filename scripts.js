@@ -43,6 +43,22 @@ async function renderPart(partIndex) {
         const sectionElement = document.createElement('section');
         sectionElement.className = 'content-section';
         sectionElement.innerHTML = html;
+
+        // Assign IDs to all h2 elements for navigation
+        const h2Elements = sectionElement.querySelectorAll('h2');
+        h2Elements.forEach((h2, index) => {
+            const sectionId = h2.textContent.toLowerCase()
+                .replace(/\s+/g, '-')
+                .replace(/[^\w-]/g, '');
+            h2.id = sectionId;
+
+            // Wrap h2 and following content in a navigable section
+            const miniSection = document.createElement('div');
+            miniSection.className = 'content-subsection';
+            miniSection.id = `section-${sectionId}`;
+            miniSection.setAttribute('data-section-title', h2.textContent);
+        });
+
         partContainer.appendChild(sectionElement);
 
         // Add continue button if there's a next part
@@ -76,6 +92,17 @@ async function renderPart(partIndex) {
 
         // Update current part index
         window.currentPartIndex = partIndex;
+
+        // Trigger navigation update for new content
+        if (partIndex > 0) {
+            setTimeout(() => {
+                document.dispatchEvent(new CustomEvent('contentAdded'));
+                // Update navigation menu
+                if (window.navigationMenu && typeof window.navigationMenu.populateMenu === 'function') {
+                    window.navigationMenu.populateMenu();
+                }
+            }, 100);
+        }
 
     } catch (error) {
         console.error(`Error loading ${part.file}:`, error);
