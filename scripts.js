@@ -172,27 +172,47 @@ function initReadingPosition() {
 
 function saveCurrentSection(sectionId) {
     localStorage.setItem('currentSection', sectionId);
+    // Also save which part we're on
+    localStorage.setItem('currentPart', window.currentPartIndex || 0);
 }
 
-function restoreReadingPosition() {
+async function restoreReadingPosition() {
     const savedSection = localStorage.getItem('currentSection');
+    const savedPart = parseInt(localStorage.getItem('currentPart') || '0');
+
     if (savedSection) {
-        const sectionElement = document.getElementById(savedSection);
-        if (sectionElement) {
-            // Small delay to ensure content is fully rendered
-            setTimeout(() => {
+        // If user was on Part 2 or 3, we need to load those parts first
+        if (savedPart > 0) {
+            // Load all parts up to the saved part
+            for (let i = 1; i <= savedPart; i++) {
+                if (i < window.contentParts.length) {
+                    await renderPart(i);
+                }
+            }
+        }
+
+        // Now try to find and scroll to the saved section
+        const attemptScroll = () => {
+            const sectionElement = document.getElementById(savedSection);
+            if (sectionElement) {
                 // Calculate position to place element 1/3 down the viewport
                 const elementRect = sectionElement.getBoundingClientRect();
                 const elementTop = elementRect.top + window.pageYOffset;
                 const viewportHeight = window.innerHeight;
                 const targetPosition = elementTop - (viewportHeight / 3);
-                
+
                 window.scrollTo({
                     top: Math.max(0, targetPosition),
                     behavior: 'smooth'
                 });
-            }, 100);
-        }
+            } else {
+                // Section not found yet, try again in a moment
+                setTimeout(attemptScroll, 200);
+            }
+        };
+
+        // Small delay to ensure content is fully rendered
+        setTimeout(attemptScroll, 100);
     }
 }
 
