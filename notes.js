@@ -392,8 +392,71 @@ const NotesSystem = {
         });
     },
 
-    // Load existing notes for a paragraph using hash-based matching
+    // Check if a note matches a paragraph using sophisticated position-based logic
+    doesNoteMatchParagraph(noteData, contentHash, currentIndex, paragraphHashList) {
+        if (!noteData.contextHashes || noteData.contextHashes.length !== 5) return false;
+
+        const [hashM2, hashM1, hashPrimary, hashP1, hashP2] = noteData.contextHashes;
+
+        // Priority 1: Check if PRIMARY hash matches current
+        if (contentHash === hashPrimary) return true;
+
+        // Priority 2: Check ±1 neighbors
+        const m1Index = hashM1 ? paragraphHashList.indexOf(hashM1) : -1;
+        const p1Index = hashP1 ? paragraphHashList.indexOf(hashP1) : -1;
+
+        if (m1Index !== -1 && p1Index !== -1) {
+            // Both ±1 found
+            const distance = p1Index - m1Index;
+            if (distance === 2 && currentIndex === m1Index + 1) {
+                // They're 1 apart and current is in the middle → primary was rewritten
+                return true;
+            } else if (currentIndex === Math.min(m1Index, p1Index)) {
+                // More than 1 apart → put on earliest
+                return true;
+            }
+        } else if (m1Index !== -1 && currentIndex === m1Index) {
+            // Only -1 found and it's current
+            return true;
+        } else if (p1Index !== -1 && currentIndex === p1Index) {
+            // Only +1 found and it's current
+            return true;
+        }
+
+        // Priority 3: Check ±2 neighbors
+        const m2Index = hashM2 ? paragraphHashList.indexOf(hashM2) : -1;
+        const p2Index = hashP2 ? paragraphHashList.indexOf(hashP2) : -1;
+
+        if (m2Index !== -1 && p2Index !== -1) {
+            // Both ±2 found
+            const distance = p2Index - m2Index;
+            if (distance === 4 && currentIndex === m2Index + 2) {
+                // They're 3 apart and current is in the middle → primary was rewritten
+                return true;
+            } else if (currentIndex === Math.min(m2Index, p2Index)) {
+                // More than 3 apart → put on earliest
+                return true;
+            }
+        } else if (m2Index !== -1 && currentIndex === m2Index) {
+            // Only -2 found and it's current
+            return true;
+        } else if (p2Index !== -1 && currentIndex === p2Index) {
+            // Only +2 found and it's current
+            return true;
+        }
+
+        return false;
+    },
+
+    // Load existing notes for a paragraph using sophisticated hash-based matching
     loadExistingNotes(paragraph, contentHash) {
+        // Build the current paragraph hash list (all hashes in document order)
+        const allParagraphs = Array.from(document.querySelectorAll('p:not(#notes p):not(header p):not(.site-header p)'));
+        const paragraphHashList = allParagraphs.map(p => this.hashContent(p.textContent));
+        const currentIndex = paragraphHashList.indexOf(contentHash);
+
+        if (currentIndex === -1) return; // Current paragraph not found in list
+
         const matchingNotes = [];
 
         // Check all notes to find matches
@@ -401,8 +464,7 @@ const NotesSystem = {
             try {
                 const noteData = JSON.parse(this.notes[noteKey]);
 
-                // Check if current hash is in any of the 5 contextHashes
-                if (noteData.contextHashes && noteData.contextHashes.includes(contentHash)) {
+                if (this.doesNoteMatchParagraph(noteData, contentHash, currentIndex, paragraphHashList)) {
                     const noteId = noteKey.split('-').slice(2).join('-');
                     matchingNotes.push({ noteKey, noteId, noteData });
                 }
@@ -771,13 +833,19 @@ const NotesSystem = {
         const contentHash = paragraph.dataset.contentHash;
         const existingNotes = [];
 
+        // Build paragraph hash list for position-based matching
+        const allParagraphs = Array.from(document.querySelectorAll('p:not(#notes p):not(header p):not(.site-header p)'));
+        const paragraphHashList = allParagraphs.map(p => this.hashContent(p.textContent));
+        const currentIndex = paragraphHashList.indexOf(contentHash);
+
+        if (currentIndex === -1) return; // Current paragraph not found
+
         // Find notes matching this paragraph's hash
         Object.keys(this.notes).forEach(key => {
             try {
                 const noteData = JSON.parse(this.notes[key]);
 
-                // Check if current hash is in any of the 5 contextHashes
-                if (noteData.contextHashes && noteData.contextHashes.includes(contentHash)) {
+                if (this.doesNoteMatchParagraph(noteData, contentHash, currentIndex, paragraphHashList)) {
                     const noteId = key.split('-').slice(2).join('-');
                     existingNotes.push({ noteId, noteData });
                 }
@@ -850,17 +918,23 @@ const NotesSystem = {
     showAllTextRanges() {
         if (this.activeNoteKey) return; // Don't show if a dialog is open
 
+        // Build paragraph hash list once for all paragraphs
+        const allParagraphs = Array.from(document.querySelectorAll('p:not(#notes p):not(header p):not(.site-header p)'));
+        const paragraphHashList = allParagraphs.map(p => this.hashContent(p.textContent));
+
         const paragraphs = document.querySelectorAll('p[data-notes-initialized]');
         paragraphs.forEach(paragraph => {
             const contentHash = paragraph.dataset.contentHash;
+            const currentIndex = paragraphHashList.indexOf(contentHash);
+
+            if (currentIndex === -1) return;
 
             // Find notes matching this paragraph
             Object.keys(this.notes).forEach(noteKey => {
                 try {
                     const noteData = JSON.parse(this.notes[noteKey]);
 
-                    // Check if current hash is in any of the 5 contextHashes
-                    if (noteData.contextHashes && noteData.contextHashes.includes(contentHash)) {
+                    if (this.doesNoteMatchParagraph(noteData, contentHash, currentIndex, paragraphHashList)) {
                         if (noteData.textRange) {
                             this.highlightTextRange(paragraph, noteData.textRange, '#a4cbb840', 'general-highlight');
                         }
