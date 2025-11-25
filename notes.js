@@ -169,6 +169,29 @@ const NotesSystem = {
         }
     },
 
+    // Show notification for relocated notes
+    showRelocatedNotesNotification(count) {
+        const notification = document.createElement('div');
+        notification.className = 'relocated-notes-notification';
+        notification.innerHTML = `
+            <div style="background-color: #d1ecf1; border: 1px solid #17a2b8; padding: 12px; border-radius: 4px; margin: 10px; font-size: 14px;">
+                ℹ️ ${count} note${count > 1 ? 's were' : ' was'} moved to the closest matching paragraph${count > 1 ? 's' : ''}
+                (the original paragraph${count > 1 ? 's were' : ' was'} edited).
+            </div>
+        `;
+
+        // Insert at top of content
+        const contentArea = document.querySelector('#content') || document.body;
+        contentArea.insertBefore(notification, contentArea.firstChild);
+
+        // Auto-dismiss after 10 seconds
+        setTimeout(() => {
+            notification.style.transition = 'opacity 0.5s';
+            notification.style.opacity = '0';
+            setTimeout(() => notification.remove(), 500);
+        }, 10000);
+    },
+
     // Show notification for orphaned notes
     showOrphanedNotesNotification(count) {
         const notification = document.createElement('div');
@@ -235,10 +258,10 @@ const NotesSystem = {
     // Enable notes mode
     enableNotesMode() {
         document.body.classList.add('notes-mode');
-        
+
         // Remember if focus mode was already active
         this.wasFocusModeActive = document.body.classList.contains('focus-mode');
-        
+
         // Force focus mode when notes are active
         if (!this.wasFocusModeActive) {
             // Use the ViewModeManager to switch to focus mode
@@ -250,12 +273,16 @@ const NotesSystem = {
                 localStorage.setItem('viewMode', 'focus');
             }
         }
-        
+
         // Small delay to ensure DOM is ready
         setTimeout(() => {
             this.addNotesToParagraphs();
+
+            // Load all notes with fuzzy matching fallback
+            this.loadAllExistingNotes();
+
             this.showAllTextRanges();
-            
+
             // Update all button visibility based on current capacity
             this.updateAllButtonVisibility();
         }, 100);
@@ -423,7 +450,54 @@ const NotesSystem = {
         });
     },
 
-    // Check if a note matches a paragraph using sophisticated position-based logic
+    // Calculate text similarity between two strings (0-1, higher = more similar)
+    calculateSimilarity(text1, text2) {
+        // Normalize both texts
+        const normalize = (str) => str.trim().toLowerCase().replace(/\s+/g, ' ');
+        const s1 = normalize(text1);
+        const s2 = normalize(text2);
+
+        if (s1 === s2) return 1.0;
+        if (s1.length === 0 || s2.length === 0) return 0.0;
+
+        // Simple word-based similarity (Jaccard similarity)
+        const words1 = new Set(s1.split(' '));
+        const words2 = new Set(s2.split(' '));
+
+        const intersection = new Set([...words1].filter(x => words2.has(x)));
+        const union = new Set([...words1, ...words2]);
+
+        return intersection.size / union.size;
+    },
+
+    // Find best paragraph match using fuzzy text matching
+    findBestFuzzyMatch(noteData, allParagraphs) {
+        // Extract original text from textRange if available
+        let originalText = noteData.text || '';
+
+        if (noteData.textRange && noteData.textRange.text) {
+            originalText = noteData.textRange.text;
+        }
+
+        if (!originalText || originalText.length < 10) {
+            return null; // Not enough text to match
+        }
+
+        let bestMatch = null;
+        let bestScore = 0.7; // Minimum threshold - must be at least 70% similar
+
+        allParagraphs.forEach((paragraph, index) => {
+            const paragraphText = paragraph.textContent;
+            const score = this.calculateSimilarity(originalText, paragraphText);
+
+            if (score > bestScore) {
+                bestScore = score;
+                bestMatch = { paragraph, index, score };
+            }
+        });
+
+        return bestMatch;
+    },
     doesNoteMatchParagraph(noteData, contentHash, currentIndex, paragraphHashList) {
         if (!noteData.contextHashes || noteData.contextHashes.length !== 5) return false;
 
@@ -479,42 +553,112 @@ const NotesSystem = {
         return false;
     },
 
-    // Load existing notes for a paragraph using sophisticated hash-based matching
-    loadExistingNotes(paragraph, contentHash) {
+    // Load existing notes for all paragraphs using sophisticated hash-based matching
+    loadAllExistingNotes() {
         // Use pre-loaded hash list (or build on demand as fallback)
         const paragraphHashList = this.getParagraphHashList();
-        const currentIndex = paragraphHashList.indexOf(contentHash);
+        const allParagraphs = Array.from(document.querySelectorAll('p[data-notes-initialized]'));
 
-        if (currentIndex === -1) return; // Current paragraph not found in list
+        const unmatchedNotes = [];
+        const relocatedNotes = [];
 
-        const matchingNotes = [];
-
-        // Check all notes to find matches
+        // First pass: try exact and neighbor matching for all notes
         Object.keys(this.notes).forEach(noteKey => {
             try {
                 const noteData = JSON.parse(this.notes[noteKey]);
+                let matched = false;
 
-                if (this.doesNoteMatchParagraph(noteData, contentHash, currentIndex, paragraphHashList)) {
-                    const noteId = noteKey.split('-').slice(2).join('-');
-                    matchingNotes.push({ noteKey, noteId, noteData });
+                // Try to match with any paragraph
+                for (let i = 0; i < allParagraphs.length; i++) {
+                    const paragraph = allParagraphs[i];
+                    const contentHash = paragraph.dataset.contentHash;
+                    const currentIndex = paragraphHashList.indexOf(contentHash);
+
+                    if (currentIndex !== -1 && this.doesNoteMatchParagraph(noteData, contentHash, currentIndex, paragraphHashList)) {
+                        const noteId = noteKey.split('-').slice(2).join('-');
+                        this.createNoteCircle(paragraph, contentHash, noteId, noteData);
+                        matched = true;
+                        break;
+                    }
+                }
+
+                if (!matched) {
+                    unmatchedNotes.push({ noteKey, noteData });
                 }
             } catch (e) {
                 console.error('Error loading note:', noteKey, e);
             }
         });
 
-        // Create note circles for all matches
-        matchingNotes.forEach(({ noteKey, noteId, noteData }) => {
-            this.createNoteCircle(paragraph, contentHash, noteId, noteData);
-        });
+        // Second pass: fuzzy matching for unmatched notes
+        if (unmatchedNotes.length > 0) {
+            const allParaElements = Array.from(document.querySelectorAll('p:not(#notes p):not(header p):not(.site-header p)'));
 
-        // Update add button visibility for both sides after loading notes
-        ['left', 'right'].forEach(side => {
-            const container = paragraph.querySelector(`.paragraph-notes-container[data-side="${side}"]`);
-            if (container) {
-                this.updateAddButtonVisibility(container);
+            unmatchedNotes.forEach(({ noteKey, noteData }) => {
+                const fuzzyMatch = this.findBestFuzzyMatch(noteData, allParaElements);
+
+                if (fuzzyMatch) {
+                    // Found a fuzzy match - relocate the note
+                    const matchedPara = fuzzyMatch.paragraph;
+                    const newContentHash = this.hashContent(matchedPara.textContent);
+                    const noteId = noteKey.split('-').slice(2).join('-');
+
+                    // Update note's context hashes to new location
+                    noteData.contextHashes = this.generateContextHashes(matchedPara);
+                    const newNoteKey = `h-${newContentHash}-${noteId}`;
+
+                    // Save with new key
+                    this.notes[newNoteKey] = JSON.stringify(noteData);
+                    delete this.notes[noteKey]; // Remove old key
+
+                    // Find the initialized paragraph element
+                    const initPara = Array.from(document.querySelectorAll('p[data-notes-initialized]'))
+                        .find(p => p === matchedPara);
+
+                    if (initPara) {
+                        this.createNoteCircle(initPara, newContentHash, noteId, noteData);
+                        relocatedNotes.push({ noteId, score: fuzzyMatch.score });
+                    }
+                } else {
+                    // No fuzzy match - orphan the note
+                    noteData.originalKey = noteKey;
+                    this.orphanedNotes[noteKey] = JSON.stringify(noteData);
+                    delete this.notes[noteKey];
+                }
+            });
+
+            // Save updated notes
+            localStorage.setItem('userNotes', JSON.stringify(this.notes));
+            localStorage.setItem('orphanedNotes', JSON.stringify(this.orphanedNotes));
+
+            // Show notifications
+            if (relocatedNotes.length > 0) {
+                this.showRelocatedNotesNotification(relocatedNotes.length);
             }
+
+            const newOrphans = unmatchedNotes.length - relocatedNotes.length;
+            if (newOrphans > 0) {
+                this.showOrphanedNotesNotification(newOrphans);
+            }
+        }
+
+        // Update button visibility for all containers
+        allParagraphs.forEach(paragraph => {
+            ['left', 'right'].forEach(side => {
+                const container = paragraph.querySelector(`.paragraph-notes-container[data-side="${side}"]`);
+                if (container) {
+                    this.updateAddButtonVisibility(container);
+                }
+            });
         });
+    },
+
+    // Load existing notes for a single paragraph (used when adding notes UI)
+    loadExistingNotes(paragraph, contentHash) {
+        // This is called per-paragraph during UI initialization
+        // The actual note loading happens in loadAllExistingNotes() after all paragraphs are initialized
+        // This function is kept for compatibility but does nothing
+        // Notes will be loaded by loadAllExistingNotes() called from enableNotesMode()
     },
     
     // Create note circle
