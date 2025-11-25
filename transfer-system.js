@@ -347,7 +347,7 @@ const TransferSystem = {
         }
     },
 
-    // Encryption utilities
+    // Encryption utilities - Unicode-safe
     encryptData(data, key) {
         let encrypted = '';
         for (let i = 0; i < data.length; i++) {
@@ -355,12 +355,14 @@ const TransferSystem = {
                 data.charCodeAt(i) ^ key.charCodeAt(i % key.length)
             );
         }
-        return btoa(encrypted); // Base64 encode
+        // Unicode-safe base64 encoding
+        return btoa(unescape(encodeURIComponent(encrypted)));
     },
 
     decryptData(encryptedData, key) {
         try {
-            const decoded = atob(encryptedData); // Base64 decode
+            // Unicode-safe base64 decoding
+            const decoded = decodeURIComponent(escape(atob(encryptedData)));
             let decrypted = '';
             for (let i = 0; i < decoded.length; i++) {
                 decrypted += String.fromCharCode(
