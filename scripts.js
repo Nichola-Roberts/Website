@@ -76,7 +76,7 @@ async function renderPart(partIndex) {
         // Initialize features on first part
         if (partIndex === 0) {
             initConclusionTimer();
-            initReadingPosition();
+            await initReadingPosition();
             document.dispatchEvent(new CustomEvent('contentReady'));
         }
 
