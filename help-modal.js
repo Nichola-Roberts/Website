@@ -117,7 +117,12 @@ function updateHelpSections(shouldScrollToCurrentSection = false) {
         
         
         if (isIntroduction || hasSpentEnoughTime || isCurrentlyReading) {
-            const html = marked.parse(`## ${title}\n${content}`);
+            // Simple HTML formatting without markdown parser
+            const formattedContent = content
+                .split('\n\n')
+                .map(para => `<p>${para.replace(/\n/g, ' ')}</p>`)
+                .join('');
+            const html = `<h2>${title}</h2>${formattedContent}`;
             const currentClass = isCurrentlyReading ? ' current-section' : '';
             guideHTML += `<div class="help-section${currentClass}" data-section-index="${index}" data-section-id="${helpSectionId}">${html}</div>`;
         } else {

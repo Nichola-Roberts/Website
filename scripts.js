@@ -171,21 +171,26 @@ async function initReadingPosition() {
 }
 
 function saveCurrentSection(sectionId) {
+    const partIndex = window.currentPartIndex || 0;
+    console.log('💾 Saving position:', { sectionId, partIndex });
     localStorage.setItem('currentSection', sectionId);
-    // Also save which part we're on
-    localStorage.setItem('currentPart', window.currentPartIndex || 0);
+    localStorage.setItem('currentPart', partIndex);
 }
 
 async function restoreReadingPosition() {
     const savedSection = localStorage.getItem('currentSection');
     const savedPart = parseInt(localStorage.getItem('currentPart') || '0');
 
+    console.log('🔄 Restoring position:', { savedSection, savedPart });
+
     if (savedSection) {
         // If user was on Part 2 or 3, we need to load those parts first
         if (savedPart > 0) {
+            console.log(`📚 Loading parts 1-${savedPart}...`);
             // Load all parts up to the saved part
             for (let i = 1; i <= savedPart; i++) {
                 if (i < window.contentParts.length) {
+                    console.log(`  Loading part ${i}...`);
                     await renderPart(i);
                 }
             }
