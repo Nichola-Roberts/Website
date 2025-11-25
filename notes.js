@@ -605,6 +605,10 @@ const NotesSystem = {
 
                     // Update note's context hashes to new location
                     noteData.contextHashes = this.generateContextHashes(matchedPara);
+
+                    // IMPORTANT: Clear text range since offsets are invalid on new paragraph
+                    delete noteData.textRange;
+
                     const newNoteKey = `h-${newContentHash}-${noteId}`;
 
                     // Save with new key
