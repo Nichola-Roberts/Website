@@ -101,6 +101,10 @@ async function renderPart(partIndex) {
                 if (window.navigationMenu && typeof window.navigationMenu.populateMenu === 'function') {
                     window.navigationMenu.populateMenu();
                 }
+                // Make TimeTracker observe new h2 elements
+                if (window.timeTracker && typeof window.timeTracker.observeNewContent === 'function') {
+                    window.timeTracker.observeNewContent();
+                }
             }, 100);
         }
 

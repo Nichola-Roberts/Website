@@ -80,36 +80,52 @@ class TimeTracker {
             rootMargin: '-40% 0px -40% 0px', // Section is "active" when in middle 20% of viewport
             threshold: 0
         };
-        
-        const observer = new IntersectionObserver((entries) => {
+
+        this.observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     this.setCurrentSection(entry.target.id);
                 }
             });
         }, options);
-        
+
         // Observe all sections and H2 headings after content is loaded
         const waitForSections = () => {
             const sections = document.querySelectorAll('.content-section');
             const h2Elements = document.querySelectorAll('.content h2[id]');
-            
+
             if (sections.length > 0) {
-                // Observe H1 sections
-                sections.forEach(section => {
-                    observer.observe(section);
-                });
-                
-                // Also observe H2 elements that have IDs (from navigation)
-                h2Elements.forEach(h2 => {
-                    observer.observe(h2);
-                });
+                this.observeSections(sections, h2Elements);
             } else {
                 // Keep checking until sections are available
                 setTimeout(waitForSections, 100);
             }
         };
         waitForSections();
+    }
+
+    observeSections(sections, h2Elements) {
+        if (!this.observer) return;
+
+        // Observe content sections
+        sections.forEach(section => {
+            this.observer.observe(section);
+        });
+
+        // Observe H2 elements that have IDs
+        h2Elements.forEach(h2 => {
+            this.observer.observe(h2);
+        });
+    }
+
+    // Called when new content is added (e.g., Part 2/3 loads)
+    observeNewContent() {
+        if (!this.observer) return;
+
+        const h2Elements = document.querySelectorAll('.content h2[id]');
+        h2Elements.forEach(h2 => {
+            this.observer.observe(h2);
+        });
     }
     
     setCurrentSection(sectionId) {
