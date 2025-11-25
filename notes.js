@@ -401,13 +401,13 @@ const NotesSystem = {
             try {
                 const noteData = JSON.parse(this.notes[noteKey]);
 
-                // Check if this note's contextHashes includes current paragraph's hash
-                if (noteData.contextHashes && noteData.contextHashes.includes(contentHash)) {
-                    const noteId = noteKey.split('-').slice(2).join('-'); // Extract noteId from h-hash-noteId
+                // Priority 1: Check if current hash matches note's primary hash (exact match)
+                if (noteKey.startsWith(`h-${contentHash}-`)) {
+                    const noteId = noteKey.split('-').slice(2).join('-');
                     matchingNotes.push({ noteKey, noteId, noteData });
                 }
-                // Also check direct hash match (for primary paragraph)
-                else if (noteKey.startsWith(`h-${contentHash}-`)) {
+                // Priority 2: Check if current hash is in note's contextHashes (neighbor match)
+                else if (noteData.contextHashes && noteData.contextHashes.includes(contentHash)) {
                     const noteId = noteKey.split('-').slice(2).join('-');
                     matchingNotes.push({ noteKey, noteId, noteData });
                 }
