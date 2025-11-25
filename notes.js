@@ -406,10 +406,21 @@ const NotesSystem = {
                     const noteId = noteKey.split('-').slice(2).join('-');
                     matchingNotes.push({ noteKey, noteId, noteData });
                 }
-                // Priority 2: Check if current hash is in note's contextHashes (neighbor match)
-                else if (noteData.contextHashes && noteData.contextHashes.includes(contentHash)) {
-                    const noteId = noteKey.split('-').slice(2).join('-');
-                    matchingNotes.push({ noteKey, noteId, noteData });
+                // Priority 2: Check the OTHER 4 hashes (±1, ±2 neighbors, excluding primary at position [2])
+                else if (noteData.contextHashes && noteData.contextHashes.length === 5) {
+                    // contextHashes = [hash-2, hash-1, PRIMARY, hash+1, hash+2]
+                    // Check positions 0, 1, 3, 4 (skip position 2 which is primary)
+                    const neighborHashes = [
+                        noteData.contextHashes[0], // -2
+                        noteData.contextHashes[1], // -1
+                        noteData.contextHashes[3], // +1
+                        noteData.contextHashes[4]  // +2
+                    ];
+
+                    if (neighborHashes.includes(contentHash)) {
+                        const noteId = noteKey.split('-').slice(2).join('-');
+                        matchingNotes.push({ noteKey, noteId, noteData });
+                    }
                 }
             } catch (e) {
                 console.error('Error loading note:', noteKey, e);
@@ -780,10 +791,24 @@ const NotesSystem = {
         Object.keys(this.notes).forEach(key => {
             try {
                 const noteData = JSON.parse(this.notes[key]);
-                if ((noteData.contextHashes && noteData.contextHashes.includes(contentHash)) ||
-                    key.startsWith(`h-${contentHash}-`)) {
+
+                // Priority 1: Check primary hash
+                if (key.startsWith(`h-${contentHash}-`)) {
                     const noteId = key.split('-').slice(2).join('-');
                     existingNotes.push({ noteId, noteData });
+                }
+                // Priority 2: Check the OTHER 4 neighbor hashes
+                else if (noteData.contextHashes && noteData.contextHashes.length === 5) {
+                    const neighborHashes = [
+                        noteData.contextHashes[0], // -2
+                        noteData.contextHashes[1], // -1
+                        noteData.contextHashes[3], // +1
+                        noteData.contextHashes[4]  // +2
+                    ];
+                    if (neighborHashes.includes(contentHash)) {
+                        const noteId = key.split('-').slice(2).join('-');
+                        existingNotes.push({ noteId, noteData });
+                    }
                 }
             } catch (e) {
                 console.error('Error restoring note:', key, e);
@@ -862,11 +887,27 @@ const NotesSystem = {
             Object.keys(this.notes).forEach(noteKey => {
                 try {
                     const noteData = JSON.parse(this.notes[noteKey]);
-                    if ((noteData.contextHashes && noteData.contextHashes.includes(contentHash)) ||
-                        noteKey.startsWith(`h-${contentHash}-`)) {
-                        if (noteData.textRange) {
-                            this.highlightTextRange(paragraph, noteData.textRange, '#a4cbb840', 'general-highlight');
+                    let isMatch = false;
+
+                    // Priority 1: Check primary hash
+                    if (noteKey.startsWith(`h-${contentHash}-`)) {
+                        isMatch = true;
+                    }
+                    // Priority 2: Check the OTHER 4 neighbor hashes
+                    else if (noteData.contextHashes && noteData.contextHashes.length === 5) {
+                        const neighborHashes = [
+                            noteData.contextHashes[0], // -2
+                            noteData.contextHashes[1], // -1
+                            noteData.contextHashes[3], // +1
+                            noteData.contextHashes[4]  // +2
+                        ];
+                        if (neighborHashes.includes(contentHash)) {
+                            isMatch = true;
                         }
+                    }
+
+                    if (isMatch && noteData.textRange) {
+                        this.highlightTextRange(paragraph, noteData.textRange, '#a4cbb840', 'general-highlight');
                     }
                 } catch (e) {
                     console.error('Error showing text range:', noteKey, e);
