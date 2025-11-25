@@ -9,6 +9,7 @@ const NotesSystem = {
     activeNoteKey: null,
     selectedTextRange: null,
     wasFocusModeActive: false, // Track previous focus state
+    paragraphHashList: null, // Cached hash list loaded from paragraph-hashes.json
 
     // Generate hash from paragraph content
     hashContent(text) {
@@ -47,8 +48,9 @@ const NotesSystem = {
     },
 
     // Initialize notes system
-    init() {
+    async init() {
         this.loadSavedState();
+        await this.loadParagraphHashList(); // Load pre-computed hash list
         this.migrateOldFormatNotes();
         this.initializeNotesButton();
         this.attachEventHandlers();
@@ -56,6 +58,35 @@ const NotesSystem = {
         if (this.isNotesMode) {
             this.enableNotesMode();
         }
+    },
+
+    // Load pre-computed paragraph hash list from paragraph-hashes.json
+    async loadParagraphHashList() {
+        try {
+            const response = await fetch('paragraph-hashes.json');
+            if (response.ok) {
+                const data = await response.json();
+                this.paragraphHashList = data.hashes;
+                console.log(`Loaded paragraph hash list: ${data.paragraphCount} paragraphs`);
+            } else {
+                console.warn('paragraph-hashes.json not found, will build hash list on demand');
+                this.paragraphHashList = null;
+            }
+        } catch (e) {
+            console.warn('Failed to load paragraph-hashes.json, will build hash list on demand:', e);
+            this.paragraphHashList = null;
+        }
+    },
+
+    // Get or build paragraph hash list
+    getParagraphHashList() {
+        if (this.paragraphHashList) {
+            return this.paragraphHashList;
+        }
+
+        // Fallback: build hash list from current DOM
+        const allParagraphs = Array.from(document.querySelectorAll('p:not(#notes p):not(header p):not(.site-header p)'));
+        return allParagraphs.map(p => this.hashContent(p.textContent));
     },
     
     // Load saved notes mode state
@@ -450,9 +481,8 @@ const NotesSystem = {
 
     // Load existing notes for a paragraph using sophisticated hash-based matching
     loadExistingNotes(paragraph, contentHash) {
-        // Build the current paragraph hash list (all hashes in document order)
-        const allParagraphs = Array.from(document.querySelectorAll('p:not(#notes p):not(header p):not(.site-header p)'));
-        const paragraphHashList = allParagraphs.map(p => this.hashContent(p.textContent));
+        // Use pre-loaded hash list (or build on demand as fallback)
+        const paragraphHashList = this.getParagraphHashList();
         const currentIndex = paragraphHashList.indexOf(contentHash);
 
         if (currentIndex === -1) return; // Current paragraph not found in list
@@ -833,9 +863,8 @@ const NotesSystem = {
         const contentHash = paragraph.dataset.contentHash;
         const existingNotes = [];
 
-        // Build paragraph hash list for position-based matching
-        const allParagraphs = Array.from(document.querySelectorAll('p:not(#notes p):not(header p):not(.site-header p)'));
-        const paragraphHashList = allParagraphs.map(p => this.hashContent(p.textContent));
+        // Use pre-loaded hash list
+        const paragraphHashList = this.getParagraphHashList();
         const currentIndex = paragraphHashList.indexOf(contentHash);
 
         if (currentIndex === -1) return; // Current paragraph not found
@@ -918,9 +947,8 @@ const NotesSystem = {
     showAllTextRanges() {
         if (this.activeNoteKey) return; // Don't show if a dialog is open
 
-        // Build paragraph hash list once for all paragraphs
-        const allParagraphs = Array.from(document.querySelectorAll('p:not(#notes p):not(header p):not(.site-header p)'));
-        const paragraphHashList = allParagraphs.map(p => this.hashContent(p.textContent));
+        // Use pre-loaded hash list
+        const paragraphHashList = this.getParagraphHashList();
 
         const paragraphs = document.querySelectorAll('p[data-notes-initialized]');
         paragraphs.forEach(paragraph => {
