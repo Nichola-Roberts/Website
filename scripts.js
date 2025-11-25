@@ -49,7 +49,7 @@ async function renderPart(partIndex) {
         if (partIndex < window.contentParts.length - 1) {
             const continueButton = document.createElement('button');
             continueButton.className = 'continue-button';
-            continueButton.textContent = `Continue to ${window.contentParts[partIndex + 1].title}`;
+            continueButton.textContent = `CONTINUE TO ${window.contentParts[partIndex + 1].title}`;
             continueButton.onclick = () => loadNextPart(partIndex + 1);
             partContainer.appendChild(continueButton);
         }
