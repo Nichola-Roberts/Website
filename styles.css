@@ -2319,9 +2319,9 @@ body:not(.notes-mode) .note-input-container {
     color: var(--color-sage-dark);
     letter-spacing: var(--tracking-tight);
     line-height: var(--leading-tight);
-    margin-bottom: var(--space-34);
+    margin: 0 0 var(--space-13) 0; /* No top/side margin, small bottom margin */
     text-align: center;
-    padding-top: 0; /* No top padding - loads right after continue button */
+    padding: 0;
 }
 
 .continue-button {
