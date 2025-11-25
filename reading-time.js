@@ -81,30 +81,30 @@ class ReadingTimeManager {
     startTracking() {
         // Wait for content to be loaded dynamically
         this.waitForContent();
-        
+
         // Update regularly until content loads
         const initialInterval = setInterval(() => {
             this.updateReadingTime();
             // Stop checking after content loads or 10 seconds
-            const sections = document.querySelectorAll('.content-section');
-            if (sections.length > 0 && this.elements.timeSpan && this.elements.timeSpan.textContent !== 'calculating...') {
+            const h2Elements = document.querySelectorAll('.content h2[id]');
+            if (h2Elements.length > 0 && this.elements.timeSpan && this.elements.timeSpan.textContent !== 'calculating...') {
                 clearInterval(initialInterval);
             }
         }, 500);
-        
+
         // Safety clear after 10 seconds
         setTimeout(() => clearInterval(initialInterval), 10000);
     }
     
     waitForContent() {
-        // Check if content sections exist yet
-        const sections = document.querySelectorAll('.content-section');
-        if (sections.length === 0) {
+        // Check if h2 sections exist yet
+        const h2Elements = document.querySelectorAll('.content h2[id]');
+        if (h2Elements.length === 0) {
             // Content not loaded yet, check again soon
             setTimeout(() => this.waitForContent(), 200);
             return;
         }
-        
+
         // Content is loaded, start tracking
         this.updateReadingTime();
     }
@@ -125,60 +125,73 @@ class ReadingTimeManager {
     }
     
     findCurrentSection() {
-        // Get all content sections (dynamically created)
-        const sections = document.querySelectorAll('.content-section');
-        if (sections.length === 0) return null;
-        
+        // Get all h2 sections (with IDs from navigation)
+        const h2Elements = document.querySelectorAll('.content h2[id]');
+        if (h2Elements.length === 0) return null;
+
         const viewportTop = window.pageYOffset;
-        const viewportHeight = window.innerHeight;
-        const viewportBottom = viewportTop + viewportHeight;
-        
-        let currentSection = null;
-        let maxVisibility = 0;
-        
-        // Check each section
-        sections.forEach(section => {
-            const rect = section.getBoundingClientRect();
-            const sectionTop = rect.top + viewportTop;
-            const sectionBottom = sectionTop + rect.height;
-            
-            // Calculate how much of this section is visible
-            const visibleTop = Math.max(sectionTop, viewportTop);
-            const visibleBottom = Math.min(sectionBottom, viewportBottom);
-            const visibleHeight = Math.max(0, visibleBottom - visibleTop);
-            const visibility = visibleHeight / rect.height;
-            
-            if (visibility > maxVisibility) {
-                maxVisibility = visibility;
-                currentSection = section;
+        const viewportMiddle = viewportTop + (window.innerHeight / 2);
+
+        let currentH2 = null;
+
+        // Find which h2 section we're currently in
+        for (let i = h2Elements.length - 1; i >= 0; i--) {
+            const h2 = h2Elements[i];
+            const rect = h2.getBoundingClientRect();
+            const h2Top = rect.top + viewportTop;
+
+            if (h2Top <= viewportMiddle) {
+                currentH2 = h2;
+                break;
             }
-        });
-        
-        return currentSection;
+        }
+
+        // If no h2 is above middle, use the first one
+        if (!currentH2 && h2Elements.length > 0) {
+            currentH2 = h2Elements[0];
+        }
+
+        return currentH2;
     }
     
-    calculateSectionReadingTime(section) {
-        // Get all paragraphs in the section
-        const paragraphs = section.querySelectorAll('p');
+    calculateSectionReadingTime(h2Element) {
+        if (!h2Element) return 'Complete';
+
+        // Find all paragraphs between this h2 and the next h2
+        const paragraphs = [];
+        let currentElement = h2Element.nextElementSibling;
+
+        while (currentElement) {
+            // Stop when we hit the next h2
+            if (currentElement.tagName === 'H2') {
+                break;
+            }
+            // Collect paragraphs
+            if (currentElement.tagName === 'P') {
+                paragraphs.push(currentElement);
+            }
+            currentElement = currentElement.nextElementSibling;
+        }
+
         if (paragraphs.length === 0) return 'Complete';
-        
+
         let totalWords = 0;
         let wordsAboveViewport = 0;
-        
+
         const viewportTop = window.pageYOffset;
         const windowBottom = viewportTop + window.innerHeight;
         const documentHeight = document.documentElement.scrollHeight;
-        
+
         // Check if we're at the bottom of the entire document
         const isAtBottom = windowBottom >= documentHeight - 50; // 50px buffer
-        
+
         paragraphs.forEach(p => {
             const words = this.countWords(p.textContent);
             totalWords += words;
-            
+
             // Check if paragraph is above current viewport (already read)
             const pRect = p.getBoundingClientRect();
-            
+
             if (pRect.bottom < 0) {
                 // Paragraph is completely above viewport - fully read
                 wordsAboveViewport += words;
@@ -190,14 +203,14 @@ class ReadingTimeManager {
                 wordsAboveViewport += Math.floor(words * readPercent);
             }
         });
-        
+
         const remainingWords = Math.max(0, totalWords - wordsAboveViewport);
         const remainingMinutes = Math.ceil(remainingWords / this.averageReadingSpeed);
-        
+
         if (totalWords === 0) {
             return 'calculating...';
         }
-        
+
         // Only show complete if at bottom of entire document
         if (isAtBottom) {
             return 'Complete';
