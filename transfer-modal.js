@@ -159,7 +159,6 @@ const TransferModal = {
                             <li>Data is stored on your device</li>
                             <li>To transfer between devices click generate</li>
                             <li>This will save a copy of your notes on our servers</li>
-                            <li>For 2 hours only</li>
                             <li>Data on our servers is encrypted</li>
                             <li>Only notes on the right margin are exported</li>
                             <li>Imported notes always go to the left margin</li>
@@ -167,7 +166,19 @@ const TransferModal = {
                         </ul>
                     </div>
                 </div>
-                
+
+                <!-- Expiry Duration Selection -->
+                <div class="expiry-selection">
+                    <label for="expiryDuration" class="expiry-label">Transfer link active for:</label>
+                    <select id="expiryDuration" class="expiry-dropdown">
+                        <option value="2">2 hours</option>
+                        <option value="12">12 hours</option>
+                        <option value="24">24 hours</option>
+                        <option value="72">3 days</option>
+                        <option value="168">7 days</option>
+                    </select>
+                </div>
+
                 <!-- Generate Code Button -->
                 <button class="transfer-button" id="generateCodeBtn">
                     Generate Code
@@ -185,7 +196,7 @@ const TransferModal = {
                             <p class="qr-label">Or scan QR code</p>
                         </div>
                     </div>
-                    <p class="transfer-expiry">Active for 2 hours</p>
+                    <p class="transfer-expiry" id="transferExpiry"></p>
                 </div>
 
                 <!-- Input Code Section -->
@@ -335,20 +346,31 @@ const TransferModal = {
     async handleGenerateCode() {
         const generateBtn = document.getElementById('generateCodeBtn');
         if (!generateBtn || !window.TransferSystem) return;
-        
+
+        // Get selected expiry duration (in hours)
+        const expirySelect = document.getElementById('expiryDuration');
+        const expiryHours = parseInt(expirySelect.value) || 2;
+
         // Show loading state
         const originalText = generateBtn.textContent;
         generateBtn.disabled = true;
         generateBtn.textContent = 'Generating...';
-        
+
         try {
-            const result = await window.TransferSystem.exportData();
-            
+            const result = await window.TransferSystem.exportData(expiryHours);
+
             if (result.success) {
                 // Show the code
                 const transferCodeEl = document.getElementById('transferCode');
                 if (transferCodeEl) {
                     transferCodeEl.textContent = result.code;
+                }
+
+                // Update expiry text dynamically
+                const expiryEl = document.getElementById('transferExpiry');
+                if (expiryEl) {
+                    const expiryText = this.formatExpiryDuration(expiryHours);
+                    expiryEl.textContent = `Active for ${expiryText}`;
                 }
                 
                 // Generate QR code with URL containing the import code
@@ -599,7 +621,17 @@ const TransferModal = {
             });
         }
     },
-    
+
+    // Format expiry duration for display
+    formatExpiryDuration(hours) {
+        if (hours < 24) {
+            return `${hours} ${hours === 1 ? 'hour' : 'hours'}`;
+        } else {
+            const days = hours / 24;
+            return `${days} ${days === 1 ? 'day' : 'days'}`;
+        }
+    },
+
     // Show message to user
     showMessage(message, type = 'info') {
         const messageEl = document.getElementById('transferMessage');

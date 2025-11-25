@@ -1,129 +1,127 @@
-// Load and render markdown content
+// Store all parts globally
+window.contentParts = [
+    { title: 'PART 1 - The Lay of the Land', file: 'part1.html' },
+    { title: 'PART 2 - Engineering Our Landscape', file: 'part2.html' },
+    { title: 'PART 3 - Integrating Our Landscape', file: 'part3.html' }
+];
+window.currentPartIndex = 0;
+
+// Load and render content
 async function loadContent() {
     try {
-        // Fetch the markdown content
-        const response = await fetch('content.md');
-        const markdown = await response.text();
-        
-        // Parse the markdown into sections
-        const sections = parseMarkdownSections(markdown);
-        
-        // Render the sections
-        renderSections(sections);
-        
+        // Render only Part 1 initially
+        await renderPart(0);
+
     } catch (error) {
         console.error('Error loading content:', error);
     }
 }
 
-function parseMarkdownSections(markdown) {
-    const sections = [];
-    const lines = markdown.split('\n');
-    let currentSection = null;
-    let currentContent = [];
-    let introContent = [];
-    let foundFirstHeading = false;
-    
-    for (const line of lines) {
-        if (line.startsWith('## ') && !line.startsWith('### ')) {
-            // If we haven't found a heading yet, save intro content
-            if (!foundFirstHeading && introContent.length > 0) {
-                sections.push({
-                    title: 'introduction',
-                    content: introContent.join('\n').trim()
-                });
-            }
-            foundFirstHeading = true;
+async function renderPart(partIndex) {
+    if (partIndex < 0 || partIndex >= window.contentParts.length) return;
 
-            // Save previous section if exists
-            if (currentSection) {
-                sections.push({
-                    title: currentSection,
-                    content: currentContent.join('\n').trim()
-                });
-            }
-            // Start new section
-            currentSection = line.substring(3).trim();
-            currentContent = [];
-        } else {
-            if (!foundFirstHeading) {
-                introContent.push(line);
-            } else {
-                currentContent.push(line);
-            }
-        }
-    }
-    
-    // Save introduction if we never found headings
-    if (!foundFirstHeading && introContent.length > 0) {
-        sections.push({
-            title: 'introduction',
-            content: introContent.join('\n').trim()
-        });
-    }
-    
-    // Save the last section
-    if (currentSection) {
-        sections.push({
-            title: currentSection,
-            content: currentContent.join('\n').trim()
-        });
-    }
-    
-    return sections;
-}
-
-function renderSections(sections) {
     const contentElement = document.getElementById('content');
-    
-    // Store conclusion section separately for later
-    let conclusionSection = null;
-    
-    sections.forEach((section, index) => {
-        // Create section ID from title
-        const sectionId = section.title.toLowerCase()
-            .replace(/\s+/g, '-')
-            .replace(/[^\w-]/g, '') || 'introduction';
-        
-        // Skip conclusion section initially
-        if (sectionId === 'conclusion') {
-            conclusionSection = section;
-            return;
-        }
-        
+    const part = window.contentParts[partIndex];
+
+    try {
+        // Fetch the HTML content for this part
+        const response = await fetch(part.file);
+        const html = await response.text();
+
+        // Create part container
+        const partContainer = document.createElement('div');
+        partContainer.className = 'part-container';
+        partContainer.id = `part-${partIndex + 1}`;
+
+        // Add part title
+        const partTitle = document.createElement('h1');
+        partTitle.className = 'part-title';
+        partTitle.textContent = part.title;
+        partContainer.appendChild(partTitle);
+
+        // Create content section
         const sectionElement = document.createElement('section');
         sectionElement.className = 'content-section';
-        sectionElement.id = sectionId;
-        
-        // Add heading if not introduction
-        if (section.title !== 'introduction') {
-            const heading = document.createElement('h2');
-            heading.textContent = section.title;
-            sectionElement.appendChild(heading);
+        sectionElement.innerHTML = html;
+        partContainer.appendChild(sectionElement);
+
+        // Add continue button if there's a next part
+        if (partIndex < window.contentParts.length - 1) {
+            const continueButton = document.createElement('button');
+            continueButton.className = 'continue-button';
+            continueButton.textContent = `CONTINUE TO ${window.contentParts[partIndex + 1].title}`;
+            continueButton.onclick = () => loadNextPart(partIndex + 1);
+            partContainer.appendChild(continueButton);
         }
-        
-        // Render markdown content
-        const contentDiv = document.createElement('div');
-        contentDiv.className = 'section-content';
-        contentDiv.innerHTML = marked.parse(section.content);
-        sectionElement.appendChild(contentDiv);
-        
-        contentElement.appendChild(sectionElement);
-    });
-    
-    // Store conclusion section for timer
-    if (conclusionSection) {
-        window.conclusionSection = conclusionSection;
+
+        // Append to content
+        contentElement.appendChild(partContainer);
+
+        // Initialize features on first part
+        if (partIndex === 0) {
+            initConclusionTimer();
+            initReadingPosition();
+            document.dispatchEvent(new CustomEvent('contentReady'));
+        }
+
+        // Trigger notes system update if in notes mode
+        if (document.body.classList.contains('notes-mode')) {
+            setTimeout(() => {
+                document.dispatchEvent(new CustomEvent('contentAdded'));
+            }, 100);
+        }
+
+        // Track part view in Google Analytics
+        trackPartView(partIndex, part.title);
+
+        // Update current part index
+        window.currentPartIndex = partIndex;
+
+    } catch (error) {
+        console.error(`Error loading ${part.file}:`, error);
     }
-    
-    // Initialize conclusion timer after content is rendered
-    initConclusionTimer();
-    
-    // Initialize reading position tracking after content is rendered
-    initReadingPosition();
-    
-    // Dispatch custom event to notify that content is ready
-    document.dispatchEvent(new CustomEvent('contentReady'));
+}
+
+// Track part views in Google Analytics
+function trackPartView(partIndex, partTitle) {
+    // Check if gtag is available
+    if (typeof gtag === 'function') {
+        // Create a virtual page path for each part
+        const virtualPath = partIndex === 0 ? '/' : `/part-${partIndex + 1}`;
+
+        // Send virtual pageview
+        gtag('event', 'page_view', {
+            page_title: partTitle,
+            page_path: virtualPath,
+            page_location: window.location.origin + virtualPath
+        });
+
+        // Also send a custom event for part progression
+        if (partIndex > 0) {
+            gtag('event', 'content_progression', {
+                event_category: 'engagement',
+                event_label: partTitle,
+                part_number: partIndex + 1
+            });
+        }
+    }
+}
+
+async function loadNextPart(partIndex) {
+    // Smooth scroll to where new content will appear
+    const lastPartContainer = document.querySelector(`#part-${partIndex}`);
+    if (lastPartContainer) {
+        const scrollTarget = lastPartContainer.offsetTop + lastPartContainer.offsetHeight - 100;
+        window.scrollTo({
+            top: scrollTarget,
+            behavior: 'smooth'
+        });
+    }
+
+    // Small delay before rendering to allow scroll
+    setTimeout(async () => {
+        await renderPart(partIndex);
+    }, 300);
 }
 
 

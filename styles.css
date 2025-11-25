@@ -1599,6 +1599,44 @@ body:not(.notes-mode) .note-input-container {
 
 /* Removed hover rule - now handled by JavaScript */
 
+/* Expiry Duration Selection */
+.expiry-selection {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin: var(--space-8) 0;
+    align-items: center;
+}
+
+.expiry-label {
+    font-size: var(--text-sm);
+    color: rgba(26, 31, 29, 0.7);
+    font-weight: 500;
+}
+
+.expiry-dropdown {
+    padding: var(--space-3) var(--space-5);
+    border: 1px solid rgba(181, 188, 181, 0.3);
+    border-radius: 4px;
+    background: white;
+    color: var(--color-ink);
+    font-size: var(--text-sm);
+    font-family: var(--font-body);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 150px;
+}
+
+.expiry-dropdown:hover {
+    border-color: var(--color-sage);
+}
+
+.expiry-dropdown:focus {
+    outline: none;
+    border-color: var(--color-sage);
+    box-shadow: 0 0 0 2px rgba(59, 125, 105, 0.1);
+}
+
 .transfer-button {
     padding: var(--space-5) var(--space-8);
     border: 1px solid rgba(181, 188, 181, 0.3);
@@ -1870,9 +1908,10 @@ body:not(.notes-mode) .note-input-container {
 /* Mobile adjustments */
 @media (max-width: 600px) {
     .transfer-modal-inner {
-        padding: var(--space-6);
-        margin: var(--space-3);
-        max-width: 360px;
+        padding: var(--space-8) var(--space-13);
+        margin: var(--space-8);
+        max-width: 90%;
+        max-height: 85vh;
     }
     
     .transfer-methods {
@@ -2252,18 +2291,67 @@ body:not(.notes-mode) .note-input-container {
     .mailing-list-modal {
         padding: var(--space-13);
     }
-    
+
     .mailing-list-modal-inner {
         padding: var(--space-21);
     }
-    
+
     .mailing-list-buttons {
         flex-direction: column;
     }
-    
+
     .subscribe-btn,
     .unsubscribe-btn {
         flex: none;
         width: 100%;
+    }
+}
+
+/* Part Containers and Continue Button */
+.part-container {
+    margin-bottom: var(--space-55);
+}
+
+.part-title {
+    font-family: var(--font-display);
+    font-size: var(--text-3xl);
+    font-weight: 400;
+    color: var(--color-sage-dark);
+    letter-spacing: var(--tracking-tight);
+    line-height: var(--leading-tight);
+    margin-bottom: var(--space-34);
+    text-align: center;
+    padding-top: 0; /* No top padding - loads right after continue button */
+}
+
+.continue-button {
+    display: block;
+    margin: 0; /* No extra spacing */
+    padding: 0;
+    font-family: var(--font-body);
+    font-size: 0.92rem; /* Same as paragraph text */
+    font-weight: 400; /* Normal weight like paragraphs */
+    line-height: 2; /* Double spacing like paragraphs */
+    color: var(--color-sage-dark); /* Green text */
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    transition: opacity var(--duration-fast) var(--ease-out);
+}
+
+.continue-button:hover {
+    opacity: 0.7;
+}
+
+.continue-button:active {
+    opacity: 0.5;
+}
+
+/* Mobile adjustments for part navigation */
+@media (max-width: 640px) {
+    .part-title {
+        font-size: var(--text-2xl);
+        margin-bottom: var(--space-21);
     }
 }

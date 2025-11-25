@@ -88,12 +88,15 @@ const TransferSystem = {
     },
 
     // Export data to Redis
-    async exportData() {
+    async exportData(expiryHours = 2) {
         try {
+            // Calculate expiration time in milliseconds
+            const expirationTime = expiryHours * 60 * 60 * 1000;
+
             // Gather all data (only right-side notes are included)
             const exportData = this.gatherExportData();
             const noteCount = Object.keys(exportData.notes || {}).length;
-            
+
 
             // Generate codes
             const fullCode = this.generateCode();
@@ -109,7 +112,7 @@ const TransferSystem = {
                 body: JSON.stringify({
                     code: accessCode,
                     data: encryptedData,
-                    expiresAt: Date.now() + this.config.expirationTime
+                    expiresAt: Date.now() + expirationTime
                 })
             });
 
@@ -119,12 +122,12 @@ const TransferSystem = {
                 throw new Error(result.error || 'Failed to store data');
             }
 
-            
+
             return {
                 success: true,
                 code: fullCode,
                 noteCount: noteCount,
-                expiresAt: new Date(Date.now() + this.config.expirationTime)
+                expiresAt: new Date(Date.now() + expirationTime)
             };
 
         } catch (error) {
