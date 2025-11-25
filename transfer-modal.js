@@ -167,18 +167,6 @@ const TransferModal = {
                     </div>
                 </div>
 
-                <!-- Expiry Duration Selection -->
-                <div class="expiry-selection">
-                    <label for="expiryDuration" class="expiry-label">Transfer link active for:</label>
-                    <select id="expiryDuration" class="expiry-dropdown">
-                        <option value="2">2 hours</option>
-                        <option value="12">12 hours</option>
-                        <option value="24">24 hours</option>
-                        <option value="72">3 days</option>
-                        <option value="168">7 days</option>
-                    </select>
-                </div>
-
                 <!-- Generate Code Button -->
                 <button class="transfer-button" id="generateCodeBtn">
                     Generate Code
@@ -211,9 +199,21 @@ const TransferModal = {
                 
                 <!-- Custom Message Display -->
                 <div class="transfer-message" id="transferMessage" style="display: none;"></div>
-                
+
                 <!-- Import Results -->
                 <div class="transfer-result" id="importResult" style="display: none;">
+                </div>
+
+                <!-- Expiry Duration Selection -->
+                <div class="expiry-selection">
+                    <label for="expiryDuration" class="expiry-label">Transfer link active for:</label>
+                    <select id="expiryDuration" class="expiry-dropdown">
+                        <option value="2">2 hours</option>
+                        <option value="12">12 hours</option>
+                        <option value="24">24 hours</option>
+                        <option value="72">3 days</option>
+                        <option value="168">7 days</option>
+                    </select>
                 </div>
 
                 <!-- Delete Local Data Section -->
@@ -224,10 +224,10 @@ const TransferModal = {
                 </div>
             </div>
         `;
-        
+
         this.attachModalEventHandlers();
     },
-    
+
     // Setup minimal import-only modal (when user has no notes)
     setupImportOnlyModal() {
         this.modalInner.innerHTML = `
