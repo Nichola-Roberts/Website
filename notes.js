@@ -5,29 +5,244 @@
 const NotesSystem = {
     isNotesMode: localStorage.getItem('notesMode') === 'true' || false,
     notes: JSON.parse(localStorage.getItem('userNotes')) || {},
+    orphanedNotes: JSON.parse(localStorage.getItem('orphanedNotes')) || {},
     activeNoteKey: null,
     selectedTextRange: null,
     wasFocusModeActive: false, // Track previous focus state
-    
+    paragraphHashList: null, // Cached hash list loaded from paragraph-hashes.json
+
+    // Generate hash from paragraph content
+    hashContent(text) {
+        // Normalize text: trim, lowercase, collapse whitespace
+        const normalized = text.trim().toLowerCase().replace(/\s+/g, ' ');
+        // Use first 200 chars for hash to balance stability with uniqueness
+        const content = normalized.substring(0, 200);
+
+        // Simple but effective hash function
+        let hash = 0;
+        for (let i = 0; i < content.length; i++) {
+            const char = content.charCodeAt(i);
+            hash = ((hash << 5) - hash) + char;
+            hash = hash & hash; // Convert to 32-bit integer
+        }
+        // Convert to positive hex string
+        return Math.abs(hash).toString(36);
+    },
+
+    // Generate context hashes for a paragraph (current + 2 before + 2 after)
+    generateContextHashes(paragraph) {
+        const allParagraphs = Array.from(document.querySelectorAll('p:not(#notes p):not(header p):not(.site-header p)'));
+        const currentIndex = allParagraphs.indexOf(paragraph);
+
+        const hashes = [];
+        // Get hashes for -2, -1, 0, +1, +2 positions
+        for (let offset = -2; offset <= 2; offset++) {
+            const targetIndex = currentIndex + offset;
+            if (targetIndex >= 0 && targetIndex < allParagraphs.length) {
+                hashes.push(this.hashContent(allParagraphs[targetIndex].textContent));
+            } else {
+                hashes.push(null); // Placeholder for out-of-bounds
+            }
+        }
+        return hashes;
+    },
+
     // Initialize notes system
-    init() {
+    async init() {
         this.loadSavedState();
+        await this.loadParagraphHashList(); // Load pre-computed hash list
+        this.migrateOldFormatNotes();
         this.initializeNotesButton();
         this.attachEventHandlers();
-        
+
         if (this.isNotesMode) {
             this.enableNotesMode();
         }
+    },
+
+    // Load pre-computed paragraph hash list from paragraph-hashes.json
+    async loadParagraphHashList() {
+        try {
+            const response = await fetch('paragraph-hashes.json');
+            if (response.ok) {
+                const data = await response.json();
+                this.paragraphHashList = data.hashes;
+                console.log(`Loaded paragraph hash list: ${data.paragraphCount} paragraphs`);
+            } else {
+                console.warn('paragraph-hashes.json not found, will build hash list on demand');
+                this.paragraphHashList = null;
+            }
+        } catch (e) {
+            console.warn('Failed to load paragraph-hashes.json, will build hash list on demand:', e);
+            this.paragraphHashList = null;
+        }
+    },
+
+    // Get or build paragraph hash list
+    getParagraphHashList() {
+        if (this.paragraphHashList) {
+            return this.paragraphHashList;
+        }
+
+        // Fallback: build hash list from current DOM
+        const allParagraphs = Array.from(document.querySelectorAll('p:not(#notes p):not(header p):not(.site-header p)'));
+        return allParagraphs.map(p => this.hashContent(p.textContent));
     },
     
     // Load saved notes mode state
     loadSavedState() {
         // Reload notes from localStorage
         this.notes = JSON.parse(localStorage.getItem('userNotes')) || {};
-        
+        this.orphanedNotes = JSON.parse(localStorage.getItem('orphanedNotes')) || {};
+
         if (this.isNotesMode) {
             document.body.classList.add('notes-mode');
         }
+    },
+
+    // Migrate old paragraph-index format (p0-noteId) to hash-based format (h-hash-noteId)
+    migrateOldFormatNotes() {
+        const notesToMigrate = Object.keys(this.notes).filter(key => key.startsWith('p') && key.match(/^p\d+-/));
+
+        if (notesToMigrate.length === 0) {
+            return; // No migration needed
+        }
+
+        console.log(`Migrating ${notesToMigrate.length} notes from index-based to hash-based format...`);
+
+        // Wait for DOM to be ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => this.performMigration());
+        } else {
+            this.performMigration();
+        }
+    },
+
+    // Perform the actual migration using fuzzy matching
+    performMigration() {
+        const paragraphs = Array.from(document.querySelectorAll('p:not(#notes p):not(header p):not(.site-header p)'));
+        const notesToMigrate = Object.keys(this.notes).filter(key => key.startsWith('p') && key.match(/^p\d+-/));
+        let migratedCount = 0;
+        let relocatedCount = 0;
+        let orphanedCount = 0;
+
+        notesToMigrate.forEach(oldKey => {
+            try {
+                const noteData = JSON.parse(this.notes[oldKey]);
+                const oldIndex = parseInt(oldKey.split('-')[0].substring(1)); // Extract index from p0-noteId
+                const noteId = oldKey.split('-').slice(1).join('-'); // Everything after first dash
+
+                let targetParagraph = null;
+                let wasRelocated = false;
+
+                // First try: use fuzzy matching to find the best match
+                const fuzzyMatch = this.findBestFuzzyMatch(noteData, paragraphs);
+
+                if (fuzzyMatch && fuzzyMatch.score >= 0.7) {
+                    // Found a good fuzzy match
+                    targetParagraph = fuzzyMatch.paragraph;
+
+                    // Check if it's at the old index
+                    if (fuzzyMatch.index !== oldIndex) {
+                        wasRelocated = true;
+                        relocatedCount++;
+                    }
+                } else if (oldIndex < paragraphs.length) {
+                    // Fallback: if no good fuzzy match but paragraph exists at old index
+                    // Use it, but this is risky (content might have changed)
+                    targetParagraph = paragraphs[oldIndex];
+                    console.warn(`Note ${oldKey} has no fuzzy match, using old index (risky)`);
+                }
+
+                if (targetParagraph) {
+                    // Successfully found a paragraph for this note
+                    const contentHash = this.hashContent(targetParagraph.textContent);
+                    const contextHashes = this.generateContextHashes(targetParagraph);
+                    const newKey = `h-${contentHash}-${noteId}`;
+
+                    // Clear text range if relocated (offsets are invalid)
+                    if (wasRelocated && noteData.textRange) {
+                        delete noteData.textRange;
+                    }
+
+                    // Add context hashes for resilience
+                    noteData.contextHashes = contextHashes;
+                    this.notes[newKey] = JSON.stringify(noteData);
+                    migratedCount++;
+                } else {
+                    // No match found - make orphaned
+                    noteData.originalKey = oldKey;
+                    noteData.originalIndex = oldIndex;
+                    this.orphanedNotes[oldKey] = JSON.stringify(noteData);
+                    orphanedCount++;
+                }
+
+                // Remove old key
+                delete this.notes[oldKey];
+            } catch (e) {
+                console.error('Failed to migrate note:', oldKey, e);
+            }
+        });
+
+        // Save updated notes
+        localStorage.setItem('userNotes', JSON.stringify(this.notes));
+        localStorage.setItem('orphanedNotes', JSON.stringify(this.orphanedNotes));
+
+        if (migratedCount > 0 || orphanedCount > 0) {
+            console.log(`Migration complete: ${migratedCount} notes migrated (${relocatedCount} relocated), ${orphanedCount} orphaned`);
+            if (relocatedCount > 0) {
+                this.showRelocatedNotesNotification(relocatedCount);
+            }
+            if (orphanedCount > 0) {
+                this.showOrphanedNotesNotification(orphanedCount);
+            }
+        }
+    },
+
+    // Show notification for relocated notes
+    showRelocatedNotesNotification(count) {
+        const notification = document.createElement('div');
+        notification.className = 'relocated-notes-notification';
+        notification.innerHTML = `
+            <div style="background-color: #d1ecf1; border: 1px solid #17a2b8; padding: 12px; border-radius: 4px; margin: 10px; font-size: 14px;">
+                ℹ️ ${count} note${count > 1 ? 's were' : ' was'} moved to the closest matching paragraph${count > 1 ? 's' : ''}
+                (the original paragraph${count > 1 ? 's were' : ' was'} edited).
+            </div>
+        `;
+
+        // Insert at top of content
+        const contentArea = document.querySelector('#content') || document.body;
+        contentArea.insertBefore(notification, contentArea.firstChild);
+
+        // Auto-dismiss after 10 seconds
+        setTimeout(() => {
+            notification.style.transition = 'opacity 0.5s';
+            notification.style.opacity = '0';
+            setTimeout(() => notification.remove(), 500);
+        }, 10000);
+    },
+
+    // Show notification for orphaned notes
+    showOrphanedNotesNotification(count) {
+        const notification = document.createElement('div');
+        notification.className = 'orphaned-notes-notification';
+        notification.innerHTML = `
+            <div style="background-color: #fff3cd; border: 1px solid #ffc107; padding: 12px; border-radius: 4px; margin: 10px; font-size: 14px;">
+                ⚠️ ${count} note${count > 1 ? 's' : ''} couldn't be linked to current content (paragraph no longer exists).
+                They've been preserved in storage.
+            </div>
+        `;
+
+        // Insert at top of content
+        const contentArea = document.querySelector('#content') || document.body;
+        contentArea.insertBefore(notification, contentArea.firstChild);
+
+        // Auto-dismiss after 10 seconds
+        setTimeout(() => {
+            notification.style.transition = 'opacity 0.5s';
+            notification.style.opacity = '0';
+            setTimeout(() => notification.remove(), 500);
+        }, 10000);
     },
     
     // Create and initialize notes button
@@ -73,10 +288,10 @@ const NotesSystem = {
     // Enable notes mode
     enableNotesMode() {
         document.body.classList.add('notes-mode');
-        
+
         // Remember if focus mode was already active
         this.wasFocusModeActive = document.body.classList.contains('focus-mode');
-        
+
         // Force focus mode when notes are active
         if (!this.wasFocusModeActive) {
             // Use the ViewModeManager to switch to focus mode
@@ -88,12 +303,16 @@ const NotesSystem = {
                 localStorage.setItem('viewMode', 'focus');
             }
         }
-        
+
         // Small delay to ensure DOM is ready
         setTimeout(() => {
             this.addNotesToParagraphs();
+
+            // Load all notes with fuzzy matching fallback
+            this.loadAllExistingNotes();
+
             this.showAllTextRanges();
-            
+
             // Update all button visibility based on current capacity
             this.updateAllButtonVisibility();
         }, 100);
@@ -123,24 +342,25 @@ const NotesSystem = {
     // Add note UI to all paragraphs
     addNotesToParagraphs() {
         const paragraphs = document.querySelectorAll('p');
-        paragraphs.forEach((paragraph, index) => {
+        paragraphs.forEach((paragraph) => {
             // Skip if already initialized, in notes section, or in header
-            if (paragraph.dataset.notesInitialized || 
-                paragraph.closest('#notes') || 
-                paragraph.closest('header') || 
+            if (paragraph.dataset.notesInitialized ||
+                paragraph.closest('#notes') ||
+                paragraph.closest('header') ||
                 paragraph.closest('.site-header')) {
                 return;
             }
-            
+
             paragraph.dataset.notesInitialized = 'true';
-            paragraph.dataset.paragraphIndex = index;
-            
+            const contentHash = this.hashContent(paragraph.textContent);
+            paragraph.dataset.contentHash = contentHash;
+
             // Create containers and add buttons for both sides
             ['left', 'right'].forEach(side => {
                 const container = document.createElement('div');
                 container.className = 'paragraph-notes-container';
                 container.dataset.side = side;
-                
+
                 // Add button for this side
                 const addButton = document.createElement('button');
                 addButton.className = 'note-add-button';
@@ -153,15 +373,15 @@ const NotesSystem = {
                         return;
                     }
                     this.captureSelectedText(paragraph);
-                    this.showNoteDialog(paragraph, index, null, side);
+                    this.showNoteDialog(paragraph, contentHash, null, side);
                 });
-                
+
                 container.appendChild(addButton);
                 paragraph.appendChild(container);
             });
-            
+
             // Load existing notes
-            this.loadExistingNotes(paragraph, index);
+            this.loadExistingNotes(paragraph, contentHash);
         });
     },
     
@@ -256,64 +476,416 @@ const NotesSystem = {
         document.querySelectorAll('.paragraph-notes-container').forEach(container => container.remove());
         document.querySelectorAll('p[data-notes-initialized]').forEach(p => {
             delete p.dataset.notesInitialized;
-            delete p.dataset.paragraphIndex;
+            delete p.dataset.contentHash;
         });
     },
-    
-    // Load existing notes for a paragraph
-    loadExistingNotes(paragraph, paragraphIndex) {
-        const paragraphNotes = Object.keys(this.notes)
-            .filter(key => key.startsWith(`p${paragraphIndex}-`));
-        
-        paragraphNotes.forEach(noteKey => {
-            const noteData = JSON.parse(this.notes[noteKey]);
-            const [, noteId] = noteKey.split('-');
-            this.createNoteCircle(paragraph, paragraphIndex, noteId, noteData);
-        });
-        
-        // Update add button visibility for both sides after loading notes
-        ['left', 'right'].forEach(side => {
-            const container = paragraph.querySelector(`.paragraph-notes-container[data-side="${side}"]`);
-            if (container) {
-                this.updateAddButtonVisibility(container);
+
+    // Calculate text similarity between two strings (0-1, higher = more similar)
+    // Uses both word overlap (Jaccard) and word order (bigram) for better accuracy
+    calculateSimilarity(text1, text2) {
+        // Normalize both texts
+        const normalize = (str) => str.trim().toLowerCase().replace(/\s+/g, ' ');
+        const s1 = normalize(text1);
+        const s2 = normalize(text2);
+
+        if (s1 === s2) return 1.0;
+        if (s1.length === 0 || s2.length === 0) return 0.0;
+
+        // Part 1: Jaccard similarity (word overlap, order-insensitive)
+        const words1 = s1.split(' ');
+        const words2 = s2.split(' ');
+        const set1 = new Set(words1);
+        const set2 = new Set(words2);
+
+        const intersection = new Set([...set1].filter(x => set2.has(x)));
+        const union = new Set([...set1, ...set2]);
+
+        const jaccardScore = intersection.size / union.size;
+
+        // Part 2: Bigram similarity (word order matters)
+        const getBigrams = (words) => {
+            const bigrams = [];
+            for (let i = 0; i < words.length - 1; i++) {
+                bigrams.push(`${words[i]} ${words[i + 1]}`);
+            }
+            return bigrams;
+        };
+
+        const bigrams1 = getBigrams(words1);
+        const bigrams2 = getBigrams(words2);
+
+        if (bigrams1.length === 0 || bigrams2.length === 0) {
+            // Too short for bigrams, use only Jaccard
+            return jaccardScore;
+        }
+
+        const bigramSet1 = new Set(bigrams1);
+        const bigramSet2 = new Set(bigrams2);
+
+        const bigramIntersection = new Set([...bigramSet1].filter(x => bigramSet2.has(x)));
+        const bigramUnion = new Set([...bigramSet1, ...bigramSet2]);
+
+        const bigramScore = bigramIntersection.size / bigramUnion.size;
+
+        // Weighted combination: 60% Jaccard (content) + 40% bigram (order)
+        return (0.6 * jaccardScore) + (0.4 * bigramScore);
+    },
+
+    // Find best paragraph match using fuzzy text matching
+    findBestFuzzyMatch(noteData, allParagraphs) {
+        // Extract original text from textRange if available
+        let originalText = noteData.text || '';
+
+        if (noteData.textRange && noteData.textRange.text) {
+            originalText = noteData.textRange.text;
+        }
+
+        if (!originalText || originalText.length < 10) {
+            return null; // Not enough text to match
+        }
+
+        let bestMatch = null;
+        let bestScore = 0.7; // Minimum threshold - must be at least 70% similar
+
+        allParagraphs.forEach((paragraph, index) => {
+            const paragraphText = paragraph.textContent;
+            const score = this.calculateSimilarity(originalText, paragraphText);
+
+            if (score > bestScore) {
+                bestScore = score;
+                bestMatch = { paragraph, index, score };
             }
         });
+
+        return bestMatch;
+    },
+    // Helper: Find all indices of a hash in the paragraph list
+    findAllIndices(paragraphHashList, hash) {
+        if (!hash) return [];
+        const indices = [];
+        for (let i = 0; i < paragraphHashList.length; i++) {
+            if (paragraphHashList[i] === hash) {
+                indices.push(i);
+            }
+        }
+        return indices;
+    },
+
+    // Helper: Check if neighbor indices form a valid pattern around currentIndex
+    isValidNeighborPattern(m1Indices, p1Indices, currentIndex) {
+        // Check all combinations of -1 and +1 neighbor positions
+        for (const m1Idx of m1Indices) {
+            for (const p1Idx of p1Indices) {
+                const distance = p1Idx - m1Idx;
+                // Perfect match: -1 and +1 are exactly 2 apart with current in middle
+                if (distance === 2 && currentIndex === m1Idx + 1) {
+                    return true;
+                }
+            }
+        }
+
+        // Fallback: current is at one of the neighbor positions
+        if (m1Indices.includes(currentIndex) || p1Indices.includes(currentIndex)) {
+            return true;
+        }
+
+        return false;
+    },
+
+    doesNoteMatchParagraph(noteData, contentHash, currentIndex, paragraphHashList) {
+        if (!noteData.contextHashes || noteData.contextHashes.length !== 5) return false;
+
+        const [hashM2, hashM1, hashPrimary, hashP1, hashP2] = noteData.contextHashes;
+
+        // Priority 1: Check if PRIMARY hash matches current
+        if (contentHash === hashPrimary) return true;
+
+        // Priority 2: Check ±1 neighbors (handle duplicate hashes)
+        const m1Indices = this.findAllIndices(paragraphHashList, hashM1);
+        const p1Indices = this.findAllIndices(paragraphHashList, hashP1);
+
+        if (m1Indices.length > 0 && p1Indices.length > 0) {
+            if (this.isValidNeighborPattern(m1Indices, p1Indices, currentIndex)) {
+                return true;
+            }
+        } else if (m1Indices.includes(currentIndex) || p1Indices.includes(currentIndex)) {
+            // Only one neighbor found, and current is at that position
+            return true;
+        }
+
+        // Priority 3: Check ±2 neighbors (handle duplicate hashes)
+        const m2Indices = this.findAllIndices(paragraphHashList, hashM2);
+        const p2Indices = this.findAllIndices(paragraphHashList, hashP2);
+
+        // Check all combinations for valid ±2 pattern
+        for (const m2Idx of m2Indices) {
+            for (const p2Idx of p2Indices) {
+                const distance = p2Idx - m2Idx;
+                // Perfect match: -2 and +2 are exactly 4 apart with current in middle
+                if (distance === 4 && currentIndex === m2Idx + 2) {
+                    return true;
+                }
+            }
+        }
+
+        // Fallback: current is at one of the ±2 positions
+        if (m2Indices.includes(currentIndex) || p2Indices.includes(currentIndex)) {
+            return true;
+        }
+
+        return false;
+    },
+
+    // Find and attach orphaned notes to the mailing list paragraph
+    attachOrphanedNotesToMailingList() {
+        if (Object.keys(this.orphanedNotes).length === 0) {
+            return; // No orphaned notes to attach
+        }
+
+        // Find the mailing list paragraph by searching for text content
+        const allParagraphs = Array.from(document.querySelectorAll('p[data-notes-initialized]'));
+        const mailingListPara = allParagraphs.find(p => {
+            const text = p.textContent.toLowerCase();
+            return text.includes('mailing list') && text.includes('book');
+        });
+
+        if (!mailingListPara) {
+            console.warn('Could not find mailing list paragraph to attach orphaned notes');
+            return;
+        }
+
+        const mailingListHash = mailingListPara.dataset.contentHash;
+        let attachedCount = 0;
+
+        // Attach each orphaned note to the mailing list paragraph
+        Object.keys(this.orphanedNotes).forEach(orphanKey => {
+            try {
+                const orphanData = JSON.parse(this.orphanedNotes[orphanKey]);
+                const noteId = `orphan-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+
+                // Update context hashes to mailing list location
+                orphanData.contextHashes = this.generateContextHashes(mailingListPara);
+
+                // Clear text range (invalid on new paragraph)
+                delete orphanData.textRange;
+
+                // Mark as orphaned in the note text
+                const originalText = orphanData.text || '';
+                orphanData.text = `[ORPHANED NOTE] ${originalText}`;
+                orphanData.isOrphaned = true;
+                orphanData.side = 'right'; // Attach to right side
+
+                const newNoteKey = `h-${mailingListHash}-${noteId}`;
+
+                // Move from orphanedNotes to notes
+                this.notes[newNoteKey] = JSON.stringify(orphanData);
+                delete this.orphanedNotes[orphanKey];
+
+                // Create note circle on mailing list paragraph
+                this.createNoteCircle(mailingListPara, mailingListHash, noteId, orphanData);
+                attachedCount++;
+            } catch (e) {
+                console.error('Failed to attach orphaned note:', orphanKey, e);
+            }
+        });
+
+        if (attachedCount > 0) {
+            console.log(`Attached ${attachedCount} orphaned notes to mailing list paragraph`);
+        }
+    },
+
+    // Load existing notes for all paragraphs using sophisticated hash-based matching
+    loadAllExistingNotes() {
+        // Track how many times this is called
+        if (!window._noteLoadCount) window._noteLoadCount = 0;
+        window._noteLoadCount++;
+
+        // Use pre-loaded hash list (or build on demand as fallback)
+        const paragraphHashList = this.getParagraphHashList();
+        const allParagraphs = Array.from(document.querySelectorAll('p[data-notes-initialized]'));
+
+        // Safety check: ensure all paragraphs have content hashes
+        if (allParagraphs.length === 0) {
+            console.warn('No initialized paragraphs found, skipping note loading');
+            return;
+        }
+
+        const unmatchedNotes = [];
+        const relocatedNotes = [];
+
+        // First pass: try exact and neighbor matching for all notes
+        Object.keys(this.notes).forEach(noteKey => {
+            try {
+                const noteData = JSON.parse(this.notes[noteKey]);
+                let matched = false;
+
+                // Extract hash from note key (format: h-{hash}-{noteId})
+                const keyParts = noteKey.split('-');
+                const noteKeyHash = keyParts.length >= 2 ? keyParts[1] : null;
+
+                // Priority 1: Try DIRECT hash match first (check ALL paragraphs)
+                for (let i = 0; i < allParagraphs.length; i++) {
+                    const paragraph = allParagraphs[i];
+                    const contentHash = paragraph.dataset.contentHash;
+
+                    if (noteKeyHash === contentHash) {
+                        // FIX: Regenerate contextHashes if mismatch detected
+                        if (noteData.contextHashes && noteData.contextHashes[2] !== noteKeyHash) {
+                            noteData.contextHashes = this.generateContextHashes(paragraph);
+                            this.notes[noteKey] = JSON.stringify(noteData);
+                            relocatedNotes.push({ noteKey, fixed: true });
+                        }
+
+                        const noteId = keyParts.slice(2).join('-');
+                        this.createNoteCircle(paragraph, contentHash, noteId, noteData);
+                        matched = true;
+                        break;
+                    }
+                }
+
+                // Priority 2: If no direct match, try context-based matching
+                if (!matched) {
+                    for (let i = 0; i < allParagraphs.length; i++) {
+                        const paragraph = allParagraphs[i];
+                        const contentHash = paragraph.dataset.contentHash;
+                        const currentIndex = paragraphHashList.indexOf(contentHash);
+
+                        if (currentIndex !== -1 && this.doesNoteMatchParagraph(noteData, contentHash, currentIndex, paragraphHashList)) {
+                            const noteId = keyParts.slice(2).join('-');
+                            this.createNoteCircle(paragraph, contentHash, noteId, noteData);
+                            matched = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (!matched) {
+                    unmatchedNotes.push({ noteKey, noteData });
+                }
+            } catch (e) {
+                console.error('Error loading note:', noteKey, e);
+            }
+        });
+
+        // Save localStorage if we fixed any hash mismatches in first pass
+        if (relocatedNotes.length > 0) {
+            localStorage.setItem('userNotes', JSON.stringify(this.notes));
+            localStorage.setItem('orphanedNotes', JSON.stringify(this.orphanedNotes));
+        }
+
+        // Second pass: fuzzy matching for unmatched notes
+        if (unmatchedNotes.length > 0) {
+            const allParaElements = Array.from(document.querySelectorAll('p:not(#notes p):not(header p):not(.site-header p)'));
+
+            unmatchedNotes.forEach(({ noteKey, noteData }) => {
+                const fuzzyMatch = this.findBestFuzzyMatch(noteData, allParaElements);
+
+                if (fuzzyMatch) {
+                    // Found a fuzzy match - relocate the note
+                    const matchedPara = fuzzyMatch.paragraph;
+                    const newContentHash = this.hashContent(matchedPara.textContent);
+                    const noteId = noteKey.split('-').slice(2).join('-');
+
+                    // Update note's context hashes to new location
+                    noteData.contextHashes = this.generateContextHashes(matchedPara);
+
+                    // IMPORTANT: Clear text range since offsets are invalid on new paragraph
+                    delete noteData.textRange;
+
+                    const newNoteKey = `h-${newContentHash}-${noteId}`;
+
+                    // Save with new key
+                    this.notes[newNoteKey] = JSON.stringify(noteData);
+                    delete this.notes[noteKey]; // Remove old key
+
+                    // Find the initialized paragraph element
+                    const initPara = Array.from(document.querySelectorAll('p[data-notes-initialized]'))
+                        .find(p => p === matchedPara);
+
+                    if (initPara) {
+                        this.createNoteCircle(initPara, newContentHash, noteId, noteData);
+                        relocatedNotes.push({ noteId, score: fuzzyMatch.score });
+                    }
+                } else {
+                    // No fuzzy match - KEEP the note in storage, don't orphan it
+                    // The paragraph might be on a part that hasn't loaded yet
+                }
+            });
+
+            // Third pass: attach orphaned notes to mailing list paragraph
+            // Only attach notes that are already in orphanedNotes (from previous sessions)
+            if (Object.keys(this.orphanedNotes).length > 0) {
+                this.attachOrphanedNotesToMailingList();
+            }
+
+            // Save updated notes ONLY if we relocated any
+            if (relocatedNotes.length > 0) {
+                localStorage.setItem('userNotes', JSON.stringify(this.notes));
+                localStorage.setItem('orphanedNotes', JSON.stringify(this.orphanedNotes));
+            }
+
+            // Show notifications only for relocated notes
+            if (relocatedNotes.length > 0) {
+                this.showRelocatedNotesNotification(relocatedNotes.length);
+            }
+        }
+
+
+        // Update button visibility for all containers
+        allParagraphs.forEach(paragraph => {
+            ['left', 'right'].forEach(side => {
+                const container = paragraph.querySelector(`.paragraph-notes-container[data-side="${side}"]`);
+                if (container) {
+                    this.updateAddButtonVisibility(container);
+                }
+            });
+        });
+    },
+
+    // Load existing notes for a single paragraph (used when adding notes UI)
+    loadExistingNotes(paragraph, contentHash) {
+        // This is called per-paragraph during UI initialization
+        // The actual note loading happens in loadAllExistingNotes() after all paragraphs are initialized
+        // This function is kept for compatibility but does nothing
+        // Notes will be loaded by loadAllExistingNotes() called from enableNotesMode()
     },
     
     // Create note circle
-    createNoteCircle(paragraph, paragraphIndex, noteId, noteData) {
+    createNoteCircle(paragraph, contentHash, noteId, noteData) {
         const side = noteData.side || 'left';
         const container = paragraph.querySelector(`.paragraph-notes-container[data-side="${side}"]`);
-        if (!container) return;
-        
+        if (!container) {
+            return;
+        }
+
         // Remove existing circle if any
         const existing = container.querySelector(`[data-note-id="${noteId}"]`);
         if (existing) existing.remove();
-        
+
         // Create note item container
         const noteItem = document.createElement('div');
         noteItem.className = 'note-item';
         noteItem.dataset.noteId = noteId;
-        
+
         const noteCircle = document.createElement('div');
         noteCircle.className = 'note-circle';
         noteCircle.style.backgroundColor = noteData.color || '#f0d9ef';
         noteCircle.title = noteData.text ? noteData.text.substring(0, 50) + '...' : 'Note';
-        
+
         // Create delete button
         const deleteButton = document.createElement('button');
         deleteButton.className = 'note-delete';
         deleteButton.innerHTML = '🗑';
         deleteButton.addEventListener('click', (e) => {
             e.stopPropagation();
-            const noteKey = `p${paragraphIndex}-${noteId}`;
-            this.deleteNote(paragraph, paragraphIndex, noteKey);
+            const noteKey = `h-${contentHash}-${noteId}`;
+            this.deleteNote(paragraph, contentHash, noteKey);
         });
-        
+
         noteCircle.addEventListener('click', (e) => {
             e.stopPropagation();
-            const noteKey = `p${paragraphIndex}-${noteId}`;
-            
+            const noteKey = `h-${contentHash}-${noteId}`;
+
             // Check if this note's dialog is already open
             const existingDialog = document.querySelector('.note-input-container');
             if (existingDialog && this.activeNoteKey === noteKey) {
@@ -321,50 +893,51 @@ const NotesSystem = {
                 this.closeDialog(true);
                 return;
             }
-            
+
             // Different note or no dialog open - show this note's dialog
             this.clearHighlights();
-            this.showNoteDialog(paragraph, paragraphIndex, noteKey);
+            this.showNoteDialog(paragraph, contentHash, noteKey);
         });
-        
+
         noteItem.appendChild(noteCircle);
         noteItem.appendChild(deleteButton);
         container.appendChild(noteItem);
-        
+
         // Update add button visibility after adding note
         this.updateAddButtonVisibility(container);
     },
     
     // Show note dialog
-    showNoteDialog(paragraph, paragraphIndex, noteKey = null, selectedSide = null) {
+    showNoteDialog(paragraph, contentHash, noteKey = null, selectedSide = null) {
         // Close any existing dialog (including view boxes)
         this.closeDialog(false); // Don't clear highlights yet, we'll show new ones
-        
+
         // Clear all general highlights since we're opening a specific note
         this.clearAllGeneralHighlights();
-        
+
         // Create new dialog
         const dialog = document.createElement('div');
         dialog.className = 'note-input-container';
-        dialog.dataset.paragraphIndex = paragraphIndex;
-        
+        dialog.dataset.contentHash = contentHash;
+
         const isNewNote = !noteKey;
         let noteData = null;
         let noteId = null;
-        
+
         if (noteKey) {
             noteData = JSON.parse(this.notes[noteKey]);
-            noteId = noteKey.split('-')[1];
+            noteId = noteKey.split('-').slice(2).join('-'); // Extract noteId from h-hash-noteId
             this.activeNoteKey = noteKey;
         } else {
             // Generate new note ID
             noteId = Date.now().toString(36);
-            noteKey = `p${paragraphIndex}-${noteId}`;
+            noteKey = `h-${contentHash}-${noteId}`;
             noteData = {
                 text: '',
                 color: '#F0D9EF',
                 side: selectedSide || 'right',
-                textRange: this.selectedTextRange
+                textRange: this.selectedTextRange,
+                contextHashes: this.generateContextHashes(paragraph)
             };
         }
         
@@ -386,30 +959,30 @@ const NotesSystem = {
                     <button class="note-move-button">${moveArrow}</button>
                 </div>
             `;
-            
+
             // Add event handlers for view mode
             const editBtn = dialog.querySelector('.note-edit-button');
             if (editBtn) {
                 editBtn.addEventListener('click', (e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    this.switchToEditMode(dialog, paragraph, paragraphIndex, noteKey, noteData);
+                    this.switchToEditMode(dialog, paragraph, contentHash, noteKey, noteData);
                 });
             }
-            
+
             const moveBtn = dialog.querySelector('.note-move-button');
             if (moveBtn) {
                 moveBtn.addEventListener('click', (e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    this.moveNoteSide(paragraph, paragraphIndex, noteKey, noteData);
+                    this.moveNoteSide(paragraph, contentHash, noteKey, noteData);
                     this.closeDialog();
                 });
             }
-            
+
         } else {
             // Edit mode
-            this.switchToEditMode(dialog, paragraph, paragraphIndex, noteKey, noteData);
+            this.switchToEditMode(dialog, paragraph, contentHash, noteKey, noteData);
         }
         
         // Common handlers
@@ -447,27 +1020,27 @@ const NotesSystem = {
     },
     
     // Switch dialog to edit mode
-    switchToEditMode(dialog, paragraph, paragraphIndex, noteKey, noteData) {
+    switchToEditMode(dialog, paragraph, contentHash, noteKey, noteData) {
         dialog.innerHTML = `
             <textarea class="note-input" placeholder="">${noteData.text}</textarea>
             <div class="note-color-picker">
-                ${['#F0D9EF', '#FCDCE1', '#FFE6BB', '#E9ECCE', '#CDE9DC', '#C4DFE5'].map(color => 
-                    `<button class="color-option ${noteData.color === color ? 'selected' : ''}" 
-                            style="background-color: ${color}" 
+                ${['#F0D9EF', '#FCDCE1', '#FFE6BB', '#E9ECCE', '#CDE9DC', '#C4DFE5'].map(color =>
+                    `<button class="color-option ${noteData.color === color ? 'selected' : ''}"
+                            style="background-color: ${color}"
                             data-color="${color}"></button>`
                 ).join('')}
             </div>
         `;
-        
+
         // Focus textarea
         const textarea = dialog.querySelector('.note-input');
         textarea.focus();
-        
+
         // Show initial highlighting if there's selected text
         if (noteData.textRange) {
             this.highlightText(paragraph, noteData.textRange, noteData.color);
         }
-        
+
         // Color picker
         let selectedColor = noteData.color;
         dialog.querySelectorAll('.color-option').forEach(btn => {
@@ -475,14 +1048,14 @@ const NotesSystem = {
                 dialog.querySelectorAll('.color-option').forEach(b => b.classList.remove('selected'));
                 btn.classList.add('selected');
                 selectedColor = btn.dataset.color;
-                
+
                 // Update highlight color in real-time
                 if (noteData.textRange) {
                     this.highlightText(paragraph, noteData.textRange, selectedColor);
                 }
             });
         });
-        
+
         // Enter key to save
         textarea.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
@@ -492,9 +1065,10 @@ const NotesSystem = {
                     const saveData = {
                         ...noteData,
                         text: text,
-                        color: selectedColor
+                        color: selectedColor,
+                        contextHashes: noteData.contextHashes || this.generateContextHashes(paragraph)
                     };
-                    this.saveNote(paragraph, paragraphIndex, noteKey, saveData);
+                    this.saveNote(paragraph, contentHash, noteKey, saveData);
                 }
                 this.closeDialog();
             }
@@ -502,34 +1076,34 @@ const NotesSystem = {
     },
     
     // Save note
-    saveNote(paragraph, paragraphIndex, noteKey, noteData) {
+    saveNote(paragraph, contentHash, noteKey, noteData) {
         this.notes[noteKey] = JSON.stringify(noteData);
         localStorage.setItem('userNotes', JSON.stringify(this.notes));
-        
-        const noteId = noteKey.split('-')[1];
-        this.createNoteCircle(paragraph, paragraphIndex, noteId, noteData);
+
+        const noteId = noteKey.split('-').slice(2).join('-');
+        this.createNoteCircle(paragraph, contentHash, noteId, noteData);
     },
-    
+
     // Move note to other side
-    moveNoteSide(paragraph, paragraphIndex, noteKey, noteData) {
-        const noteId = noteKey.split('-')[1];
-        
+    moveNoteSide(paragraph, contentHash, noteKey, noteData) {
+        const noteId = noteKey.split('-').slice(2).join('-');
+
         // Remove the existing note item from the current side
         paragraph.querySelectorAll(`.note-item[data-note-id="${noteId}"]`).forEach(item => {
             item.remove();
         });
-        
+
         // Update the side and save
         noteData.side = noteData.side === 'left' ? 'right' : 'left';
-        this.saveNote(paragraph, paragraphIndex, noteKey, noteData);
+        this.saveNote(paragraph, contentHash, noteKey, noteData);
     },
-    
+
     // Delete note
-    deleteNote(paragraph, paragraphIndex, noteKey) {
+    deleteNote(paragraph, contentHash, noteKey) {
         delete this.notes[noteKey];
         localStorage.setItem('userNotes', JSON.stringify(this.notes));
-        
-        const noteId = noteKey.split('-')[1];
+
+        const noteId = noteKey.split('-').slice(2).join('-');
         paragraph.querySelectorAll(`.note-item[data-note-id="${noteId}"]`).forEach(item => {
             const container = item.parentElement;
             item.remove();
@@ -621,20 +1195,35 @@ const NotesSystem = {
     
     // Restore note containers after innerHTML replacement
     restoreNoteContainers(paragraph) {
-        const existingNotes = Object.keys(this.notes)
-            .filter(key => key.startsWith(`p${paragraph.dataset.paragraphIndex}-`))
-            .map(key => {
+        const contentHash = paragraph.dataset.contentHash;
+        const existingNotes = [];
+
+        // Use pre-loaded hash list
+        const paragraphHashList = this.getParagraphHashList();
+        const currentIndex = paragraphHashList.indexOf(contentHash);
+
+        if (currentIndex === -1) return; // Current paragraph not found
+
+        // Find notes matching this paragraph's hash
+        Object.keys(this.notes).forEach(key => {
+            try {
                 const noteData = JSON.parse(this.notes[key]);
-                const noteId = key.split('-')[1];
-                return { noteId, noteData };
-            });
-        
+
+                if (this.doesNoteMatchParagraph(noteData, contentHash, currentIndex, paragraphHashList)) {
+                    const noteId = key.split('-').slice(2).join('-');
+                    existingNotes.push({ noteId, noteData });
+                }
+            } catch (e) {
+                console.error('Error restoring note:', key, e);
+            }
+        });
+
         // Recreate containers
         ['left', 'right'].forEach(side => {
             const container = document.createElement('div');
             container.className = 'paragraph-notes-container';
             container.dataset.side = side;
-            
+
             // Add button for this side
             const addButton = document.createElement('button');
             addButton.className = 'note-add-button';
@@ -642,20 +1231,19 @@ const NotesSystem = {
             addButton.title = `Add note (${side} side)`;
             addButton.addEventListener('click', (e) => {
                 e.stopPropagation();
-                const paragraphIndex = parseInt(paragraph.dataset.paragraphIndex);
                 this.captureSelectedText(paragraph);
-                this.showNoteDialog(paragraph, paragraphIndex, null, side);
+                this.showNoteDialog(paragraph, contentHash, null, side);
             });
-            
+
             container.appendChild(addButton);
             paragraph.appendChild(container);
         });
-        
+
         // Restore existing notes and update button visibility
         existingNotes.forEach(({noteId, noteData}) => {
-            this.createNoteCircle(paragraph, parseInt(paragraph.dataset.paragraphIndex), noteId, noteData);
+            this.createNoteCircle(paragraph, contentHash, noteId, noteData);
         });
-        
+
         // Update add button visibility for both sides after restoring
         ['left', 'right'].forEach(side => {
             const sideContainer = paragraph.querySelector(`.paragraph-notes-container[data-side="${side}"]`);
@@ -693,17 +1281,29 @@ const NotesSystem = {
     // Show all text ranges in light green when no dialog is open
     showAllTextRanges() {
         if (this.activeNoteKey) return; // Don't show if a dialog is open
-        
+
+        // Use pre-loaded hash list
+        const paragraphHashList = this.getParagraphHashList();
+
         const paragraphs = document.querySelectorAll('p[data-notes-initialized]');
         paragraphs.forEach(paragraph => {
-            const paragraphIndex = parseInt(paragraph.dataset.paragraphIndex);
-            const paragraphNotes = Object.keys(this.notes)
-                .filter(key => key.startsWith(`p${paragraphIndex}-`));
-            
-            paragraphNotes.forEach(noteKey => {
-                const noteData = JSON.parse(this.notes[noteKey]);
-                if (noteData.textRange) {
-                    this.highlightTextRange(paragraph, noteData.textRange, '#a4cbb840', 'general-highlight');
+            const contentHash = paragraph.dataset.contentHash;
+            const currentIndex = paragraphHashList.indexOf(contentHash);
+
+            if (currentIndex === -1) return;
+
+            // Find notes matching this paragraph
+            Object.keys(this.notes).forEach(noteKey => {
+                try {
+                    const noteData = JSON.parse(this.notes[noteKey]);
+
+                    if (this.doesNoteMatchParagraph(noteData, contentHash, currentIndex, paragraphHashList)) {
+                        if (noteData.textRange) {
+                            this.highlightTextRange(paragraph, noteData.textRange, '#a4cbb840', 'general-highlight');
+                        }
+                    }
+                } catch (e) {
+                    console.error('Error showing text range:', noteKey, e);
                 }
             });
         });

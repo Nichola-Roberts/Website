@@ -274,14 +274,21 @@ const TransferSystem = {
                 const noteStr = typeof value === 'string' ? value : JSON.stringify(value);
                 const note = JSON.parse(noteStr);
                 note.side = 'left'; // Force to left margin
-                
-                // Generate new key to avoid conflicts
-                const timestamp = Date.now().toString(36);
-                const random = Math.random().toString(36).substr(2, 5);
-                const paragraphIndex = key.split('-')[0];
-                const newKey = `${paragraphIndex}-${timestamp}${random}`;
-                
-                existingNotes[newKey] = JSON.stringify(note);
+
+                // For hash-based notes (h-hash-noteId), preserve the structure
+                // For old format (p0-noteId), keep as-is for migration to handle
+                if (key.startsWith('h-')) {
+                    // Hash-based note - preserve key structure
+                    // Generate new noteId to avoid conflicts
+                    const timestamp = Date.now().toString(36);
+                    const random = Math.random().toString(36).substr(2, 5);
+                    const hashPart = key.split('-')[1]; // Extract hash from h-hash-noteId
+                    const newKey = `h-${hashPart}-${timestamp}${random}`;
+                    existingNotes[newKey] = JSON.stringify(note);
+                } else {
+                    // Old format or unknown - keep as-is
+                    existingNotes[key] = JSON.stringify(note);
+                }
             } catch (e) {
                 console.error('Failed to process note:', key, e);
             }

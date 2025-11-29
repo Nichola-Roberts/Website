@@ -29,6 +29,7 @@ class CollapsibleSections {
                     if (window.NotesSystem && window.NotesSystem.isNotesMode) {
                         window.NotesSystem.removeNotesFromParagraphs();
                         window.NotesSystem.addNotesToParagraphs();
+                        window.NotesSystem.loadAllExistingNotes(); // FIX: Reload note circles!
                     }
                 }, 500);
             }
