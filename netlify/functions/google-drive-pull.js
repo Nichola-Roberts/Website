@@ -4,9 +4,19 @@
  */
 
 exports.handler = async (event, context) => {
+    // Allowed origins for CORS
+    const allowedOrigins = [
+        'https://www.energylandscapetheory.com',
+        'https://energylandscapetheory.com',
+        'http://localhost:8888'
+    ];
+
+    const origin = event.headers.origin || event.headers.Origin;
+    const allowOrigin = allowedOrigins.includes(origin) ? origin : allowedOrigins[0];
+
     // Set CORS headers
     const headers = {
-        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Origin': allowOrigin,
         'Access-Control-Allow-Headers': 'Content-Type, Authorization',
         'Access-Control-Allow-Methods': 'GET, OPTIONS',
         'Content-Type': 'application/json'

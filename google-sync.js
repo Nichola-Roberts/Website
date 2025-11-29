@@ -142,7 +142,7 @@ class GoogleSyncSystem {
                 const response = await fetch('/.netlify/functions/google-auth-callback', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ code })
+                    body: JSON.stringify({ code, state })
                 });
 
                 const data = await response.json();
@@ -307,9 +307,25 @@ class GoogleSyncSystem {
                     localStorage.setItem('viewMode', cloudData.viewMode || 'normal');
                     localStorage.setItem('lastSyncTime', cloudData.syncTimestamp.toString());
 
-                    // Reload page to apply changes
-                    console.log('Synced from Google Drive');
-                    location.reload();
+                    // Format sync time for display
+                    const syncDate = new Date(cloudData.syncTimestamp);
+                    const syncTimeStr = syncDate.toLocaleString();
+
+                    console.log(`Synced from Google Drive (${syncTimeStr})`);
+
+                    // Show message if modal is open
+                    if (this.modal?.classList.contains('active')) {
+                        this.showMessage(`Pulled newer data from Google Drive (synced ${syncTimeStr})`, 'success');
+                        this.updateUI();
+                    }
+
+                    // Dispatch event to notify other parts of the app
+                    window.dispatchEvent(new CustomEvent('googleSyncPulled', {
+                        detail: { timestamp: cloudData.syncTimestamp, syncDate: syncTimeStr }
+                    }));
+                } else if (this.modal?.classList.contains('active')) {
+                    // Local data is newer or same
+                    console.log('Local data is up to date');
                 }
             } else if (result.error === 'token_expired') {
                 await this.refreshAccessToken();
