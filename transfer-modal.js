@@ -147,7 +147,7 @@ const TransferModal = {
             
             <div class="transfer-content">
                 <div class="transfer-header">
-                    <h3 class="transfer-title">Transfer data between devices</h3>
+                    <h3 class="transfer-title">Share notes between devices</h3>
                     <button class="info-icon" id="infoIconBtn">?</button>
                 </div>
                 
@@ -157,7 +157,7 @@ const TransferModal = {
                         <button class="tooltip-close" id="tooltipClose">&times;</button>
                         <ul>
                             <li>Data is stored on your device</li>
-                            <li>To transfer between devices click generate</li>
+                            <li>To share notes between devices click generate</li>
                             <li>This will save a copy of your notes on our servers</li>
                             <li>Data on our servers is encrypted</li>
                             <li>Only notes on the right margin are exported</li>
@@ -190,7 +190,7 @@ const TransferModal = {
                 <!-- Input Code Section -->
                 <div class="transfer-input-section" id="inputSection">
                     <input type="text" id="importCode" class="transfer-code-input" 
-                           placeholder="enter transfer code" maxlength="8" 
+                           placeholder="enter share code" maxlength="8" 
                            style="text-transform: uppercase">
                     <button class="transfer-button" id="importDataBtn">
                         Import Data
@@ -239,7 +239,7 @@ const TransferModal = {
                 <!-- Input Code Section -->
                 <div class="transfer-input-section" id="inputSection">
                     <input type="text" id="importCode" class="transfer-code-input" 
-                           placeholder="enter transfer code" maxlength="8" 
+                           placeholder="enter share code" maxlength="8" 
                            style="text-transform: uppercase">
                     <button class="transfer-button" id="importDataBtn">
                         Import Data
@@ -408,10 +408,10 @@ const TransferModal = {
                 if (inputSection) inputSection.style.display = 'none';
                 if (exportResult) exportResult.style.display = 'block';
             } else {
-                this.showMessage('Failed to generate transfer code: ' + result.error, 'error');
+                this.showMessage('Failed to generate share code: ' + result.error, 'error');
             }
         } catch (error) {
-            this.showMessage('Failed to generate transfer code. Please try again.', 'error');
+            this.showMessage('Failed to generate share code. Please try again.', 'error');
         } finally {
             generateBtn.disabled = false;
             generateBtn.textContent = originalText;
@@ -427,7 +427,7 @@ const TransferModal = {
         
         const code = importCodeInput.value.trim().toUpperCase();
         if (!code || code.length !== 8) {
-            this.showMessage('Please enter a valid 8-character transfer code', 'error');
+            this.showMessage('Please enter a valid 8-character share code', 'error');
             return;
         }
         

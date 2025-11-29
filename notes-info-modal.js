@@ -55,9 +55,9 @@ class NotesInfoModal {
                             <p>You may add your own notes to the document.</p>
                             <p>Click the pluses on each paragraph to add notes to that paragraph.</p>
                             <p>If text is highlighted the note will attach to that text.</p>
-                            <p>Right margin notes can be transferred to another device i.e. mobile to laptop.</p>
-                            <p>This could also be used to share.</p>
-                            <p>Transferred notes will appear in the left hand margin.</p>
+                            <p>Right margin notes can be shared with others (mobile to laptop, or with friends).</p>
+                            <p>Use the Share button to generate a code for others to import your notes.</p>
+                            <p>Shared notes will appear in the left hand margin.</p>
                             <p>This allows a clear distinction for imported notes.</p>
                             <p>Notes can be moved from margin to the other.</p>
                         </div>
