@@ -21,7 +21,7 @@ exports.handler = async (event, context) => {
     const headers = {
         'Access-Control-Allow-Origin': allowOrigin,
         'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
         'Content-Type': 'application/json'
     };
 
@@ -30,7 +30,7 @@ exports.handler = async (event, context) => {
         return { statusCode: 204, headers, body: '' };
     }
 
-    if (event.httpMethod !== 'POST') {
+    if (event.httpMethod !== 'POST' && event.httpMethod !== 'GET') {
         return {
             statusCode: 405,
             headers,
@@ -39,7 +39,16 @@ exports.handler = async (event, context) => {
     }
 
     try {
-        const { code, state } = JSON.parse(event.body);
+        // Handle both GET (from Google redirect) and POST (from frontend)
+        let code, state;
+        if (event.httpMethod === 'GET') {
+            code = event.queryStringParameters?.code;
+            state = event.queryStringParameters?.state;
+        } else {
+            const body = JSON.parse(event.body);
+            code = body.code;
+            state = body.state;
+        }
 
         if (!code) {
             return {
@@ -134,6 +143,18 @@ exports.handler = async (event, context) => {
             // Don't fail auth if stats recording fails
         });
 
+        // For GET requests (from Google redirect), redirect back to main page with code
+        if (event.httpMethod === 'GET') {
+            return {
+                statusCode: 302,
+                headers: {
+                    'Location': `/?code=${code}&state=${state}`
+                },
+                body: ''
+            };
+        }
+
+        // For POST requests (from frontend), return JSON with tokens
         return {
             statusCode: 200,
             headers,
