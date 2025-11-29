@@ -9,7 +9,7 @@
     "deploy": "netlify deploy --prod"
   },
   "dependencies": {
-    "@neondatabase/serverless": "^0.10.6",
+    "@neondatabase/serverless": "^1.0.2",
     "@netlify/blobs": "^8.2.0",
     "aws-sdk": "^2.1692.0",
     "dotenv": "^17.2.1",
