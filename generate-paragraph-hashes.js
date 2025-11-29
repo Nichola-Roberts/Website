@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 /**
- * Generate paragraph-hashes.json from content.md
- * Run this when content.md changes to update the hash list
+ * Generate paragraph-hashes.json from part1.html, part2.html, part3.html
+ * Run this when content changes to update the hash list
  */
 
 const fs = require('fs');
@@ -26,32 +26,33 @@ function hashContent(text) {
     return Math.abs(hash).toString(36);
 }
 
-// Parse content.md and extract paragraph text
-function extractParagraphs(contentMd) {
-    const lines = contentMd.split('\n');
+// Extract text content from HTML, stripping tags
+function stripHtmlTags(html) {
+    // Remove HTML tags and decode common entities
+    return html
+        .replace(/<[^>]*>/g, '') // Remove tags
+        .replace(/&nbsp;/g, ' ')
+        .replace(/&amp;/g, '&')
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/&quot;/g, '"')
+        .replace(/&#39;/g, "'")
+        .trim();
+}
+
+// Extract paragraphs from HTML file
+function extractParagraphsFromHtml(html) {
     const paragraphs = [];
-    let inCodeBlock = false;
 
-    for (const line of lines) {
-        // Toggle code block state
-        if (line.trim().startsWith('```')) {
-            inCodeBlock = !inCodeBlock;
-            continue;
+    // Match all <p>...</p> tags (including multiline)
+    const pTagRegex = /<p[^>]*>([\s\S]*?)<\/p>/gi;
+    let match;
+
+    while ((match = pTagRegex.exec(html)) !== null) {
+        const textContent = stripHtmlTags(match[1]);
+        if (textContent.trim().length > 0) {
+            paragraphs.push(textContent);
         }
-
-        // Skip if in code block
-        if (inCodeBlock) continue;
-
-        // Skip empty lines, headers, and special markers
-        if (line.trim() === '' ||
-            line.startsWith('#') ||
-            line.startsWith('---') ||
-            line.startsWith('<!--')) {
-            continue;
-        }
-
-        // This is a paragraph
-        paragraphs.push(line.trim());
     }
 
     return paragraphs;
@@ -59,28 +60,41 @@ function extractParagraphs(contentMd) {
 
 // Main execution
 function main() {
-    const contentPath = path.join(__dirname, 'content.md');
+    const partFiles = ['part1.html', 'part2.html', 'part3.html'];
     const outputPath = path.join(__dirname, 'paragraph-hashes.json');
 
-    // Read content.md
-    if (!fs.existsSync(contentPath)) {
-        console.error('Error: content.md not found');
+    const allParagraphs = [];
+
+    // Process each part file
+    for (const partFile of partFiles) {
+        const partPath = path.join(__dirname, partFile);
+
+        if (!fs.existsSync(partPath)) {
+            console.error(`Warning: ${partFile} not found, skipping`);
+            continue;
+        }
+
+        const html = fs.readFileSync(partPath, 'utf-8');
+        const paragraphs = extractParagraphsFromHtml(html);
+
+        console.log(`  ${partFile}: ${paragraphs.length} paragraphs`);
+        allParagraphs.push(...paragraphs);
+    }
+
+    if (allParagraphs.length === 0) {
+        console.error('Error: No paragraphs found in any part files');
         process.exit(1);
     }
 
-    const contentMd = fs.readFileSync(contentPath, 'utf-8');
-
-    // Extract paragraphs
-    const paragraphs = extractParagraphs(contentMd);
-
     // Generate hashes
-    const hashes = paragraphs.map(p => hashContent(p));
+    const hashes = allParagraphs.map(p => hashContent(p));
 
     // Create output with metadata
     const output = {
-        version: 1,
+        version: 2, // Increment version for HTML-based format
         generatedAt: new Date().toISOString(),
         paragraphCount: hashes.length,
+        sourceFiles: partFiles,
         hashes: hashes
     };
 
@@ -88,7 +102,7 @@ function main() {
     fs.writeFileSync(outputPath, JSON.stringify(output, null, 2));
 
     console.log(`✓ Generated paragraph-hashes.json`);
-    console.log(`  Paragraphs: ${hashes.length}`);
+    console.log(`  Total paragraphs: ${hashes.length}`);
     console.log(`  Output: ${outputPath}`);
 }
 

@@ -33,16 +33,30 @@ async function renderPart(partIndex) {
         partContainer.className = 'part-container';
         partContainer.id = `part-${partIndex + 1}`;
 
-        // Add part title
-        const partTitle = document.createElement('h1');
-        partTitle.className = 'part-title';
-        partTitle.textContent = part.title;
-        partContainer.appendChild(partTitle);
-
         // Create content section
         const sectionElement = document.createElement('section');
         sectionElement.className = 'content-section';
         sectionElement.innerHTML = html;
+
+        // Add part title
+        const partTitle = document.createElement('h1');
+        partTitle.className = 'part-title';
+        partTitle.textContent = part.title;
+
+        // For Part 1, insert title after first 3 paragraphs, before Energy Landscape header
+        if (partIndex === 0) {
+            const paragraphs = sectionElement.querySelectorAll('p');
+            if (paragraphs.length >= 3) {
+                // Insert title after 3rd paragraph
+                paragraphs[2].after(partTitle);
+            } else {
+                // Fallback: add at beginning if fewer than 3 paragraphs
+                sectionElement.insertBefore(partTitle, sectionElement.firstChild);
+            }
+        } else {
+            // For other parts, add title at the beginning
+            partContainer.appendChild(partTitle);
+        }
 
         // Assign IDs to all h2 elements for navigation
         const h2Elements = sectionElement.querySelectorAll('h2');
