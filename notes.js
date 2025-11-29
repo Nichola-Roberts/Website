@@ -118,11 +118,12 @@ const NotesSystem = {
         }
     },
 
-    // Perform the actual migration
+    // Perform the actual migration using fuzzy matching
     performMigration() {
         const paragraphs = Array.from(document.querySelectorAll('p:not(#notes p):not(header p):not(.site-header p)'));
         const notesToMigrate = Object.keys(this.notes).filter(key => key.startsWith('p') && key.match(/^p\d+-/));
         let migratedCount = 0;
+        let relocatedCount = 0;
         let orphanedCount = 0;
 
         notesToMigrate.forEach(oldKey => {
@@ -131,19 +132,45 @@ const NotesSystem = {
                 const oldIndex = parseInt(oldKey.split('-')[0].substring(1)); // Extract index from p0-noteId
                 const noteId = oldKey.split('-').slice(1).join('-'); // Everything after first dash
 
-                if (oldIndex < paragraphs.length) {
-                    // Paragraph still exists at this position
-                    const paragraph = paragraphs[oldIndex];
-                    const contentHash = this.hashContent(paragraph.textContent);
-                    const contextHashes = this.generateContextHashes(paragraph);
+                let targetParagraph = null;
+                let wasRelocated = false;
+
+                // First try: use fuzzy matching to find the best match
+                const fuzzyMatch = this.findBestFuzzyMatch(noteData, paragraphs);
+
+                if (fuzzyMatch && fuzzyMatch.score >= 0.7) {
+                    // Found a good fuzzy match
+                    targetParagraph = fuzzyMatch.paragraph;
+
+                    // Check if it's at the old index
+                    if (fuzzyMatch.index !== oldIndex) {
+                        wasRelocated = true;
+                        relocatedCount++;
+                    }
+                } else if (oldIndex < paragraphs.length) {
+                    // Fallback: if no good fuzzy match but paragraph exists at old index
+                    // Use it, but this is risky (content might have changed)
+                    targetParagraph = paragraphs[oldIndex];
+                    console.warn(`Note ${oldKey} has no fuzzy match, using old index (risky)`);
+                }
+
+                if (targetParagraph) {
+                    // Successfully found a paragraph for this note
+                    const contentHash = this.hashContent(targetParagraph.textContent);
+                    const contextHashes = this.generateContextHashes(targetParagraph);
                     const newKey = `h-${contentHash}-${noteId}`;
+
+                    // Clear text range if relocated (offsets are invalid)
+                    if (wasRelocated && noteData.textRange) {
+                        delete noteData.textRange;
+                    }
 
                     // Add context hashes for resilience
                     noteData.contextHashes = contextHashes;
                     this.notes[newKey] = JSON.stringify(noteData);
                     migratedCount++;
                 } else {
-                    // Paragraph doesn't exist - make orphaned
+                    // No match found - make orphaned
                     noteData.originalKey = oldKey;
                     noteData.originalIndex = oldIndex;
                     this.orphanedNotes[oldKey] = JSON.stringify(noteData);
@@ -162,7 +189,10 @@ const NotesSystem = {
         localStorage.setItem('orphanedNotes', JSON.stringify(this.orphanedNotes));
 
         if (migratedCount > 0 || orphanedCount > 0) {
-            console.log(`Migration complete: ${migratedCount} notes migrated, ${orphanedCount} orphaned`);
+            console.log(`Migration complete: ${migratedCount} notes migrated (${relocatedCount} relocated), ${orphanedCount} orphaned`);
+            if (relocatedCount > 0) {
+                this.showRelocatedNotesNotification(relocatedCount);
+            }
             if (orphanedCount > 0) {
                 this.showOrphanedNotesNotification(orphanedCount);
             }
@@ -451,6 +481,7 @@ const NotesSystem = {
     },
 
     // Calculate text similarity between two strings (0-1, higher = more similar)
+    // Uses both word overlap (Jaccard) and word order (bigram) for better accuracy
     calculateSimilarity(text1, text2) {
         // Normalize both texts
         const normalize = (str) => str.trim().toLowerCase().replace(/\s+/g, ' ');
@@ -460,14 +491,44 @@ const NotesSystem = {
         if (s1 === s2) return 1.0;
         if (s1.length === 0 || s2.length === 0) return 0.0;
 
-        // Simple word-based similarity (Jaccard similarity)
-        const words1 = new Set(s1.split(' '));
-        const words2 = new Set(s2.split(' '));
+        // Part 1: Jaccard similarity (word overlap, order-insensitive)
+        const words1 = s1.split(' ');
+        const words2 = s2.split(' ');
+        const set1 = new Set(words1);
+        const set2 = new Set(words2);
 
-        const intersection = new Set([...words1].filter(x => words2.has(x)));
-        const union = new Set([...words1, ...words2]);
+        const intersection = new Set([...set1].filter(x => set2.has(x)));
+        const union = new Set([...set1, ...set2]);
 
-        return intersection.size / union.size;
+        const jaccardScore = intersection.size / union.size;
+
+        // Part 2: Bigram similarity (word order matters)
+        const getBigrams = (words) => {
+            const bigrams = [];
+            for (let i = 0; i < words.length - 1; i++) {
+                bigrams.push(`${words[i]} ${words[i + 1]}`);
+            }
+            return bigrams;
+        };
+
+        const bigrams1 = getBigrams(words1);
+        const bigrams2 = getBigrams(words2);
+
+        if (bigrams1.length === 0 || bigrams2.length === 0) {
+            // Too short for bigrams, use only Jaccard
+            return jaccardScore;
+        }
+
+        const bigramSet1 = new Set(bigrams1);
+        const bigramSet2 = new Set(bigrams2);
+
+        const bigramIntersection = new Set([...bigramSet1].filter(x => bigramSet2.has(x)));
+        const bigramUnion = new Set([...bigramSet1, ...bigramSet2]);
+
+        const bigramScore = bigramIntersection.size / bigramUnion.size;
+
+        // Weighted combination: 60% Jaccard (content) + 40% bigram (order)
+        return (0.6 * jaccardScore) + (0.4 * bigramScore);
     },
 
     // Find best paragraph match using fuzzy text matching
@@ -498,6 +559,39 @@ const NotesSystem = {
 
         return bestMatch;
     },
+    // Helper: Find all indices of a hash in the paragraph list
+    findAllIndices(paragraphHashList, hash) {
+        if (!hash) return [];
+        const indices = [];
+        for (let i = 0; i < paragraphHashList.length; i++) {
+            if (paragraphHashList[i] === hash) {
+                indices.push(i);
+            }
+        }
+        return indices;
+    },
+
+    // Helper: Check if neighbor indices form a valid pattern around currentIndex
+    isValidNeighborPattern(m1Indices, p1Indices, currentIndex) {
+        // Check all combinations of -1 and +1 neighbor positions
+        for (const m1Idx of m1Indices) {
+            for (const p1Idx of p1Indices) {
+                const distance = p1Idx - m1Idx;
+                // Perfect match: -1 and +1 are exactly 2 apart with current in middle
+                if (distance === 2 && currentIndex === m1Idx + 1) {
+                    return true;
+                }
+            }
+        }
+
+        // Fallback: current is at one of the neighbor positions
+        if (m1Indices.includes(currentIndex) || p1Indices.includes(currentIndex)) {
+            return true;
+        }
+
+        return false;
+    },
+
     doesNoteMatchParagraph(noteData, contentHash, currentIndex, paragraphHashList) {
         if (!noteData.contextHashes || noteData.contextHashes.length !== 5) return false;
 
@@ -506,58 +600,115 @@ const NotesSystem = {
         // Priority 1: Check if PRIMARY hash matches current
         if (contentHash === hashPrimary) return true;
 
-        // Priority 2: Check ±1 neighbors
-        const m1Index = hashM1 ? paragraphHashList.indexOf(hashM1) : -1;
-        const p1Index = hashP1 ? paragraphHashList.indexOf(hashP1) : -1;
+        // Priority 2: Check ±1 neighbors (handle duplicate hashes)
+        const m1Indices = this.findAllIndices(paragraphHashList, hashM1);
+        const p1Indices = this.findAllIndices(paragraphHashList, hashP1);
 
-        if (m1Index !== -1 && p1Index !== -1) {
-            // Both ±1 found
-            const distance = p1Index - m1Index;
-            if (distance === 2 && currentIndex === m1Index + 1) {
-                // They're 1 apart and current is in the middle → primary was rewritten
-                return true;
-            } else if (currentIndex === Math.min(m1Index, p1Index)) {
-                // More than 1 apart → put on earliest
+        if (m1Indices.length > 0 && p1Indices.length > 0) {
+            if (this.isValidNeighborPattern(m1Indices, p1Indices, currentIndex)) {
                 return true;
             }
-        } else if (m1Index !== -1 && currentIndex === m1Index) {
-            // Only -1 found and it's current
-            return true;
-        } else if (p1Index !== -1 && currentIndex === p1Index) {
-            // Only +1 found and it's current
+        } else if (m1Indices.includes(currentIndex) || p1Indices.includes(currentIndex)) {
+            // Only one neighbor found, and current is at that position
             return true;
         }
 
-        // Priority 3: Check ±2 neighbors
-        const m2Index = hashM2 ? paragraphHashList.indexOf(hashM2) : -1;
-        const p2Index = hashP2 ? paragraphHashList.indexOf(hashP2) : -1;
+        // Priority 3: Check ±2 neighbors (handle duplicate hashes)
+        const m2Indices = this.findAllIndices(paragraphHashList, hashM2);
+        const p2Indices = this.findAllIndices(paragraphHashList, hashP2);
 
-        if (m2Index !== -1 && p2Index !== -1) {
-            // Both ±2 found
-            const distance = p2Index - m2Index;
-            if (distance === 4 && currentIndex === m2Index + 2) {
-                // They're 3 apart and current is in the middle → primary was rewritten
-                return true;
-            } else if (currentIndex === Math.min(m2Index, p2Index)) {
-                // More than 3 apart → put on earliest
-                return true;
+        // Check all combinations for valid ±2 pattern
+        for (const m2Idx of m2Indices) {
+            for (const p2Idx of p2Indices) {
+                const distance = p2Idx - m2Idx;
+                // Perfect match: -2 and +2 are exactly 4 apart with current in middle
+                if (distance === 4 && currentIndex === m2Idx + 2) {
+                    return true;
+                }
             }
-        } else if (m2Index !== -1 && currentIndex === m2Index) {
-            // Only -2 found and it's current
-            return true;
-        } else if (p2Index !== -1 && currentIndex === p2Index) {
-            // Only +2 found and it's current
+        }
+
+        // Fallback: current is at one of the ±2 positions
+        if (m2Indices.includes(currentIndex) || p2Indices.includes(currentIndex)) {
             return true;
         }
 
         return false;
     },
 
+    // Find and attach orphaned notes to the mailing list paragraph
+    attachOrphanedNotesToMailingList() {
+        if (Object.keys(this.orphanedNotes).length === 0) {
+            return; // No orphaned notes to attach
+        }
+
+        // Find the mailing list paragraph by searching for text content
+        const allParagraphs = Array.from(document.querySelectorAll('p[data-notes-initialized]'));
+        const mailingListPara = allParagraphs.find(p => {
+            const text = p.textContent.toLowerCase();
+            return text.includes('mailing list') && text.includes('book');
+        });
+
+        if (!mailingListPara) {
+            console.warn('Could not find mailing list paragraph to attach orphaned notes');
+            return;
+        }
+
+        const mailingListHash = mailingListPara.dataset.contentHash;
+        let attachedCount = 0;
+
+        // Attach each orphaned note to the mailing list paragraph
+        Object.keys(this.orphanedNotes).forEach(orphanKey => {
+            try {
+                const orphanData = JSON.parse(this.orphanedNotes[orphanKey]);
+                const noteId = `orphan-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+
+                // Update context hashes to mailing list location
+                orphanData.contextHashes = this.generateContextHashes(mailingListPara);
+
+                // Clear text range (invalid on new paragraph)
+                delete orphanData.textRange;
+
+                // Mark as orphaned in the note text
+                const originalText = orphanData.text || '';
+                orphanData.text = `[ORPHANED NOTE] ${originalText}`;
+                orphanData.isOrphaned = true;
+                orphanData.side = 'right'; // Attach to right side
+
+                const newNoteKey = `h-${mailingListHash}-${noteId}`;
+
+                // Move from orphanedNotes to notes
+                this.notes[newNoteKey] = JSON.stringify(orphanData);
+                delete this.orphanedNotes[orphanKey];
+
+                // Create note circle on mailing list paragraph
+                this.createNoteCircle(mailingListPara, mailingListHash, noteId, orphanData);
+                attachedCount++;
+            } catch (e) {
+                console.error('Failed to attach orphaned note:', orphanKey, e);
+            }
+        });
+
+        if (attachedCount > 0) {
+            console.log(`Attached ${attachedCount} orphaned notes to mailing list paragraph`);
+        }
+    },
+
     // Load existing notes for all paragraphs using sophisticated hash-based matching
     loadAllExistingNotes() {
+        // Track how many times this is called
+        if (!window._noteLoadCount) window._noteLoadCount = 0;
+        window._noteLoadCount++;
+
         // Use pre-loaded hash list (or build on demand as fallback)
         const paragraphHashList = this.getParagraphHashList();
         const allParagraphs = Array.from(document.querySelectorAll('p[data-notes-initialized]'));
+
+        // Safety check: ensure all paragraphs have content hashes
+        if (allParagraphs.length === 0) {
+            console.warn('No initialized paragraphs found, skipping note loading');
+            return;
+        }
 
         const unmatchedNotes = [];
         const relocatedNotes = [];
@@ -568,17 +719,43 @@ const NotesSystem = {
                 const noteData = JSON.parse(this.notes[noteKey]);
                 let matched = false;
 
-                // Try to match with any paragraph
+                // Extract hash from note key (format: h-{hash}-{noteId})
+                const keyParts = noteKey.split('-');
+                const noteKeyHash = keyParts.length >= 2 ? keyParts[1] : null;
+
+                // Priority 1: Try DIRECT hash match first (check ALL paragraphs)
                 for (let i = 0; i < allParagraphs.length; i++) {
                     const paragraph = allParagraphs[i];
                     const contentHash = paragraph.dataset.contentHash;
-                    const currentIndex = paragraphHashList.indexOf(contentHash);
 
-                    if (currentIndex !== -1 && this.doesNoteMatchParagraph(noteData, contentHash, currentIndex, paragraphHashList)) {
-                        const noteId = noteKey.split('-').slice(2).join('-');
+                    if (noteKeyHash === contentHash) {
+                        // FIX: Regenerate contextHashes if mismatch detected
+                        if (noteData.contextHashes && noteData.contextHashes[2] !== noteKeyHash) {
+                            noteData.contextHashes = this.generateContextHashes(paragraph);
+                            this.notes[noteKey] = JSON.stringify(noteData);
+                            relocatedNotes.push({ noteKey, fixed: true });
+                        }
+
+                        const noteId = keyParts.slice(2).join('-');
                         this.createNoteCircle(paragraph, contentHash, noteId, noteData);
                         matched = true;
                         break;
+                    }
+                }
+
+                // Priority 2: If no direct match, try context-based matching
+                if (!matched) {
+                    for (let i = 0; i < allParagraphs.length; i++) {
+                        const paragraph = allParagraphs[i];
+                        const contentHash = paragraph.dataset.contentHash;
+                        const currentIndex = paragraphHashList.indexOf(contentHash);
+
+                        if (currentIndex !== -1 && this.doesNoteMatchParagraph(noteData, contentHash, currentIndex, paragraphHashList)) {
+                            const noteId = keyParts.slice(2).join('-');
+                            this.createNoteCircle(paragraph, contentHash, noteId, noteData);
+                            matched = true;
+                            break;
+                        }
                     }
                 }
 
@@ -589,6 +766,12 @@ const NotesSystem = {
                 console.error('Error loading note:', noteKey, e);
             }
         });
+
+        // Save localStorage if we fixed any hash mismatches in first pass
+        if (relocatedNotes.length > 0) {
+            localStorage.setItem('userNotes', JSON.stringify(this.notes));
+            localStorage.setItem('orphanedNotes', JSON.stringify(this.orphanedNotes));
+        }
 
         // Second pass: fuzzy matching for unmatched notes
         if (unmatchedNotes.length > 0) {
@@ -624,27 +807,29 @@ const NotesSystem = {
                         relocatedNotes.push({ noteId, score: fuzzyMatch.score });
                     }
                 } else {
-                    // No fuzzy match - orphan the note
-                    noteData.originalKey = noteKey;
-                    this.orphanedNotes[noteKey] = JSON.stringify(noteData);
-                    delete this.notes[noteKey];
+                    // No fuzzy match - KEEP the note in storage, don't orphan it
+                    // The paragraph might be on a part that hasn't loaded yet
                 }
             });
 
-            // Save updated notes
-            localStorage.setItem('userNotes', JSON.stringify(this.notes));
-            localStorage.setItem('orphanedNotes', JSON.stringify(this.orphanedNotes));
+            // Third pass: attach orphaned notes to mailing list paragraph
+            // Only attach notes that are already in orphanedNotes (from previous sessions)
+            if (Object.keys(this.orphanedNotes).length > 0) {
+                this.attachOrphanedNotesToMailingList();
+            }
 
-            // Show notifications
+            // Save updated notes ONLY if we relocated any
+            if (relocatedNotes.length > 0) {
+                localStorage.setItem('userNotes', JSON.stringify(this.notes));
+                localStorage.setItem('orphanedNotes', JSON.stringify(this.orphanedNotes));
+            }
+
+            // Show notifications only for relocated notes
             if (relocatedNotes.length > 0) {
                 this.showRelocatedNotesNotification(relocatedNotes.length);
             }
-
-            const newOrphans = unmatchedNotes.length - relocatedNotes.length;
-            if (newOrphans > 0) {
-                this.showOrphanedNotesNotification(newOrphans);
-            }
         }
+
 
         // Update button visibility for all containers
         allParagraphs.forEach(paragraph => {
@@ -669,7 +854,9 @@ const NotesSystem = {
     createNoteCircle(paragraph, contentHash, noteId, noteData) {
         const side = noteData.side || 'left';
         const container = paragraph.querySelector(`.paragraph-notes-container[data-side="${side}"]`);
-        if (!container) return;
+        if (!container) {
+            return;
+        }
 
         // Remove existing circle if any
         const existing = container.querySelector(`[data-note-id="${noteId}"]`);
